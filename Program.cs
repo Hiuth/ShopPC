@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ShopPC.Data;
+using ShopPC.Exceptions;
 using ShopPC.Repository.InterfaceRepository;
 using ShopPC.Repository.ImplementationsRepository;
 using ShopPC.Service.InterfaceService;
@@ -24,6 +25,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
+app.UseMiddleware<GlobalExceptionHandler>();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
