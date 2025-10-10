@@ -5,7 +5,7 @@ namespace ShopPC.Repository.InterfaceRepository
 {
     public interface IGenericRepository<T> where T: class
     {
-        Task<T> GetByIdAsync(string id);
+        Task<T?> GetByIdAsync(string id);
 
         Task<IEnumerable<T>> GetAllAsync();
 
@@ -19,7 +19,7 @@ namespace ShopPC.Repository.InterfaceRepository
 
         Task<bool> ExistsAsync(string id);
 
-        Task<int> CountAsync();
+        Task<int> CountAsync(Expression<Func<T, bool>>? filter = null);
 
         Task<IEnumerable<T>> GetAsync(  // hàm get tất cả các thể loại (chấp hết)
             Expression<Func<T, bool>>? filter = null, 
