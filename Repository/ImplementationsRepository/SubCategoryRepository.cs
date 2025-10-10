@@ -21,5 +21,7 @@ namespace ShopPC.Repository.ImplementationsRepository
         {
             return await _dbSet.Where(sc => sc.categoryId == categoryId).ToListAsync();
         }
+
+
     }
 }
