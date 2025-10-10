@@ -8,6 +8,6 @@ namespace ShopPC.Models
         public string brandName { get; set; } = string.Empty;
 
         // 1 brand có nhiều product
-        public List<Products> products { get; set; } = new List<Products>();
+        public ICollection<Products> products { get; set; } = new List<Products>();
     }
 }

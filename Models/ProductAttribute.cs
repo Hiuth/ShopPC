@@ -12,7 +12,7 @@ namespace ShopPC.Models
 
         // 1 productAttribute thuộc về 1 product
         [ForeignKey("attributeId")]
-        public Attribute attribute { get; set; } = null!;
+        public Attributes attribute { get; set; } = null!;
 
         [ForeignKey("productId")]
         public Products product { get; set; } = null!;

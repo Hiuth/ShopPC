@@ -21,6 +21,6 @@ namespace ShopPC.Models
         public ICollection<Products> products { get; set; } = new List<Products>();
 
         //1 subCategory có nhiều attribute
-        public ICollection<Attribute> attributes { get; set; } = new List<Attribute>();
+        public ICollection<Attributes> attributes { get; set; } = new List<Attributes>();
     }
 }

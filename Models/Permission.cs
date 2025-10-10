@@ -8,6 +8,6 @@ namespace ShopPC.Models
         public string description { get; set; } = string.Empty;
 
         // 1 permission có nhiều role
-        public ICollection<Permission> Permissions { get; set; } = new List<Permission>();
+        public ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
     }
 }

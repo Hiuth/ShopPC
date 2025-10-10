@@ -4,11 +4,10 @@ namespace ShopPC.Models
     public class Role
     {
         [Key]
-        public string permissionName { get; set; } = string.Empty;
+        public string roleName { get; set; } = string.Empty;
         public string description { get; set; } = string.Empty;
 
         // 1 role có nhiều Permission
-
-        public ICollection<Role> Roles { get; set; } = new List<Role>();
+        public ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
     }
 }
