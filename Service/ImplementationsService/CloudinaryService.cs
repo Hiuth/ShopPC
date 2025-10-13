@@ -25,7 +25,7 @@ namespace ShopPC.Service.ImplementationsService
             _logger = logger;
         }
 
-        public async Task<ImageUploadResult> UploadImageAsync(IFormFile file)
+        public async Task<string> UploadImageAsync(IFormFile file)
         {
             ValidateFile(file);
 
@@ -62,7 +62,7 @@ namespace ShopPC.Service.ImplementationsService
 
                 string url = uploadResult.SecureUrl.ToString();
                 _logger.LogInformation("File uploaded successfully to Cloudinary: {Url}", url);
-                return uploadResult;
+                return url;
             }
             catch (Exception e)
             {

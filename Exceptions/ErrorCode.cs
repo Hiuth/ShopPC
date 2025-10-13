@@ -31,6 +31,7 @@ namespace ShopPC.Exceptions
             = new ErrorCode(1006, "File upload failed", HttpStatusCode.InternalServerError);
         public static readonly ErrorCode DELETE_FILE_FAILED
             = new ErrorCode(1007, "Delete file failed", HttpStatusCode.InternalServerError);
-
+        public static readonly ErrorCode CATEGORY_NOT_EXISTS
+            = new ErrorCode(1008, "Category not exists", HttpStatusCode.BadRequest);
     }
 }

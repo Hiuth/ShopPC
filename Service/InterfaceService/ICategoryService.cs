@@ -5,8 +5,8 @@ namespace ShopPC.Service.InterfaceService
 {
     public interface ICategoryService
     {
-        Task<CategoryResponse> createCategory(CategoryRequest request);
-        Task<CategoryResponse> updateCategory(string id, CategoryRequest request);
+        Task<CategoryResponse> createCategory(CategoryRequest request, IFormFile file );
+        Task<CategoryResponse> updateCategory(string id, CategoryRequest request, IFormFile file);
         //Task<bool> deleteCategory(string id);
         Task<List<CategoryResponse>> getAllCategory();
         Task<CategoryResponse> getCategoryById(string id);
