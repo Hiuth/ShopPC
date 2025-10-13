@@ -17,7 +17,7 @@ namespace ShopPC.Models
         public string phoneNumber { get; set; } = string.Empty;
 
         // 1 account có nhiều role
-        public ICollection<Role> roles { get; set; } = new List<Role>();
+        //public ICollection<Role> roles { get; set; } = new List<Role>();
 
         // 1 account có nhiều order
         public ICollection<Order> orders { get; set; } = new List<Order>();

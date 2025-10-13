@@ -12,7 +12,7 @@ using ShopPC.Data;
 namespace ShopPC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251013015305_Database")]
+    [Migration("20251013034220_Database")]
     partial class Database
     {
         /// <inheritdoc />
@@ -391,16 +391,11 @@ namespace ShopPC.Migrations
                     b.Property<string>("roleName")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Accountid")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("roleName");
-
-                    b.HasIndex("Accountid");
 
                     b.ToTable("Roles");
                 });
@@ -589,13 +584,6 @@ namespace ShopPC.Migrations
                     b.Navigation("subCategory");
                 });
 
-            modelBuilder.Entity("ShopPC.Models.Role", b =>
-                {
-                    b.HasOne("ShopPC.Models.Account", null)
-                        .WithMany("roles")
-                        .HasForeignKey("Accountid");
-                });
-
             modelBuilder.Entity("ShopPC.Models.RolePermission", b =>
                 {
                     b.HasOne("ShopPC.Models.Permission", "Permission")
@@ -633,8 +621,6 @@ namespace ShopPC.Migrations
                     b.Navigation("notifications");
 
                     b.Navigation("orders");
-
-                    b.Navigation("roles");
                 });
 
             modelBuilder.Entity("ShopPC.Models.Attributes", b =>
