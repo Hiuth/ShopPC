@@ -17,5 +17,20 @@ namespace ShopPC.Exceptions
 
         public static readonly ErrorCode INTERNAL_SERVER_ERROR
             = new ErrorCode(1000, "Uncategorized Exception", HttpStatusCode.InternalServerError);
+        public static readonly ErrorCode CATEGORY_ALREADY_EXISTS
+            = new ErrorCode(1001, "Category already exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode CATEGORY_NOT_FOUND
+            = new ErrorCode(1002, "Category not found", HttpStatusCode.NotFound);
+        public static readonly ErrorCode FILE_TOO_LARGE
+            = new ErrorCode(1003, "File size is too large", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode FILE_EMPTY
+            = new ErrorCode(1004, "File is empty", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode INVALID_FILE_TYPE
+            = new ErrorCode(1005, "Invalid file type", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode FILE_UPLOAD_FAILED
+            = new ErrorCode(1006, "File upload failed", HttpStatusCode.InternalServerError);
+        public static readonly ErrorCode DELETE_FILE_FAILED
+            = new ErrorCode(1007, "Delete file failed", HttpStatusCode.InternalServerError);
+
     }
 }
