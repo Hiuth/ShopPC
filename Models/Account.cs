@@ -15,7 +15,7 @@ namespace ShopPC.Models
         public string gender { get; set; } = string.Empty;
         public string email { get; set; } = string.Empty;
         public string phoneNumber { get; set; } = string.Empty;
-
+        public string address { get; set; } = string.Empty;
         // 1 account có nhiều role
         //public ICollection<Role> roles { get; set; } = new List<Role>();
 

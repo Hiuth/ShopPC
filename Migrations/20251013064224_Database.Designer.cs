@@ -12,7 +12,7 @@ using ShopPC.Data;
 namespace ShopPC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251013034220_Database")]
+    [Migration("20251013064224_Database")]
     partial class Database
     {
         /// <inheritdoc />
@@ -29,6 +29,10 @@ namespace ShopPC.Migrations
                 {
                     b.Property<string>("id")
                         .HasColumnType("varchar(255)");
+
+                    b.Property<string>("address")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("datetime(6)");

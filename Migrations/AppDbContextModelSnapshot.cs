@@ -27,6 +27,10 @@ namespace ShopPC.Migrations
                     b.Property<string>("id")
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("address")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("datetime(6)");
 
