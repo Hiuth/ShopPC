@@ -32,5 +32,9 @@ namespace ShopPC.Repository.ImplementationsRepository
             return await _dbSet.Where(p => p.price >= minPrice && p.price <= maxPrice).ToListAsync();
         }
 
+        public async Task<IEnumerable<Products>> GetProductsByCategoryIdAsync(string categoryId)
+        {
+            return await _dbSet.Where(p => p.categoryId == categoryId).ToListAsync();
+        } 
     }
 }

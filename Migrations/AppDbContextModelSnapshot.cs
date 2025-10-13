@@ -63,17 +63,22 @@ namespace ShopPC.Migrations
                     b.Property<string>("id")
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("SubCategoryid")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("attributeName")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("subCategoryId")
+                    b.Property<string>("categoryId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("id");
 
-                    b.HasIndex("subCategoryId");
+                    b.HasIndex("SubCategoryid");
+
+                    b.HasIndex("categoryId");
 
                     b.ToTable("Attributes");
                 });
@@ -87,7 +92,13 @@ namespace ShopPC.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("categoryId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
                     b.HasKey("id");
+
+                    b.HasIndex("categoryId");
 
                     b.ToTable("Brand");
                 });
@@ -323,10 +334,11 @@ namespace ShopPC.Migrations
                     b.Property<string>("id")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Categoryid")
+                    b.Property<string>("brandId")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("brandId")
+                    b.Property<string>("categoryId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
@@ -362,9 +374,9 @@ namespace ShopPC.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Categoryid");
-
                     b.HasIndex("brandId");
+
+                    b.HasIndex("categoryId");
 
                     b.HasIndex("subCategoryId");
 
@@ -433,13 +445,28 @@ namespace ShopPC.Migrations
 
             modelBuilder.Entity("ShopPC.Models.Attributes", b =>
                 {
-                    b.HasOne("ShopPC.Models.SubCategory", "subCategory")
+                    b.HasOne("ShopPC.Models.SubCategory", null)
                         .WithMany("attributes")
-                        .HasForeignKey("subCategoryId")
+                        .HasForeignKey("SubCategoryid");
+
+                    b.HasOne("ShopPC.Models.Category", "category")
+                        .WithMany("attributes")
+                        .HasForeignKey("categoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("subCategory");
+                    b.Navigation("category");
+                });
+
+            modelBuilder.Entity("ShopPC.Models.Brand", b =>
+                {
+                    b.HasOne("ShopPC.Models.Category", "category")
+                        .WithMany("brands")
+                        .HasForeignKey("categoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("category");
                 });
 
             modelBuilder.Entity("ShopPC.Models.Cart", b =>
@@ -534,13 +561,15 @@ namespace ShopPC.Migrations
 
             modelBuilder.Entity("ShopPC.Models.Products", b =>
                 {
-                    b.HasOne("ShopPC.Models.Category", null)
-                        .WithMany("products")
-                        .HasForeignKey("Categoryid");
-
                     b.HasOne("ShopPC.Models.Brand", "brand")
                         .WithMany("products")
                         .HasForeignKey("brandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShopPC.Models.Category", "category")
+                        .WithMany("products")
+                        .HasForeignKey("categoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -551,6 +580,8 @@ namespace ShopPC.Migrations
                         .IsRequired();
 
                     b.Navigation("brand");
+
+                    b.Navigation("category");
 
                     b.Navigation("subCategory");
                 });
@@ -615,6 +646,10 @@ namespace ShopPC.Migrations
 
             modelBuilder.Entity("ShopPC.Models.Category", b =>
                 {
+                    b.Navigation("attributes");
+
+                    b.Navigation("brands");
+
                     b.Navigation("products");
 
                     b.Navigation("subCategories");

@@ -13,12 +13,9 @@ namespace ShopPC.Repository.ImplementationsRepository
         {
         }
 
-        public async Task<List<Attributes>> GetAttributesBySubCategoryId(string subCategoryId)
+        public async Task<IEnumerable<Attributes>> GetAttributesByCategoryId(string categoryId)
         {
-            var attributes = await _context.Attributes
-                .Where(a => a.subCategoryId == subCategoryId)
-                .ToListAsync();
-            return attributes;
+            return await _dbSet.Where(a => a.categoryId == categoryId).ToListAsync();
         }
     }
 }

@@ -16,6 +16,7 @@ namespace ShopPC.Models
         public DateTime createdAt { get; set; } = DateTime.Now;
         public string brandId { get; set; } = string.Empty;
         public string subCategoryId { get; set; } = string.Empty;
+        public string categoryId { get; set; } = string.Empty;
 
         // 1 product thuộc về 1 brand
         [ForeignKey("brandId")]
@@ -23,6 +24,10 @@ namespace ShopPC.Models
         // 1 product thuộc về 1 subCategory
         [ForeignKey("subCategoryId")]
         public SubCategory subCategory { get; set; } = null!;
+
+        //1 product thuộc về 1 category thông qua subCategory
+        [ForeignKey("categoryId")]
+        public Category category { get; set; } = null!;
 
         // 1 product có nhiều productImg
         public ICollection<ProductImg> productImgs { get; set; } = new List<ProductImg>();

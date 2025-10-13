@@ -7,5 +7,6 @@ namespace ShopPC.Repository.InterfaceRepository
     {
         Task<bool> IsBrandNameUniqueAsync(string brandName);
 
+        Task<IEnumerable<Brand>> GetBrandByCategoryIdAsync(string categoryId);
     }
 }
