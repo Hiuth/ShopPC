@@ -12,7 +12,7 @@ namespace ShopPC.Repository.ImplementationsRepository
         {
         }
 
-        public async Task<IEnumerable<Cart>> GetCartsByUserIdAsync(string userId)
+        public async Task<IEnumerable<Cart>> GetCartByUserIdAsync(string userId)
         {
             return await _dbSet.Where(c => c.accountId == userId).ToListAsync();
         }
@@ -24,7 +24,7 @@ namespace ShopPC.Repository.ImplementationsRepository
             await _context.SaveChangesAsync();
         }
 
-        public async Task ClearAllCart(string accountId)
+        public async Task ClearAllCartAsync(string accountId)
         {
             var cart = await _dbSet.Where(c => c.accountId == accountId).ToListAsync();
             _dbSet.RemoveRange(cart);
