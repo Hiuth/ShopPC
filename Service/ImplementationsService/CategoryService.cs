@@ -34,7 +34,7 @@ namespace ShopPC.Service.ImplementationsService
             return CategoryMapper.toCategoryResponse(createdCategory);
         }
 
-        public async Task<CategoryResponse> updateCategory(string id, CategoryRequest request, IFormFile file)
+        public async Task<CategoryResponse> updateCategory(string id, CategoryRequest request, IFormFile? file)
         {
             Category category = await _categoryRepository.GetByIdAsync(id) ??
                 throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
