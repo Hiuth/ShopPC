@@ -12,7 +12,6 @@ namespace ShopPC.Repository.InterfaceRepository
 
         Task<IEnumerable<Products>> GetProductsByPriceRangeAsync(decimal minPrice, decimal maxPrice);
 
-        Task<IEnumerable<Products>> GetProductsByCategoryIdAsync(string categoryId);
 
         //Task<IEnumerable<Products>> GetTopRatedProductsAsync(int count);
         //Task<IEnumerable<Products>> GetMostPopularProductsAsync(int count);

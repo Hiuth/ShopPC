@@ -9,8 +9,5 @@
         public string? description { get; set; }
         public string? thumbnail { get; set; }
         public string status { get; set; } = string.Empty;
-        public string brandId { get; set; } = string.Empty;
-        public string subCategoryId { get; set; } = string.Empty;
-        public string categoryId { get; set; } = string.Empty;
     }
 }

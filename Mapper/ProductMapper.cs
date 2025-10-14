@@ -16,10 +16,7 @@ namespace ShopPC.Mapper
                 stockQuantity = productRequest.stockQuantity,
                 description = productRequest.description,
                 thumbnail = productRequest.thumbnail,
-                status = productRequest.status,
-                brandId = productRequest.brandId,
-                subCategoryId = productRequest.subCategoryId,
-                categoryId = productRequest.categoryId
+                status = productRequest.status
             };
         }
 
@@ -37,11 +34,9 @@ namespace ShopPC.Mapper
                 status = products.status,
                 brandId = products.brandId,
                 subCategoryId = products.subCategoryId,
-                categoryId = products.categoryId,
                 createdAt = products.createdAt,
                 brandName = products.brand.brandName,
-                subCategoryName = products.subCategory.subCategoryName,
-                categoryName = products.category.categoryName
+                subCategoryName = products.subCategory.subCategoryName
             };
         }
     }

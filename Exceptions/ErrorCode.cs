@@ -56,5 +56,18 @@ namespace ShopPC.Exceptions
             = new ErrorCode(4001, "Attribute not exists", HttpStatusCode.BadRequest);
         public static readonly ErrorCode ATTRIBUTE_ALREADY_EXISTS
             = new ErrorCode(4002, "Attribute already exists", HttpStatusCode.BadRequest);
+
+        //product error codes
+        public static readonly ErrorCode PRODUCT_NOT_EXISTS
+            = new ErrorCode(5001, "Product not exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode PRODUCT_ALREADY_EXISTS
+            = new ErrorCode(5002, "Product already exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode PRODUCT_OUT_OF_STOCK
+            = new ErrorCode(5003, "Product out of stock", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode INVALID_PRODUCT_QUANTITY
+            = new ErrorCode(5004, "Invalid product quantity", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode INVALID_PRODUCT_PRICE
+            = new ErrorCode(5005, "Invalid product price", HttpStatusCode.BadRequest);
+     
     }
 }
