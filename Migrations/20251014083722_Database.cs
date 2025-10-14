@@ -294,8 +294,6 @@ namespace ShopPC.Migrations
                     brandId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     subCategoryId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    categoryId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -305,12 +303,6 @@ namespace ShopPC.Migrations
                         name: "FK_Products_Brand_brandId",
                         column: x => x.brandId,
                         principalTable: "Brand",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Products_Category_categoryId",
-                        column: x => x.categoryId,
-                        principalTable: "Category",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -501,11 +493,6 @@ namespace ShopPC.Migrations
                 name: "IX_Products_brandId",
                 table: "Products",
                 column: "brandId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_categoryId",
-                table: "Products",
-                column: "categoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_subCategoryId",

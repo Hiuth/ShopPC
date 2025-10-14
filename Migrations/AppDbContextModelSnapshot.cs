@@ -342,10 +342,6 @@ namespace ShopPC.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("categoryId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("datetime(6)");
 
@@ -379,8 +375,6 @@ namespace ShopPC.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("brandId");
-
-                    b.HasIndex("categoryId");
 
                     b.HasIndex("subCategoryId");
 
@@ -566,12 +560,6 @@ namespace ShopPC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShopPC.Models.Category", "category")
-                        .WithMany("products")
-                        .HasForeignKey("categoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ShopPC.Models.SubCategory", "subCategory")
                         .WithMany("products")
                         .HasForeignKey("subCategoryId")
@@ -579,8 +567,6 @@ namespace ShopPC.Migrations
                         .IsRequired();
 
                     b.Navigation("brand");
-
-                    b.Navigation("category");
 
                     b.Navigation("subCategory");
                 });
@@ -639,8 +625,6 @@ namespace ShopPC.Migrations
                     b.Navigation("attributes");
 
                     b.Navigation("brands");
-
-                    b.Navigation("products");
 
                     b.Navigation("subCategories");
                 });
