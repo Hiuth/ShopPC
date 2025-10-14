@@ -10,8 +10,7 @@ namespace ShopPC.Mapper
         {
             return new Attributes
             {
-                attributeName = attributesRequest.attributeName,
-                categoryId = attributesRequest.categoryId
+                attributeName = attributesRequest.attributeName
             };
         }
 

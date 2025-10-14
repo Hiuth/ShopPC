@@ -53,7 +53,7 @@ namespace ShopPC.Controllers
             }
         }
 
-        [HttpPut("update/{id}")]
+        [HttpPut("update/{categoryId}")]
         public async Task<ActionResult<ApiResponse<CategoryResponse>>> updateCategory(
             [FromRoute(Name ="categoryId")] string categoryId, [FromForm(Name ="categoryName")] string? categoryName, IFormFile? file)
         {

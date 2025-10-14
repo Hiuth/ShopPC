@@ -3,6 +3,5 @@
     public class AttributesRequest
     {
         public string attributeName { get; set; } = string.Empty;
-        public string categoryId { get; set; } = string.Empty;
     }
 }

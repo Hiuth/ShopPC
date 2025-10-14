@@ -22,7 +22,7 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<BrandResponse> createBrand(string categoryId, BrandRequest request)
         {
-            if (await _brandReopsitory.IsBrandNameUniqueAsync(request.brandName))
+            if (!await _brandReopsitory.IsBrandNameUniqueAsync(request.brandName))
             {
                 throw new AppException(ErrorCode.BRAND_ALREADY_EXISTS);
             }
@@ -32,6 +32,7 @@ namespace ShopPC.Service.ImplementationsService
             }
 
             var brand = BrandMapper.toBrand(request);
+            brand.categoryId = categoryId;
             var createdBrand = await _brandReopsitory.AddAsync(brand);
             return BrandMapper.toBrandResponse(createdBrand);
         }
@@ -53,7 +54,7 @@ namespace ShopPC.Service.ImplementationsService
                 
             if(!String.IsNullOrWhiteSpace(request.brandName))
             {
-                if (await _brandReopsitory.IsBrandNameUniqueAsync(request.brandName))
+                if (!await _brandReopsitory.IsBrandNameUniqueAsync(request.brandName))
                 {
                     throw new AppException(ErrorCode.BRAND_ALREADY_EXISTS);
                 } brand.brandName = request.brandName;
