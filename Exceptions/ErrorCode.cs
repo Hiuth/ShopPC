@@ -44,5 +44,12 @@ namespace ShopPC.Exceptions
             = new ErrorCode(2001, "SubCategory already exists", HttpStatusCode.BadRequest);
         public static readonly ErrorCode SUB_CATEGORY_NOT_EXISTS
             = new ErrorCode(2002, "SubCategory not exists", HttpStatusCode.BadRequest);
+
+        //brand error codes
+        public static readonly ErrorCode BRAND_ALREADY_EXISTS
+            = new ErrorCode(3001, "Brand already exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode BRAND_NOT_EXISTS
+            = new ErrorCode(3002, "Brand not exists", HttpStatusCode.BadRequest);
+
     }
 }

@@ -10,8 +10,7 @@ namespace ShopPC.Mapper
         {
             return new Brand
             { 
-                brandName = brandRequest.brandName,
-                categoryId = brandRequest.categoryId
+                brandName = brandRequest.brandName
             };
         }
 

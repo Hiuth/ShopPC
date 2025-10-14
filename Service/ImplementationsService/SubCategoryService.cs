@@ -23,14 +23,14 @@ namespace ShopPC.Service.ImplementationsService
             _cloudinaryService = cloudinaryService;
         }
 
-        public async Task<SubCategoryResponse> createSubCategory(string id, SubCategoryRequest request, IFormFile file)
+        public async Task<SubCategoryResponse> createSubCategory(string categoryId, SubCategoryRequest request, IFormFile file)
         {
             if (await _subCategoryRepository.IsSubCategoryNameUniqueAsync(request.subCategoryName))
             {
                 throw new AppException(ErrorCode.SUBCATEGORY_ALREADY_EXISTS);
             }
 
-            var category = await _categoryRepository.GetByIdAsync(id) ??
+            var category = await _categoryRepository.GetByIdAsync(categoryId) ??
                 throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
             var imageUrl = await _cloudinaryService.UploadImageAsync(file);
 
@@ -41,9 +41,9 @@ namespace ShopPC.Service.ImplementationsService
             return SubCategoryMapper.toSubCategoryResponse(createdSubCategory);
         }
 
-        public async Task<SubCategoryResponse> updateSubCategory(string id,SubCategoryRequest request, IFormFile file)
+        public async Task<SubCategoryResponse> updateSubCategory(string subCategoryId,string categoryId,SubCategoryRequest request, IFormFile file)
         {
-            var subCategory = await _subCategoryRepository.GetByIdAsync(id) ??
+            var subCategory = await _subCategoryRepository.GetByIdAsync(subCategoryId) ??
                 throw new AppException(ErrorCode.SUB_CATEGORY_NOT_EXISTS);
 
             if (!String.IsNullOrWhiteSpace(request.subCategoryName))
@@ -66,11 +66,11 @@ namespace ShopPC.Service.ImplementationsService
                 subCategory.description = request.description;
             }
 
-            if (!String.IsNullOrWhiteSpace(request.categoryId))
+            if (!String.IsNullOrWhiteSpace(categoryId))
             {
-                if (await _categoryRepository.ExistsAsync(request.categoryId))
+                if (await _categoryRepository.ExistsAsync(categoryId))
                 {
-                    subCategory.categoryId = request.categoryId;
+                    subCategory.categoryId = categoryId;
                 }
                 else
                 {

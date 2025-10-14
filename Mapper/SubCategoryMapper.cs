@@ -12,8 +12,7 @@ namespace ShopPC.Mapper
             {
                 subCategoryName = subCategoryRequest.subCategoryName,
                 subCategoryImg = subCategoryRequest.subCategoryImg,
-                description = subCategoryRequest.description,
-                categoryId = subCategoryRequest.categoryId ?? string.Empty,
+                description = subCategoryRequest.description
             };
         }
 
