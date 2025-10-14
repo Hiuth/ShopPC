@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using ShopPC.Configuration;
 using ShopPC.Data;
 using ShopPC.Exceptions;
-using ShopPC.Repository.InterfaceRepository;
 using ShopPC.Repository.ImplementationsRepository;
-using ShopPC.Service.InterfaceService;
+using ShopPC.Repository.InterfaceRepository;
 using ShopPC.Service.ImplementationsService;
+using ShopPC.Service.InterfaceService;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,19 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 var app = builder.Build();
+
+// Configure Cloudinary
+builder.Services.Configure<CloudinaryConfig>(
+    builder.Configuration.GetSection("Cloudinary"));
+
+// Add repository and service dependencies
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ISubCategoryService, SubCategoryService>();
+
+
 
 app.UseMiddleware<GlobalExceptionHandler>();
 // Configure the HTTP request pipeline.

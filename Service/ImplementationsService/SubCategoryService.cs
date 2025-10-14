@@ -23,27 +23,87 @@ namespace ShopPC.Service.ImplementationsService
             _cloudinaryService = cloudinaryService;
         }
 
-        public async Task<SubCategoryResponse> createSubCategory(SubCategoryRequest request, IFormFile file)
-        { 
-            
+        public async Task<SubCategoryResponse> createSubCategory(string id, SubCategoryRequest request, IFormFile file)
+        {
+            if (await _subCategoryRepository.IsSubCategoryNameUniqueAsync(request.subCategoryName))
+            {
+                throw new AppException(ErrorCode.SUBCATEGORY_ALREADY_EXISTS);
+            }
+
+            var category = await _categoryRepository.GetByIdAsync(id) ??
+                throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
+            var imageUrl = await _cloudinaryService.UploadImageAsync(file);
+
+            var subCategory = SubCategoryMapper.toSubCategory(request);
+            subCategory.categoryId = category.id;
+            subCategory.subCategoryImg = imageUrl;
+            var createdSubCategory = await _subCategoryRepository.AddAsync(subCategory);
+            return SubCategoryMapper.toSubCategoryResponse(createdSubCategory);
         }
 
         public async Task<SubCategoryResponse> updateSubCategory(string id,SubCategoryRequest request, IFormFile file)
         {
+            var subCategory = await _subCategoryRepository.GetByIdAsync(id) ??
+                throw new AppException(ErrorCode.SUB_CATEGORY_NOT_EXISTS);
 
+            if (!String.IsNullOrWhiteSpace(request.subCategoryName))
+            {
+                if (await _subCategoryRepository.IsSubCategoryNameUniqueAsync(request.subCategoryName))
+                {
+                    throw new AppException(ErrorCode.SUBCATEGORY_ALREADY_EXISTS);
+                }
+                subCategory.subCategoryName = request.subCategoryName;
+            }
+                 
+            if (!string.IsNullOrEmpty(subCategory.subCategoryImg))
+            {
+               await _cloudinaryService.DeleteImageAsync(subCategory.subCategoryImg);
+               subCategory.subCategoryImg = await _cloudinaryService.UploadImageAsync(file);
+            }
+             
+            if (!String.IsNullOrWhiteSpace(request.description))
+            {
+                subCategory.description = request.description;
+            }
+
+            if (!String.IsNullOrWhiteSpace(request.categoryId))
+            {
+                if (await _categoryRepository.ExistsAsync(request.categoryId))
+                {
+                    subCategory.categoryId = request.categoryId;
+                }
+                else
+                {
+                    throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
+                }
+
+            }
+
+            await _subCategoryRepository.UpdateAsync(subCategory);
+            return SubCategoryMapper.toSubCategoryResponse(subCategory);
         }
 
         public async Task<List<SubCategoryResponse>> getAllSubCategory()
         {
-      
+           var subCategories = await _subCategoryRepository.GetAllAsync();
+           return subCategories.Select(SubCategoryMapper.toSubCategoryResponse).ToList();
         }
 
         public async Task<SubCategoryResponse> getSubCategoryById(string id)
         {
-
+            var subCategory = await _subCategoryRepository.GetByIdAsync(id) ??
+                throw new AppException(ErrorCode.SUB_CATEGORY_NOT_EXISTS);
+            return SubCategoryMapper.toSubCategoryResponse(subCategory);
         }
+        
         public async Task<List<SubCategoryResponse>> getSubCategoryByCategoryId(string categoryId)
         {
+            if (!await _categoryRepository.ExistsAsync(categoryId))
+            {
+                throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
+            }
+            var subCategories = await _subCategoryRepository.GetSubCategoriesByCategoryIdAsync(categoryId);
+            return subCategories.Select(SubCategoryMapper.toSubCategoryResponse).ToList();
         }
     }
 }
