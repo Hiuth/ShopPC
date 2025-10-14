@@ -4,6 +4,7 @@ using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShopPC.Controllers
 {
@@ -17,14 +18,14 @@ namespace ShopPC.Controllers
             _categoryService = categoryService;
         }
 
+
         [HttpPost("create")]
-        [Consumes("multipart/form-data")]
         public async Task<ActionResult<ApiResponse<CategoryResponse>>> createCategory(
-            [FromForm] string CategoryName, IFormFile file)
+            [FromForm(Name ="categoryName")] string categoryName, IFormFile file)
         {
             var request = new CategoryRequest
             {
-                categoryName = CategoryName
+                categoryName = categoryName
             };
             var response = new ApiResponse<CategoryResponse>()
             {
@@ -53,13 +54,12 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{id}")]
-        [Consumes("multipart/form-data")]
         public async Task<ActionResult<ApiResponse<CategoryResponse>>> updateCategory(
-            [FromRoute] string id, [FromForm] string? CategoryName, IFormFile? file)
+            [FromRoute(Name ="categoryId")] string categoryId, [FromForm(Name ="categoryName")] string? categoryName, IFormFile? file)
         {
             var request = new CategoryRequest
             {
-                categoryName = CategoryName ?? string.Empty
+                categoryName = categoryName ?? string.Empty
             };
             var response = new ApiResponse<CategoryResponse>()
             {
@@ -67,7 +67,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var category = await _categoryService.updateCategory(id, request, file);
+                var category = await _categoryService.updateCategory(categoryId, request, file);
                 response.Result = category;  // Gán kết quả vào response
                 return Ok(response);
             }

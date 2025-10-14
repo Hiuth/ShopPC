@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ShopPC.Configuration;
 using ShopPC.Data;
 using ShopPC.Exceptions;
@@ -15,17 +15,26 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "ShopPC API",
+        Version = "v1",
+        Description = "API for ShopPC application"
+    });
+    c.MapType<IFormFile>(() => new Microsoft.OpenApi.Models.OpenApiSchema
+    {
+        Type = "string",
+        Format = "binary"
+    });
+});
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
-
-
-var app = builder.Build();
-
 // Configure Cloudinary
 builder.Services.Configure<CloudinaryConfig>(
     builder.Configuration.GetSection("Cloudinary"));
@@ -49,7 +58,7 @@ builder.Services.AddScoped<ISubCategoryService, SubCategoryService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<IAttributesService, AttributesService>();
 
-
+var app = builder.Build();
 
 
 app.UseMiddleware<GlobalExceptionHandler>();
@@ -63,8 +72,13 @@ if (!app.Environment.IsDevelopment())
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShopPC API V1");
+        //c.RoutePrefix = string.Empty;  // Đường dẫn để truy cập Swagger UI
+    });
 }
 
 
@@ -75,8 +89,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllers();
 app.Run();

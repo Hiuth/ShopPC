@@ -23,7 +23,7 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<CategoryResponse> createCategory(CategoryRequest request, IFormFile file)
         {
-            if (await _categoryRepository.IsCategoryNameUniqueAsync(request.categoryName))
+            if (!await _categoryRepository.IsCategoryNameUniqueAsync(request.categoryName))
             {
                 throw new AppException(ErrorCode.CATEGORY_ALREADY_EXISTS);
             }
