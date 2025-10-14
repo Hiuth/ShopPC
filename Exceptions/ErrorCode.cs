@@ -51,5 +51,10 @@ namespace ShopPC.Exceptions
         public static readonly ErrorCode BRAND_NOT_EXISTS
             = new ErrorCode(3002, "Brand not exists", HttpStatusCode.BadRequest);
 
+        //attribute error codes
+        public static readonly ErrorCode ATTRIBUTE_NOT_EXISTS
+            = new ErrorCode(4001, "Attribute not exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode ATTRIBUTE_ALREADY_EXISTS
+            = new ErrorCode(4002, "Attribute already exists", HttpStatusCode.BadRequest);
     }
 }

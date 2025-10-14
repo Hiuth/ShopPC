@@ -41,7 +41,7 @@ namespace ShopPC.Service.ImplementationsService
             return SubCategoryMapper.toSubCategoryResponse(createdSubCategory);
         }
 
-        public async Task<SubCategoryResponse> updateSubCategory(string subCategoryId,string categoryId,SubCategoryRequest request, IFormFile file)
+        public async Task<SubCategoryResponse> updateSubCategory(string subCategoryId,string? categoryId,SubCategoryRequest request, IFormFile file)
         {
             var subCategory = await _subCategoryRepository.GetByIdAsync(subCategoryId) ??
                 throw new AppException(ErrorCode.SUB_CATEGORY_NOT_EXISTS);

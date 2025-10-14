@@ -36,7 +36,7 @@ namespace ShopPC.Service.ImplementationsService
             return BrandMapper.toBrandResponse(createdBrand);
         }
 
-        public async Task<BrandResponse> updateBrand(string brandId, string categoryId, BrandRequest request)
+        public async Task<BrandResponse> updateBrand(string brandId, string? categoryId, BrandRequest request)
         {
              var brand = await _brandReopsitory.GetByIdAsync(brandId) ??
                 throw new AppException(ErrorCode.BRAND_NOT_EXISTS);
