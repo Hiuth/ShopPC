@@ -3,6 +3,6 @@ namespace ShopPC.Repository.InterfaceRepository
 {
     public interface IProductAttributeRepository: IGenericRepository<ProductAttribute>
     {
-        Task<IEnumerable<ProductAttribute>> GetProductAttributesByProductIdAsync(string productId);
+        Task<List<ProductAttribute>> GetProductAttributesByProductIdAsync(string productId);
     }
 }

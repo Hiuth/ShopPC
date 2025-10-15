@@ -9,9 +9,7 @@ namespace ShopPC.Mapper
         {
             return new ProductAttribute
             {
-                attributeId = productAttributeRequest.attributeId,
-                value = productAttributeRequest.value,
-                productId = productAttributeRequest.productId
+                value = productAttributeRequest.value
             };
         }
 

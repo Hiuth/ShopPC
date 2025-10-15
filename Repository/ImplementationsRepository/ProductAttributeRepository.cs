@@ -11,7 +11,7 @@ namespace ShopPC.Repository.ImplementationsRepository
         public ProductAttributeRepository(AppDbContext context) : base(context)
         {
         }
-        public async Task<IEnumerable<ProductAttribute>> GetProductAttributesByProductIdAsync(string productId)
+        public async Task<List<ProductAttribute>> GetProductAttributesByProductIdAsync(string productId)
         {
             return await _dbSet.Where(attr => attr.productId == productId).ToListAsync();
         }
