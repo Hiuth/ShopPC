@@ -15,7 +15,6 @@ namespace ShopPC.Mapper
                 quantity = productRequest.quantity,
                 stockQuantity = productRequest.stockQuantity,
                 description = productRequest.description,
-                thumbnail = productRequest.thumbnail,
                 status = productRequest.status
             };
         }

@@ -7,13 +7,13 @@ namespace ShopPC.Service.InterfaceService
     {
         Task<ProductResponse> CreateProduct(string brandId,string subCategoryId ,ProductRequest request, IFormFile file);
         Task<ProductResponse> UpdateProduct(string productId,string? brandId,string? subCategoryId, ProductRequest request, IFormFile? file);
-        //Task<bool> DeleteProduct(string id);
-        Task<IEnumerable<ProductResponse>> GetAllProduct();
         Task<ProductResponse> GetProductById(string id);
-        Task<IEnumerable<ProductResponse>> GetProductsBySubCategoryId(string subCategoryId);
-        Task<IEnumerable<ProductResponse>> GetProductsByBrandId(string brandId);
-        Task<IEnumerable<ProductResponse>> SearchProducts(string searchTerm);
-        Task<IEnumerable<ProductResponse>> GetProductsByPriceRange(decimal minPrice, decimal maxPrice);
+        //Task<bool> DeleteProduct(string id);
+        Task<PaginatedResponse<ProductResponse>> GetAllProduct(int pageNumber, int pageSize);
+        Task<PaginatedResponse<ProductResponse>> GetProductsBySubCategoryId(string subCategoryId, int pageNumber, int pageSize);
+        Task<PaginatedResponse<ProductResponse>> GetProductsByBrandId(string brandId, int pageNumber, int pageSize);
+        Task<PaginatedResponse<ProductResponse>> SearchProducts(string searchTerm, int pageNumber, int pageSize);
+        Task<PaginatedResponse<ProductResponse>> GetProductsByPriceRange(decimal minPrice, decimal maxPrice, int pageNumber, int pageSize);
 
     }
 }

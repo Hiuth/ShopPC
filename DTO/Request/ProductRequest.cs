@@ -7,7 +7,6 @@
         public int quantity { get; set; }
         public int stockQuantity { get; set; }
         public string? description { get; set; }
-        public string? thumbnail { get; set; }
         public string status { get; set; } = string.Empty;
     }
 }

@@ -7,6 +7,7 @@ using ShopPC.Repository.ImplementationsRepository;
 using ShopPC.Exceptions;
 using ShopPC.Mapper;
 using System.Threading.Tasks;
+using PagedList.Core;
 
 
 namespace ShopPC.Service.ImplementationsService
@@ -24,6 +25,19 @@ namespace ShopPC.Service.ImplementationsService
             _subCategoryRepository = subCategoryRepository;
             _cloudinaryService = cloudinaryService;
         }
+
+        private PaginatedResponse<ProductResponse> ToPaginatedResponse(IPagedList<Products> pagedList)
+        {
+            return new PaginatedResponse<ProductResponse>
+            {
+                Items = pagedList.Select(ProductMapper.toProductResponse),
+                CurrentPage = pagedList.PageNumber,
+                PageSize = pagedList.PageSize,
+                TotalPages = pagedList.PageCount,
+                TotalCount = pagedList.TotalItemCount
+            };
+        }
+
 
         public async Task<ProductResponse> CreateProduct(string brandId, string subCategoryId, ProductRequest request, IFormFile file)
         {
@@ -105,34 +119,41 @@ namespace ShopPC.Service.ImplementationsService
             return ProductMapper.toProductResponse(product);
         }
 
-        public async Task<IEnumerable<ProductResponse>> GetAllProduct()
+
+
+        public async Task<PaginatedResponse<ProductResponse>> GetAllProduct(int pageNumber, int pageSize)
         {
-            var products = await _productRepository.GetAllAsync();
-            return products.Select(ProductMapper.toProductResponse);
+            var allProducts = (await _productRepository.GetAllAsync()).AsQueryable();
+            var pagedList = new PagedList<Products>(allProducts, pageNumber, pageSize);
+            return ToPaginatedResponse(pagedList);
         }
 
-        public async Task<IEnumerable<ProductResponse>> GetProductsBySubCategoryId(string subCategoryId)
+        public async Task<PaginatedResponse<ProductResponse>> GetProductsBySubCategoryId(string subCategoryId, int pageNumber, int pageSize)
         {
-            var products = await _productRepository.GetProductsBySubCategoryIdAsync(subCategoryId);
-            return products.Select(ProductMapper.toProductResponse);
+            var products = (await _productRepository.GetProductsBySubCategoryIdAsync(subCategoryId)).AsQueryable();
+            var pagedList = new PagedList<Products>(products, pageNumber, pageSize);
+            return ToPaginatedResponse(pagedList);
         }
 
-        public async Task<IEnumerable<ProductResponse>> GetProductsByBrandId(string brandId)
+        public async Task<PaginatedResponse<ProductResponse>> GetProductsByBrandId(string brandId, int pageNumber, int pageSize)
         {
-            var products = await _productRepository.GetProductsByBrandIdAsync(brandId);
-            return products.Select(ProductMapper.toProductResponse);
+            var products = (await _productRepository.GetProductsByBrandIdAsync(brandId)).AsQueryable();
+            var pagedList = new PagedList<Products>(products, pageNumber, pageSize);
+            return ToPaginatedResponse(pagedList);
         }
 
-        public async Task<IEnumerable<ProductResponse>> SearchProducts(string searchTerm)
+        public async Task<PaginatedResponse<ProductResponse>> SearchProducts(string searchTerm, int pageNumber, int pageSize)
         {
-            var products = await _productRepository.SearchProductsAsync(searchTerm);
-            return products.Select(ProductMapper.toProductResponse);
+            var products = (await _productRepository.SearchProductsAsync(searchTerm)).AsQueryable();
+            var pagedList = new PagedList<Products>(products, pageNumber, pageSize);
+            return ToPaginatedResponse(pagedList);
         }
 
-        public async Task<IEnumerable<ProductResponse>> GetProductsByPriceRange(decimal minPrice, decimal maxPrice)
+        public async Task<PaginatedResponse<ProductResponse>> GetProductsByPriceRange(decimal minPrice, decimal maxPrice, int pageNumber, int pageSize)
         {
-            var products = await _productRepository.GetProductsByPriceRangeAsync(minPrice, maxPrice);
-            return products.Select(ProductMapper.toProductResponse);
+            var products = (await _productRepository.GetProductsByPriceRangeAsync(minPrice, maxPrice)).AsQueryable();
+            var pagedList = new PagedList<Products>(products, pageNumber, pageSize);
+            return ToPaginatedResponse(pagedList);
         }
     }
 }
