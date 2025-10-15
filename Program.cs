@@ -57,6 +57,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISubCategoryService, SubCategoryService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<IAttributesService, AttributesService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 

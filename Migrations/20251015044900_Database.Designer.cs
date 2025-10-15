@@ -12,7 +12,7 @@ using ShopPC.Data;
 namespace ShopPC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251014083722_Database")]
+    [Migration("20251015044900_Database")]
     partial class Database
     {
         /// <inheritdoc />
@@ -357,9 +357,6 @@ namespace ShopPC.Migrations
                     b.Property<string>("productName")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int>("quantity")
-                        .HasColumnType("int");
 
                     b.Property<string>("status")
                         .IsRequired()

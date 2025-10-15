@@ -12,7 +12,6 @@ namespace ShopPC.Mapper
             { 
                 productName = productRequest.productName,
                 price = productRequest.price,
-                quantity = productRequest.quantity,
                 stockQuantity = productRequest.stockQuantity,
                 description = productRequest.description,
                 status = productRequest.status
@@ -26,7 +25,6 @@ namespace ShopPC.Mapper
                 id = products.id,
                 productName = products.productName,
                 price = products.price,
-                quantity = products.quantity,
                 stockQuantity = products.stockQuantity,
                 description = products.description,
                 thumbnail = products.thumbnail,

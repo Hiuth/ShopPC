@@ -282,7 +282,6 @@ namespace ShopPC.Migrations
                     productName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     price = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    quantity = table.Column<int>(type: "int", nullable: false),
                     stockQuantity = table.Column<int>(type: "int", nullable: false),
                     description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),

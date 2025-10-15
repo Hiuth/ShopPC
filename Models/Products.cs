@@ -8,7 +8,6 @@ namespace ShopPC.Models
         public string id { get; set; } = Guid.NewGuid().ToString();
         public string productName { get; set; } = string.Empty;
         public decimal price { get; set; }
-        public int quantity { get; set; }
         public int stockQuantity { get; set; }
         public string? description { get; set; }
         public string? thumbnail { get; set; }
