@@ -4,6 +4,6 @@ namespace ShopPC.Repository.InterfaceRepository
 {
     public interface IProductImgRepository: IGenericRepository<ProductImg>
     {
-        Task<IEnumerable<ProductImg>> GetImagesByProductIdAsync(string productId);
+        Task<List<ProductImg>> GetImagesByProductIdAsync(string productId);
     }
 }

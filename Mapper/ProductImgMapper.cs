@@ -10,8 +10,7 @@ namespace ShopPC.Mapper
         {
             return new ProductImg
             {
-                imgUrl = productImgRequest.imgUrl,
-                productId = productImgRequest.productId
+                imgUrl = productImgRequest.imgUrl
             };
         }
 

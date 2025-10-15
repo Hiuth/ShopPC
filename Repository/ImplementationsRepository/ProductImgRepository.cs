@@ -12,7 +12,7 @@ namespace ShopPC.Repository.ImplementationsRepository
         public ProductImgRepository(AppDbContext context) : base(context)
         {
         }
-        public async Task<IEnumerable<ProductImg>> GetImagesByProductIdAsync(string productId)
+        public async Task<List<ProductImg>> GetImagesByProductIdAsync(string productId)
         {
             return await _dbSet.Where(img => img.productId == productId).ToListAsync();
         }

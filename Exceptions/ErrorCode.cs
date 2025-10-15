@@ -68,6 +68,9 @@ namespace ShopPC.Exceptions
             = new ErrorCode(5004, "Invalid product quantity", HttpStatusCode.BadRequest);
         public static readonly ErrorCode INVALID_PRODUCT_PRICE
             = new ErrorCode(5005, "Invalid product price", HttpStatusCode.BadRequest);
-     
+
+        //product img
+        public static readonly ErrorCode PRODUCT_IMG_NOT_EXISTS
+            = new ErrorCode(6001, "ProductImg not exists", HttpStatusCode.BadRequest);
     }
 }
