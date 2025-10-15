@@ -11,7 +11,7 @@ using PagedList.Core;
 
 namespace ShopPC.Service.ImplementationsService
 {
-    public class ProductAttributeService: IProductAttributeSerivce
+    public class ProductAttributeService : IProductAttributeSerivce
     {
         private readonly IProductAttributeRepository _productAttributeRepository;
         private readonly IAttributesRepository _attributesRepository;
@@ -22,6 +22,26 @@ namespace ShopPC.Service.ImplementationsService
             _productAttributeRepository = productAttributeRepository;
             _attributesRepository = attributesRepository;
             _productRepository = productRepository;
+        }
+
+        public async Task<ProductAttributeResponse> CreateProductAttribute(string attributeId, string productId, ProductAttributeRequest request)
+        {
+
+        }
+
+        public async Task<ProductAttributeResponse> UpdateProductAttribute(string productAttributeId,string? attributeId,ProductAttributeRequest request)
+        {
+
+        }
+
+        public async Task<List<ProductAttributeResponse>> GetProductAttributeByProductId(string productId)
+        {
+
+        }
+
+        public async Task<string> DeleteProductAttribute(string productAttributeId)
+        {
+
         }
     }
 }
