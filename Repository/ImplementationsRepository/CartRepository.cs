@@ -12,9 +12,23 @@ namespace ShopPC.Repository.ImplementationsRepository
         {
         }
 
-        public async Task<IEnumerable<Cart>> GetCartByUserIdAsync(string userId)
+        public async Task<List<Cart>> GetCartByAccountIdAsync(string accountId)
         {
-            return await _dbSet.Where(c => c.accountId == userId).ToListAsync();
+            return await _dbSet
+                .Include(c => c.product)
+                .Where(c => c.accountId == accountId).ToListAsync();
+        }
+
+        public async Task<Cart?> GetCartByProductIdAndProductIdAsync(string accountId, string productId)
+        {
+            return await _dbSet
+                .Include(c => c.product)
+                .FirstOrDefaultAsync(c => c.accountId == accountId && c.productId == productId);
+        }
+
+        public async Task<bool> IsProductInCartAsync(string accountId, string productId)
+        {
+            return await _dbSet.AnyAsync(c => c.accountId == accountId && c.productId == productId);
         }
 
         public async Task ClearCartAsync(string cartId)

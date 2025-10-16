@@ -88,5 +88,11 @@ namespace ShopPC.Exceptions
             = new ErrorCode(8003, "Email already exists", HttpStatusCode.BadRequest);
         public static readonly ErrorCode EMAIL_NOT_EXISTS
             = new ErrorCode(8004, "Email not exists", HttpStatusCode.BadRequest);
+
+        //cart error codes
+        public static readonly ErrorCode CART_NOT_EXISTS
+            = new ErrorCode(9001, "Cart not exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode INVALID_QUANTITY
+            = new ErrorCode(9002, "Invalid quantity", HttpStatusCode.BadRequest);
     }
 }

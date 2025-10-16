@@ -60,6 +60,8 @@ builder.Services.AddScoped<IAttributesService, AttributesService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductImgService,ProductImgService>();
 builder.Services.AddScoped<IProductAttributeSerivce, ProductAttributeService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ICartService,CartService>();
 
 var app = builder.Build();
 

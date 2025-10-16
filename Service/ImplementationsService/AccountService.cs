@@ -24,7 +24,7 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<AccountResponse> CreateAccount(AccountRequest request, IFormFile file)
         {
-            if (!await _accountRepository.IsEmailUniqueAsync(request.email))
+            if (await _accountRepository.IsEmailUniqueAsync(request.email))
             {
                 throw new AppException(ErrorCode.ACCOUNT_ALREADY_EXISTS);
             }

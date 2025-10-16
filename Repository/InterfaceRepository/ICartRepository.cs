@@ -3,7 +3,10 @@ namespace ShopPC.Repository.InterfaceRepository
 {
     public interface ICartRepository: IGenericRepository<Cart>
     {
-        Task<IEnumerable<Cart>> GetCartByUserIdAsync(string userId);
+        Task<List<Cart>> GetCartByAccountIdAsync(string accountId);
+        Task<Cart?> GetCartByProductIdAndProductIdAsync(string accountId, string productId);
+        Task<bool> IsProductInCartAsync(string accountId, string productId);
+
         Task ClearCartAsync(string cartId);
         Task ClearAllCartAsync(string accountId);
     }

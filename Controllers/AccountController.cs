@@ -10,7 +10,7 @@ namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController
+    public class AccountController: ControllerBase
     {
         private readonly IAccountService _accountService;
         public AccountController(IAccountService accountService)

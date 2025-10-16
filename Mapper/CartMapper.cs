@@ -10,9 +10,7 @@ namespace ShopPC.Mapper
         {
             return new Cart
             {
-                productId = request.productId,
-                quantity = request.quantity,
-                accountId = request.accountId
+                quantity = request.quantity
             };
         }
         public static CartResponse toCartResponse(Cart cart)
@@ -22,7 +20,11 @@ namespace ShopPC.Mapper
                 id = cart.id,
                 productId = cart.productId,
                 quantity = cart.quantity,
-                accountId = cart.accountId
+                accountId = cart.accountId,
+                price = cart.product.price,
+                productName = cart.product.productName,
+                thumbnail = cart.product.thumbnail??string.Empty,
+                stockQuantity = cart.product.stockQuantity
             };
         }
     }
