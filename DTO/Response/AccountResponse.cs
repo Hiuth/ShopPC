@@ -10,5 +10,6 @@
         public string email { get; set; } = string.Empty;
         public string phoneNumber { get; set; } = string.Empty;
         public string address { get; set; } = string.Empty;
+        public string accountImg { get; set; } = string.Empty;
     }
 }

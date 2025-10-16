@@ -78,5 +78,15 @@ namespace ShopPC.Exceptions
             = new ErrorCode(7001, "ProductAttribute not exists", HttpStatusCode.BadRequest);
         public static readonly ErrorCode PRODUCT_ATTRIBUTE_ALREADY_EXISTS
             = new ErrorCode(7002, "ProductAttribute already exists", HttpStatusCode.BadRequest);
+
+        //account error codes
+        public static readonly ErrorCode ACCOUNT_NOT_EXISTS
+            = new ErrorCode(8001, "Account not exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode ACCOUNT_ALREADY_EXISTS
+            = new ErrorCode(8002, "Account already exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode EMAIL_ALREADY_EXISTS
+            = new ErrorCode(8003, "Email already exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode EMAIL_NOT_EXISTS
+            = new ErrorCode(8004, "Email not exists", HttpStatusCode.BadRequest);
     }
 }

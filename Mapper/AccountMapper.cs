@@ -29,7 +29,8 @@ namespace ShopPC.Mapper
                 gender = account.gender,
                 email = account.email,
                 address = account.address,
-                phoneNumber = account.phoneNumber
+                phoneNumber = account.phoneNumber,
+                accountImg = account.accountImg
             };
         }
     }
