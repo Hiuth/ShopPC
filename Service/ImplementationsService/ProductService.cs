@@ -61,7 +61,7 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<ProductResponse> UpdateProduct(string productId, string? brandId, string? subCategoryId, ProductRequest request, IFormFile? file)
         {
-            var product = await _productRepository.GetByIdAsync(productId) ??
+            var product = await _productRepository.GetProductByIdAsync(productId) ??
                 throw new AppException(ErrorCode.PRODUCT_NOT_EXISTS);
             if (!String.IsNullOrWhiteSpace(brandId))
             {
@@ -123,7 +123,7 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<PaginatedResponse<ProductResponse>> GetAllProduct(int pageNumber, int pageSize)
         {
-            var allProducts = (await _productRepository.GetAllAsync()).AsQueryable();
+            var allProducts = (await _productRepository.GetAllProductAsync()).AsQueryable();
             var pagedList = new PagedList<Products>(allProducts, pageNumber, pageSize);
             return ToPaginatedResponse(pagedList);
         }

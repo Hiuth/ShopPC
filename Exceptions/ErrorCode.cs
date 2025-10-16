@@ -72,5 +72,11 @@ namespace ShopPC.Exceptions
         //product img
         public static readonly ErrorCode PRODUCT_IMG_NOT_EXISTS
             = new ErrorCode(6001, "ProductImg not exists", HttpStatusCode.BadRequest);
+
+        //product attribute
+        public static readonly ErrorCode PRODUCT_ATTRIBUTE_NOT_EXISTS
+            = new ErrorCode(7001, "ProductAttribute not exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode PRODUCT_ATTRIBUTE_ALREADY_EXISTS
+            = new ErrorCode(7002, "ProductAttribute already exists", HttpStatusCode.BadRequest);
     }
 }
