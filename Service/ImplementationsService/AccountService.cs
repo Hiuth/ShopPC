@@ -58,6 +58,15 @@ namespace ShopPC.Service.ImplementationsService
                 account.address = request.address;
             }
 
+            if(file != null)
+            {
+                if (!string.IsNullOrEmpty(account.accountImg))
+                {
+                    await _cloudinaryService.DeleteImageAsync(account.accountImg);
+                    account.accountImg = await _cloudinaryService.UploadImageAsync(file);
+                }
+            }
+
             //if()
             //{
             //    updatePassWord
