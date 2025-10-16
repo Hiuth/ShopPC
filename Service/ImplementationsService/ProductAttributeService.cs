@@ -79,7 +79,7 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<string> DeleteProductAttribute(string productAttributeId)
         {
-            var productAttribute = await _productAttributeRepository.GetByIdAsync(productAttributeId) ??
+            var productAttribute = await _productAttributeRepository.GetProductAttributeByIdAsync(productAttributeId) ??
                 throw new AppException(ErrorCode.PRODUCT_ATTRIBUTE_NOT_EXISTS);
             await _productAttributeRepository.DeleteAsync(productAttributeId);
             if (await _productAttributeRepository.ExistsAsync(productAttributeId))

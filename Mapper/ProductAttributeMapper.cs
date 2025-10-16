@@ -20,7 +20,8 @@ namespace ShopPC.Mapper
                 id = productAttribute.id,
                 attributeId = productAttribute.attributeId,
                 value = productAttribute.value,
-                productId = productAttribute.productId
+                productId = productAttribute.productId,
+                attributeName = productAttribute.attribute.attributeName
             };
         }
     }

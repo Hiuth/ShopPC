@@ -13,7 +13,16 @@ namespace ShopPC.Repository.ImplementationsRepository
         }
         public async Task<List<ProductAttribute>> GetProductAttributesByProductIdAsync(string productId)
         {
-            return await _dbSet.Where(attr => attr.productId == productId).ToListAsync();
+            return await _dbSet
+                .Include(p=> p.attribute)
+                .Where(attr => attr.productId == productId).ToListAsync();
+        }
+
+        public async Task<ProductAttribute?> GetProductAttributeByIdAsync(string productAttributeId)
+        {
+            return await _dbSet
+                .Include(p => p.attribute)
+                .FirstOrDefaultAsync(attr => attr.id == productAttributeId);
         }
     }
 }
