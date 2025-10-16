@@ -110,5 +110,64 @@ namespace ShopPC.Controllers
                 return new ObjectResult(response) { StatusCode = 500 };
             }
         }
+
+        [HttpGet("getAccountById/{accountId}")]
+        public async Task<ActionResult<ApiResponse<AccountResponse>>> GetAccountById(
+            [FromRoute(Name = "accountId"), Required] string accountId)
+        {
+            var response = new ApiResponse<AccountResponse>()
+            {
+                Message = "Get account by id successfully"
+            };
+            try
+            {
+                var account = await _accountService.GetAccountById(accountId);
+                response.Result = account;
+                return new OkObjectResult(response);
+            }
+            catch (AppException ex)  // Catch AppException riêng
+            {
+                response.Code = 400;
+                response.Message = ex.Message;
+                response.Result = null;
+                return new BadRequestObjectResult(response);
+            }
+            catch (Exception e)  // Catch Exception chung
+            {
+                response.Code = 500;
+                response.Message = e.Message;
+                response.Result = null;
+                return new ObjectResult(response) { StatusCode = 500 };
+            }
+        }
+
+        [HttpGet("getAllAccount")]
+        public async Task<ActionResult<ApiResponse<List<AccountResponse>>>> GetAllAccount()
+        {
+            var response = new ApiResponse<List<AccountResponse>>()
+            {
+                Message = "Get all account successfully"
+            };
+            try
+            {
+                var accounts = await _accountService.GetAllAccount();
+                response.Result = accounts;
+                return new OkObjectResult(response);
+            }
+            catch (AppException ex)  // Catch AppException riêng
+            {
+                response.Code = 400;
+                response.Message = ex.Message;
+                response.Result = null;
+                return new BadRequestObjectResult(response);
+            }
+            catch (Exception e)  // Catch Exception chung
+            {
+                response.Code = 500;
+                response.Message = e.Message;
+                response.Result = null;
+                return new ObjectResult(response) { StatusCode = 500 };
+            }
+        }
     }
 }
