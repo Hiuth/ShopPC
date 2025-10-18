@@ -8,6 +8,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: vuhoangquan2004
       MYSQL_DATABASE: shoppc
+      LOWER_CASE_TABLE_NAMES: 1
     ports:
       - "3307:3306"
     volumes:
