@@ -38,5 +38,8 @@ namespace ShopPC.Models
 
         //1 product có nhiều comment
         public ICollection<Comment> comments { get; set; } = new List<Comment>();
+
+        //1 product có nhiều productUnit
+        public ICollection<ProductUnit> productUnits { get; set; } = new List<ProductUnit>();
     }
 }

@@ -26,7 +26,7 @@ namespace ShopPC.Data
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<Comment> Comment { get; set; }
         public DbSet<Report> Report { get; set; }
-
+        public DbSet<ProductUnit> ProductUnits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
