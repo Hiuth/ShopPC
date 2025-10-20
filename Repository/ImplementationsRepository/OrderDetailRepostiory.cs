@@ -13,7 +13,9 @@ namespace ShopPC.Repository.ImplementationsRepository
         }
         public async Task<IEnumerable<OrderDetail>> GetOrderDetailsByOrderIdAsync(string orderId)
         {
-            return await _dbSet.Where(od => od.orderId == orderId).ToListAsync();
+            return await _dbSet
+                .Include(od => od.product)
+                .Where(od => od.orderId == orderId).ToListAsync();
         }
     }
 }

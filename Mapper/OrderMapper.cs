@@ -11,9 +11,8 @@ namespace ShopPC.Mapper
             return new Order
             {
                 status = request.status,
-                accountId = request.accountId,
                 totalAmount = request.totalAmount,
-                CustomerName = request.CustomerName,
+                CustomerName = request.customerName,
                 phoneNumber = request.phoneNumber,
                 address = request.address
             };

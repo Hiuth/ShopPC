@@ -94,5 +94,15 @@ namespace ShopPC.Exceptions
             = new ErrorCode(9001, "Cart not exists", HttpStatusCode.BadRequest);
         public static readonly ErrorCode INVALID_QUANTITY
             = new ErrorCode(9002, "Invalid quantity", HttpStatusCode.BadRequest);
+
+        //Order and Order detail error codes
+        public static readonly ErrorCode ORDER_NOT_EXISTS
+            = new ErrorCode(10001,"Order not exists",HttpStatusCode.BadRequest);
+        public static readonly ErrorCode ORDER_ALREADY_EXISTS
+            = new ErrorCode(10002, "Order already exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode ORDER_DETAIL_NOT_EXISTS
+            = new ErrorCode(10003, "Order detail not exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode ORDER_DETAIL_ALREADY_EXISTS
+            = new ErrorCode(10004, "Order detail already exists", HttpStatusCode.BadRequest);
     }
 }

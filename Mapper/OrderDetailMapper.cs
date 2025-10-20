@@ -10,8 +10,6 @@ namespace ShopPC.Mapper
         {
             return new OrderDetail
             {
-                orderId = request.orderId,
-                productId = request.productId,
                 quantity = request.quantity,
                 unitPrice = request.unitPrice
             };
@@ -23,6 +21,8 @@ namespace ShopPC.Mapper
                 id = orderDetail.id,
                 orderId = orderDetail.orderId,
                 productId = orderDetail.productId,
+                productName = orderDetail.product.productName??string.Empty,
+                price = orderDetail.product.price,
                 quantity = orderDetail.quantity,
                 unitPrice = orderDetail.unitPrice
             };
