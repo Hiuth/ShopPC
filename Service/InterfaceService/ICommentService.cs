@@ -1,0 +1,20 @@
+﻿using ShopPC.Repository.InterfaceRepository;
+using ShopPC.DTO.Request;
+using ShopPC.DTO.Response;
+using ShopPC.Models;
+using ShopPC.Service.InterfaceService;
+using ShopPC.Repository.ImplementationsRepository;
+using ShopPC.Exceptions;
+using ShopPC.Mapper;
+
+namespace ShopPC.Service.InterfaceService
+{
+    public interface ICommentService
+    {
+        Task<CommentResponse> CreateComment(string accountId, string productId, CommentRequest request);
+        Task<List<CommentResponse>> GetCommentsByProductId(string productId);
+        Task<List<CommentResponse>> GetCommentsByAccountId(string accountId);
+        Task<string> DeleteComment(string commentId);
+        Task<CommentResponse> updateComment(string commentId, CommentRequest request);
+    }
+}

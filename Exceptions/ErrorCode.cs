@@ -104,5 +104,11 @@ namespace ShopPC.Exceptions
             = new ErrorCode(10003, "Order detail not exists", HttpStatusCode.BadRequest);
         public static readonly ErrorCode ORDER_DETAIL_ALREADY_EXISTS
             = new ErrorCode(10004, "Order detail already exists", HttpStatusCode.BadRequest);
+
+        //Comment error codes
+        public static readonly ErrorCode COMMENT_NOT_EXISTS
+            = new ErrorCode(11001, "Comment not exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode COMMENT_ALREADY_EXISTS
+            = new ErrorCode(11002, "Comment already exists", HttpStatusCode.BadRequest);
     }
 }
