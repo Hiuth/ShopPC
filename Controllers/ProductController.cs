@@ -22,12 +22,12 @@ namespace ShopPC.Controllers
         public async Task<ActionResult<ApiResponse<ProductResponse>>> createProduct(
             [FromRoute(Name="brandId")] string brandId,
             [FromRoute(Name="subCategoryId")] string subCategoryId,
-            [FromForm(Name ="productName")] string productName,
-            [FromForm(Name = "price")] decimal price,
-            [FromForm(Name = "stockQuantity")] int stockQuantity,
-            [FromForm(Name = "description")] string description,
-            [FromForm(Name = "status")] string status,
-            [FromForm(Name ="warrantyPeriod")] string warrantyPeriod,
+            [FromForm(Name ="productName")][Required] string productName,
+            [FromForm(Name = "price")][Required] decimal price,
+            [FromForm(Name = "stockQuantity")][Required] int stockQuantity,
+            [FromForm(Name = "description")] [Required] string description,
+            [FromForm(Name = "status")] [Required] string status,
+            [FromForm(Name ="warrantyPeriod")] [Required] string warrantyPeriod,
             IFormFile thumbnail)
         {
             var request = new ProductRequest

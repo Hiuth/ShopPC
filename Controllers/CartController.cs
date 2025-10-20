@@ -22,7 +22,7 @@ namespace ShopPC.Controllers
         public async Task<ActionResult<ApiResponse<CartResponse>>> AddToCart(
             [FromRoute(Name = "accountId"), Required] string accountId,
             [FromRoute(Name = "productId"), Required] string productId,
-            [FromForm(Name = "quantity")] int quantity)
+            [FromForm(Name = "quantity")][Required] int quantity)
         {
             var request = new CartRequest
             {

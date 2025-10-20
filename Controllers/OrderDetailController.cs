@@ -20,8 +20,8 @@ namespace ShopPC.Controllers
         public async Task<ActionResult<ApiResponse<OrderDetailResponse>>> createOrderDetail(
             [FromRoute(Name = "orderId")] string orderId,
             [FromRoute(Name = "productId")] string productId,
-            [FromForm(Name = "quantity")] int quantity,
-            [FromForm(Name = "unitPrice")] decimal unitPrice)
+            [FromForm(Name = "quantity")] [Required] int quantity,
+            [FromForm(Name = "unitPrice")] [Required]   decimal unitPrice)
         {
             var request = new OrderDetailRequest
             {

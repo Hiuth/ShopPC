@@ -26,7 +26,7 @@ namespace ShopPC.Controllers
             [FromForm(Name = "gender"), Required] string gender,
             [FromForm(Name = "phoneNumber"), Required] string phoneNumber,
             [FromForm(Name = "address"), Required] string address,
-            IFormFile file)
+            [Required] IFormFile  file)
         {
             var request = new AccountRequest
             {

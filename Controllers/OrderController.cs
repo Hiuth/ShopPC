@@ -23,11 +23,11 @@ namespace ShopPC.Controllers
         [HttpPost("/create/{accountId}")]
         public async Task<ActionResult<ApiResponse<OrderResponse>>> createOrder(
             [FromRoute(Name="accountId")] string accountId,
-            [FromForm(Name ="status")] string status,
-            [FromForm(Name ="totalAmount")] decimal totalAmount,
-            [FromForm(Name ="customerName")] string cusotmerName,
-            [FromForm(Name ="phoneNumber")] string phoneNumber,
-            [FromForm(Name ="address")] string address)
+            [FromForm(Name ="status")] [Required] string status,
+            [FromForm(Name ="totalAmount")] [Required] decimal totalAmount,
+            [FromForm(Name ="customerName")] [Required] string cusotmerName,
+            [FromForm(Name ="phoneNumber")] [Required] string phoneNumber,
+            [FromForm(Name ="address")] [Required] string address)
         {
             var request = new OrderRequest
             {

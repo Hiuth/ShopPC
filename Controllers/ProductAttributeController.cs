@@ -24,7 +24,7 @@ namespace ShopPC.Controllers
         public async Task<ActionResult<ApiResponse<ProductAttributeResponse>>> createProductAttribute(
             [FromRoute(Name="attributeId")] string attributeId,
             [FromRoute(Name="productId")] string productId,
-            [FromForm(Name ="value")] string value)
+            [FromForm(Name ="value")][Required] string value)
         {
             var request = new ProductAttributeRequest
             {

@@ -23,8 +23,8 @@ namespace ShopPC.Controllers
 
         [HttpPost("create/{productId}")]
         public async Task<ActionResult<ApiResponse<ProductImgResponse>>> createProductImg(
-            [FromRoute(Name ="productId")]string productId, 
-            IFormFile file)
+            [FromRoute(Name ="productId")]string productId,
+           [Required] IFormFile file)
         {
             var response = new ApiResponse<ProductImgResponse>()
             {

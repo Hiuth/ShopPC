@@ -21,7 +21,7 @@ namespace ShopPC.Controllers
 
         [HttpPost("create")]
         public async Task<ActionResult<ApiResponse<CategoryResponse>>> createCategory(
-            [FromForm(Name ="categoryName")] string categoryName, IFormFile file)
+            [FromForm(Name ="categoryName")][Required] string categoryName, [Required] IFormFile file)
         {
             var request = new CategoryRequest
             {
