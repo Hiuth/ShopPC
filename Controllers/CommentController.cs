@@ -23,11 +23,13 @@ namespace ShopPC.Controllers
         public async Task<ActionResult<ApiResponse<CommentResponse>>> createComment(
             [FromRoute(Name = "productId")] string productId,
             [FromRoute(Name = "accountId")] string accountId,
-            [FromForm(Name = "content")] string content)
+            [FromForm(Name = "content")][Required] string content,
+            [FromForm(Name ="rating")][Required] int rating)
         {
             var request = new CommentRequest
             {
-                content = content
+                content = content,
+                rating = rating
             };
             var response = new ApiResponse<CommentResponse>()
             {

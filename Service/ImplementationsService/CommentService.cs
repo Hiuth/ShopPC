@@ -9,12 +9,12 @@ using ShopPC.Mapper;
 
 namespace ShopPC.Service.ImplementationsService
 {
-    public class CommentSerivce : ICommentService
+    public class CommentService : ICommentService
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IProductRepository _productRepository;
         private readonly IAccountRepository _accountRepository;
-        public CommentSerivce(ICommentRepository commentRepository, IProductRepository productRepository, IAccountRepository accountRepository)
+        public CommentService(ICommentRepository commentRepository, IProductRepository productRepository, IAccountRepository accountRepository)
         {
             _commentRepository = commentRepository;
             _productRepository = productRepository;

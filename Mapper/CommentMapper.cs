@@ -10,7 +10,8 @@ namespace ShopPC.Mapper
         {
             return new Comment
             {
-                content = request.content
+                content = request.content,
+                rating = request.rating
             };
         }
 
