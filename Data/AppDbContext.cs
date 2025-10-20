@@ -24,7 +24,8 @@ namespace ShopPC.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
-
+        public DbSet<Comment> Comment { get; set; }
+        public DbSet<Report> Report { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

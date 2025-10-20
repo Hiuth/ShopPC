@@ -28,5 +28,11 @@ namespace ShopPC.Models
 
         //1 account có nhiều notification
         public ICollection<Notification> notifications { get; set; } = new List<Notification>();
+
+        //1 account có nhiều comment
+        public ICollection<Comment> comments { get; set; } = new List<Comment>();
+
+        //1 account có nhiều report
+        public ICollection<Report> reports { get; set; } = new List<Report>();
     }
 }

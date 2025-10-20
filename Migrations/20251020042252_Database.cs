@@ -102,6 +102,8 @@ namespace ShopPC.Migrations
                     phoneNumber = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     address = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    accountImg = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -244,6 +246,32 @@ namespace ShopPC.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Report",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    accountId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    content = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    createdAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    status = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Report", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Report_Users_accountId",
+                        column: x => x.accountId,
+                        principalTable: "Users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Attributes",
                 columns: table => new
                 {
@@ -336,6 +364,39 @@ namespace ShopPC.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Cart_Users_accountId",
+                        column: x => x.accountId,
+                        principalTable: "Users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Comment",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    productId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    accountId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    content = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    createdAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    totalLike = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comment", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Comment_Products_productId",
+                        column: x => x.productId,
+                        principalTable: "Products",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comment_Users_accountId",
                         column: x => x.accountId,
                         principalTable: "Users",
                         principalColumn: "id",
@@ -454,6 +515,16 @@ namespace ShopPC.Migrations
                 column: "productId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comment_accountId",
+                table: "Comment",
+                column: "accountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comment_productId",
+                table: "Comment",
+                column: "productId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Notifications_accountId",
                 table: "Notifications",
                 column: "accountId");
@@ -499,6 +570,11 @@ namespace ShopPC.Migrations
                 column: "subCategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Report_accountId",
+                table: "Report",
+                column: "accountId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RolePermissions_PermissionName",
                 table: "RolePermissions",
                 column: "PermissionName");
@@ -522,6 +598,9 @@ namespace ShopPC.Migrations
                 name: "Cart");
 
             migrationBuilder.DropTable(
+                name: "Comment");
+
+            migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
@@ -535,6 +614,9 @@ namespace ShopPC.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductImg");
+
+            migrationBuilder.DropTable(
+                name: "Report");
 
             migrationBuilder.DropTable(
                 name: "RolePermissions");

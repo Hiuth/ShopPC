@@ -153,6 +153,38 @@ namespace ShopPC.Migrations
                     b.ToTable("Category");
                 });
 
+            modelBuilder.Entity("ShopPC.Models.Comment", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("accountId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("createdAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("productId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("totalLike")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("accountId");
+
+                    b.HasIndex("productId");
+
+                    b.ToTable("Comment");
+                });
+
             modelBuilder.Entity("ShopPC.Models.Notification", b =>
                 {
                     b.Property<string>("id")
@@ -382,6 +414,33 @@ namespace ShopPC.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("ShopPC.Models.Report", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("accountId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("createdAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("accountId");
+
+                    b.ToTable("Report");
+                });
+
             modelBuilder.Entity("ShopPC.Models.Role", b =>
                 {
                     b.Property<string>("roleName")
@@ -482,6 +541,25 @@ namespace ShopPC.Migrations
                     b.Navigation("product");
                 });
 
+            modelBuilder.Entity("ShopPC.Models.Comment", b =>
+                {
+                    b.HasOne("ShopPC.Models.Account", "account")
+                        .WithMany("comments")
+                        .HasForeignKey("accountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShopPC.Models.Products", "product")
+                        .WithMany("comments")
+                        .HasForeignKey("productId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("account");
+
+                    b.Navigation("product");
+                });
+
             modelBuilder.Entity("ShopPC.Models.Notification", b =>
                 {
                     b.HasOne("ShopPC.Models.Account", "account")
@@ -572,6 +650,17 @@ namespace ShopPC.Migrations
                     b.Navigation("subCategory");
                 });
 
+            modelBuilder.Entity("ShopPC.Models.Report", b =>
+                {
+                    b.HasOne("ShopPC.Models.Account", "account")
+                        .WithMany("reports")
+                        .HasForeignKey("accountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("account");
+                });
+
             modelBuilder.Entity("ShopPC.Models.RolePermission", b =>
                 {
                     b.HasOne("ShopPC.Models.Permission", "Permission")
@@ -606,9 +695,13 @@ namespace ShopPC.Migrations
                 {
                     b.Navigation("carts");
 
+                    b.Navigation("comments");
+
                     b.Navigation("notifications");
 
                     b.Navigation("orders");
+
+                    b.Navigation("reports");
                 });
 
             modelBuilder.Entity("ShopPC.Models.Attributes", b =>
@@ -643,6 +736,8 @@ namespace ShopPC.Migrations
             modelBuilder.Entity("ShopPC.Models.Products", b =>
                 {
                     b.Navigation("carts");
+
+                    b.Navigation("comments");
 
                     b.Navigation("orderDetails");
 

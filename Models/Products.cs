@@ -34,5 +34,8 @@ namespace ShopPC.Models
 
         // 1 product có nhiều Cart
         public ICollection<Cart> carts { get; set; } = new List<Cart>();
+
+        //1 product có nhiều comment
+        public ICollection<Comment> comments { get; set; } = new List<Comment>();
     }
 }
