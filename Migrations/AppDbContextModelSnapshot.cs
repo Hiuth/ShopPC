@@ -173,7 +173,7 @@ namespace ShopPC.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int>("totalLike")
+                    b.Property<int>("rating")
                         .HasColumnType("int");
 
                     b.HasKey("id");

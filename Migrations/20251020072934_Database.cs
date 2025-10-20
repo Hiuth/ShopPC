@@ -383,8 +383,8 @@ namespace ShopPC.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     content = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    createdAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    totalLike = table.Column<int>(type: "int", nullable: false)
+                    rating = table.Column<int>(type: "int", nullable: false),
+                    createdAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {

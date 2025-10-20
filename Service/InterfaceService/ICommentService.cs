@@ -15,6 +15,7 @@ namespace ShopPC.Service.InterfaceService
         Task<List<CommentResponse>> GetCommentsByProductId(string productId);
         Task<List<CommentResponse>> GetCommentsByAccountId(string accountId);
         Task<string> DeleteComment(string commentId);
-        Task<CommentResponse> updateComment(string commentId, CommentRequest request);
+        Task<CommentResponse> UpdateComment(string commentId, CommentRequest request);
+        Task<RatingSummaryResponse> GetRatingSummaryByProductId(string productId);
     }
 }

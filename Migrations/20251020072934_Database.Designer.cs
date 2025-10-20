@@ -12,7 +12,7 @@ using ShopPC.Data;
 namespace ShopPC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251020042252_Database")]
+    [Migration("20251020072934_Database")]
     partial class Database
     {
         /// <inheritdoc />
@@ -176,7 +176,7 @@ namespace ShopPC.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int>("totalLike")
+                    b.Property<int>("rating")
                         .HasColumnType("int");
 
                     b.HasKey("id");

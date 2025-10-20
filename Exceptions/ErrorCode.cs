@@ -110,5 +110,7 @@ namespace ShopPC.Exceptions
             = new ErrorCode(11001, "Comment not exists", HttpStatusCode.BadRequest);
         public static readonly ErrorCode COMMENT_ALREADY_EXISTS
             = new ErrorCode(11002, "Comment already exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode RATING_INVALID
+            = new ErrorCode(11003, "Rating is invalid", HttpStatusCode.BadRequest);
     }
 }

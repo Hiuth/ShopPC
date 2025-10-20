@@ -21,7 +21,7 @@ namespace ShopPC.Service.ImplementationsService
             _accountRepository = accountRepository;
         }
 
-        public async Task<CommentResponse> createCategory(string accountId, string productId, CommentRequest request)
+        public async Task<CommentResponse> CreateComment(string accountId, string productId, CommentRequest request)
         {
             if (!await _accountRepository.ExistsAsync(accountId))
             {
@@ -32,12 +32,84 @@ namespace ShopPC.Service.ImplementationsService
             {
                 throw new AppException(ErrorCode.PRODUCT_NOT_EXISTS);
             }
+            if (request.rating < 1 || request.rating > 5)
+                throw new AppException(ErrorCode.RATING_INVALID);
 
             var comment = CommentMapper.toComment(request);
             comment.accountId = accountId;
             comment.productId = productId;
             await _commentRepository.AddAsync(comment);
             return CommentMapper.toCommentResponse(comment);
+        }
+
+        public async Task<CommentResponse> UpdateComment(string commentId, CommentRequest request)
+        {
+            var comment = await _commentRepository.GetByIdAsync(commentId) ??
+                throw new AppException(ErrorCode.COMMENT_NOT_EXISTS);
+            if (!String.IsNullOrWhiteSpace(request.content))
+            {
+                comment.content = request.content;
+            }
+            if (request.rating != 0)
+            {
+                if (request.rating<1 || request.rating>5)
+                {
+                    throw new AppException(ErrorCode.RATING_INVALID);
+                }
+                comment.rating = request.rating;
+            }
+            await _commentRepository.UpdateAsync(comment);
+            return CommentMapper.toCommentResponse(comment);
+        }
+
+        public async Task<string> DeleteComment(string commentId)
+        {
+            var comment = await _commentRepository.GetByIdAsync(commentId) ??
+                throw new AppException(ErrorCode.COMMENT_NOT_EXISTS);
+            await _commentRepository.DeleteAsync(comment.id);
+            if (await _commentRepository.ExistsAsync(commentId))
+            {
+                return "Delete comment fail";
+            }
+            return "Delete comment successfully";
+        }
+
+        public async Task<List<CommentResponse>> GetCommentsByProductId(string productId)
+        {
+            if (!await _productRepository.ExistsAsync(productId))
+            {
+                throw new AppException(ErrorCode.PRODUCT_NOT_EXISTS);
+            }
+            var comments = await _commentRepository.GetCommentByProductIdAsync(productId);
+            return comments.Select(CommentMapper.toCommentResponse).ToList();
+        }
+
+        public async Task<List<CommentResponse>> GetCommentsByAccountId(string accountId)
+        {
+            if (!await _accountRepository.ExistsAsync(accountId))
+            {
+                throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
+            }
+            var comments = await _commentRepository.GetCommentByAccountIdAsync(accountId);
+            return comments.Select(CommentMapper.toCommentResponse).ToList();
+        }
+
+        public async Task<RatingSummaryResponse> GetRatingSummaryByProductId(string productId)
+        {
+            if (!await _productRepository.ExistsAsync(productId))
+                throw new AppException(ErrorCode.PRODUCT_NOT_EXISTS);
+
+            var (avg, total, dist) = await _commentRepository.GetRatingSummaryByProductIdAsync(productId);
+            return new RatingSummaryResponse
+            {
+                average = Math.Round(avg, 2),
+                total = total,
+                star1 = dist[0],
+                star2 = dist[1],
+                star3 = dist[2],
+                star4 = dist[3],
+                star5 = dist[4]
+            };
         }
     }
 }
