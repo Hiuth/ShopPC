@@ -7,5 +7,6 @@
         public int stockQuantity { get; set; }
         public string? description { get; set; }
         public string status { get; set; } = string.Empty;
+        public string warrantyPeriod { get; set; } = string.Empty;
     }
 }

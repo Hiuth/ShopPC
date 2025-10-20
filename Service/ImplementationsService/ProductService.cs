@@ -95,6 +95,11 @@ namespace ShopPC.Service.ImplementationsService
             {
                 product.description = request.description;
             }
+            if (!String.IsNullOrWhiteSpace(request.warrantyPeriod))
+            {
+                product.warrantyPeriod = request.warrantyPeriod;
+            }
+
             if (file != null)
             {
                 if (!string.IsNullOrEmpty(product.thumbnail))

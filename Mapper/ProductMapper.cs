@@ -14,7 +14,8 @@ namespace ShopPC.Mapper
                 price = productRequest.price,
                 stockQuantity = productRequest.stockQuantity,
                 description = productRequest.description,
-                status = productRequest.status
+                status = productRequest.status,
+                warrantyPeriod = productRequest.warrantyPeriod,
             };
         }
 
@@ -33,7 +34,8 @@ namespace ShopPC.Mapper
                 subCategoryId = products.subCategoryId,
                 createdAt = products.createdAt,
                 brandName = products.brand.brandName,
-                subCategoryName = products.subCategory.subCategoryName
+                subCategoryName = products.subCategory.subCategoryName,
+                warrantyPeriod = products.warrantyPeriod
             };
         }
     }

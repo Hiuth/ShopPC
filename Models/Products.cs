@@ -15,6 +15,7 @@ namespace ShopPC.Models
         public DateTime createdAt { get; set; } = DateTime.Now;
         public string brandId { get; set; } = string.Empty;
         public string subCategoryId { get; set; } = string.Empty;
+        public string warrantyPeriod { get; set; } = string.Empty;
 
         // 1 product thuộc về 1 brand
         [ForeignKey("brandId")]
