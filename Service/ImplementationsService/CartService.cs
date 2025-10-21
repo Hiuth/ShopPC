@@ -26,16 +26,17 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<CartResponse> AddToCart(string accountId, string productId, CartRequest request)
         {
-            if (!await _accountRepository.ExistsAsync(accountId))
-            {
-                throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
-            }
+            var product = await _productRepository.GetByIdAsync(productId)
+                ?? throw new AppException(ErrorCode.PRODUCT_NOT_EXISTS);
             if (!await _productRepository.ExistsAsync(productId))
             {
                 throw new AppException(ErrorCode.PRODUCT_NOT_EXISTS);
             }
+            if(request.quantity > product.stockQuantity) { 
+                throw new AppException(ErrorCode.QUANTITY_EXCEEDS_STOCK);
+            }
 
-            if(await _cartRepository.IsProductInCartAsync(accountId,productId))
+            if (await _cartRepository.IsProductInCartAsync(accountId,productId))
             {
                 var newCart = await _cartRepository.GetCartByProductIdAndProductIdAsync(accountId, productId)
                     ?? throw new AppException(ErrorCode.CART_NOT_EXISTS);
@@ -56,11 +57,11 @@ namespace ShopPC.Service.ImplementationsService
             var cart = await _cartRepository.GetByIdAsync(cartId)
                 ?? throw new AppException(ErrorCode.CART_NOT_EXISTS);
 
-            if (request.quantity != 0)
+            if (request.quantity > 0)
             {
-                if (request.quantity <= 0)
+                if (request.quantity > cart.product.stockQuantity)
                 {
-                    throw new AppException(ErrorCode.INVALID_QUANTITY);
+                    throw new AppException(ErrorCode.QUANTITY_EXCEEDS_STOCK);
                 }
                 cart.quantity = request.quantity;
             }

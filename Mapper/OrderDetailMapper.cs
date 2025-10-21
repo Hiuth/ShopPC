@@ -22,7 +22,7 @@ namespace ShopPC.Mapper
                 orderId = orderDetail.orderId,
                 productId = orderDetail.productId,
                 productName = orderDetail.product.productName??string.Empty,
-                price = orderDetail.product.price,
+                price = orderDetail.product.price??0,
                 quantity = orderDetail.quantity,
                 unitPrice = orderDetail.unitPrice
             };

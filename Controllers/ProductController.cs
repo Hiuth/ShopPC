@@ -83,11 +83,11 @@ namespace ShopPC.Controllers
             var request = new ProductRequest
             {
                 productName = productName ?? string.Empty,
-                price = price ?? 0,
-                stockQuantity = stockQuantity ?? 0,
+                price = price,
+                stockQuantity = stockQuantity,
                 description = description ?? string.Empty,
                 status = status ?? string.Empty,
-                warrantyPeriod = warrantyPeriod ?? 0
+                warrantyPeriod = warrantyPeriod
             };
 
             var response = new ApiResponse<ProductResponse>()

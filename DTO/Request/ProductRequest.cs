@@ -3,10 +3,10 @@
     public class ProductRequest
     {
         public string productName { get; set; } = string.Empty;
-        public decimal price { get; set; }
-        public int stockQuantity { get; set; }
+        public decimal? price { get; set; }
+        public int? stockQuantity { get; set; }
         public string? description { get; set; }
         public string status { get; set; } = string.Empty;
-        public int warrantyPeriod { get; set; }
+        public int? warrantyPeriod { get; set; }
     }
 }

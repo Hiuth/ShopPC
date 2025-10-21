@@ -21,10 +21,10 @@ namespace ShopPC.Mapper
                 productId = cart.productId,
                 quantity = cart.quantity,
                 accountId = cart.accountId,
-                price = cart.product.price,
+                price = cart.product.price??0,
                 productName = cart.product.productName,
                 thumbnail = cart.product.thumbnail??string.Empty,
-                stockQuantity = cart.product.stockQuantity
+                stockQuantity = cart.product.stockQuantity ?? 0
             };
         }
     }

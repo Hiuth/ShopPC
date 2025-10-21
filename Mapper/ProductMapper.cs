@@ -25,8 +25,8 @@ namespace ShopPC.Mapper
             {
                 id = products.id,
                 productName = products.productName,
-                price = products.price,
-                stockQuantity = products.stockQuantity,
+                price = products.price??0,
+                stockQuantity = products.stockQuantity??0,
                 description = products.description,
                 thumbnail = products.thumbnail,
                 status = products.status,
@@ -35,7 +35,7 @@ namespace ShopPC.Mapper
                 createdAt = products.createdAt,
                 brandName = products.brand.brandName,
                 subCategoryName = products.subCategory.subCategoryName,
-                warrantyPeriod = products.warrantyPeriod
+                warrantyPeriod = products.warrantyPeriod ?? 0
             };
         }
     }

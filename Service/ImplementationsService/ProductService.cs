@@ -83,21 +83,21 @@ namespace ShopPC.Service.ImplementationsService
             {
                 product.productName = request.productName;
             }
-            if (request.price > 0)
+            if (request.price.HasValue)
             {
-                product.price = request.price;
+                product.price = request.price.Value;
             }
-            if (request.stockQuantity >= 0)
+            if (request.stockQuantity.HasValue)
             {
-                product.stockQuantity = request.stockQuantity;
+                product.stockQuantity = request.stockQuantity.Value;
             }
             if (!String.IsNullOrWhiteSpace(request.description))
             {
                 product.description = request.description;
             }
-            if (request.warrantyPeriod>=0)
+            if (request.warrantyPeriod.HasValue)
             {
-                product.warrantyPeriod = request.warrantyPeriod;
+                product.warrantyPeriod = request.warrantyPeriod.Value;
             }
 
             if (file != null)

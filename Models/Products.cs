@@ -7,15 +7,15 @@ namespace ShopPC.Models
         [Key]
         public string id { get; set; } = Guid.NewGuid().ToString();
         public string productName { get; set; } = string.Empty;
-        public decimal price { get; set; }
-        public int stockQuantity { get; set; }
+        public decimal? price { get; set; }
+        public int? stockQuantity { get; set; }
         public string? description { get; set; }
         public string? thumbnail { get; set; }
         public string status { get; set; } = string.Empty;
         public DateTime createdAt { get; set; } = DateTime.Now;
         public string brandId { get; set; } = string.Empty;
         public string subCategoryId { get; set; } = string.Empty;
-        public int warrantyPeriod { get; set; }
+        public int? warrantyPeriod { get; set; }
 
         // 1 product thuộc về 1 brand
         [ForeignKey("brandId")]
