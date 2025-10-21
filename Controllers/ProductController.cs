@@ -27,7 +27,7 @@ namespace ShopPC.Controllers
             [FromForm(Name = "stockQuantity")][Required] int stockQuantity,
             [FromForm(Name = "description")] [Required] string description,
             [FromForm(Name = "status")] [Required] string status,
-            [FromForm(Name ="warrantyPeriod")] [Required] string warrantyPeriod,
+            [FromForm(Name ="warrantyPeriod")] [Required] int warrantyPeriod,
             IFormFile thumbnail)
         {
             var request = new ProductRequest
@@ -77,7 +77,7 @@ namespace ShopPC.Controllers
             [FromForm(Name = "stockQuantity")] int? stockQuantity,
             [FromForm(Name = "description")] string? description,
             [FromForm(Name = "status")] string? status,
-            [FromForm(Name = "warrantyPeriod")] string? warrantyPeriod,
+            [FromForm(Name = "warrantyPeriod")] int? warrantyPeriod,
             IFormFile? thumbnail)
         {
             var request = new ProductRequest
@@ -87,7 +87,7 @@ namespace ShopPC.Controllers
                 stockQuantity = stockQuantity ?? 0,
                 description = description ?? string.Empty,
                 status = status ?? string.Empty,
-                warrantyPeriod = warrantyPeriod ?? string.Empty
+                warrantyPeriod = warrantyPeriod ?? 0
             };
 
             var response = new ApiResponse<ProductResponse>()

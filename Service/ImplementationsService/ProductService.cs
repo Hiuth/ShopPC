@@ -83,7 +83,7 @@ namespace ShopPC.Service.ImplementationsService
             {
                 product.productName = request.productName;
             }
-            if (request.price >= 0)
+            if (request.price > 0)
             {
                 product.price = request.price;
             }
@@ -95,7 +95,7 @@ namespace ShopPC.Service.ImplementationsService
             {
                 product.description = request.description;
             }
-            if (!String.IsNullOrWhiteSpace(request.warrantyPeriod))
+            if (request.warrantyPeriod>=0)
             {
                 product.warrantyPeriod = request.warrantyPeriod;
             }
