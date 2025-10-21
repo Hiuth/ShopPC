@@ -1,4 +1,4 @@
-﻿using CloudinaryDotNet;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
@@ -12,40 +12,37 @@ namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class OrderController : ControllerBase
+    public class ProductUnitController : ControllerBase
     {
-        private readonly IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private readonly IProductUnitService _productUnitService;
+        public ProductUnitController(IProductUnitService productUnitService)
         {
-            _orderService = orderService;
+            _productUnitService = productUnitService;
         }
 
-        [HttpPost("create/{accountId}")]
-        public async Task<ActionResult<ApiResponse<OrderResponse>>> createOrder(
-            [FromRoute(Name="accountId")] string accountId,
-            [FromForm(Name ="status")] [Required] string status,
-            [FromForm(Name ="totalAmount")] [Required] decimal totalAmount,
-            [FromForm(Name ="customerName")] [Required] string cusotmerName,
-            [FromForm(Name ="phoneNumber")] [Required] string phoneNumber,
-            [FromForm(Name ="address")] [Required] string address)
+        [HttpPost("create/{productId}")]
+        public async Task<ActionResult<ApiResponse<ProductUnitResponse>>> createProductUnit(
+            [FromRoute(Name = "productId")] string productId,
+            [FromForm(Name = "imei")] string? imei,
+            [FromForm(Name = "serialNumber")] string? serialNumber,
+            [FromForm(Name = "status")] string status)
         {
-            var request = new OrderRequest
+            var request = new ProductUnitRequest
             {
-                status =status,
-                totalAmount = totalAmount,
-                customerName =cusotmerName,
-                phoneNumber = phoneNumber,
-                address = address
+                imei = imei,
+                serialNumber = serialNumber,
+                status = status
             };
 
-            var response = new ApiResponse<OrderResponse>()
+            var response = new ApiResponse<ProductUnitResponse>
             {
-                Message = "Create order Successfully"
+                Message = "Product unit created successfully",
             };
+
             try
             {
-                var order = await _orderService.CreateOrder(accountId,request) ;
-                response.Result = order;
+                var proudctUnit = await _productUnitService.CreateProductUnit(productId, request);
+                response.Result = proudctUnit;
                 return Ok(response);
             }
             catch (AppException ex)  // Catch AppException riêng
@@ -64,32 +61,27 @@ namespace ShopPC.Controllers
             }
         }
 
-        [HttpPut("update/{orderId}")]
-        public async Task<ActionResult<ApiResponse<OrderResponse>>> updateOrder(
-            [FromRoute(Name = "orderId")] string orderId,
-            [FromForm(Name = "status")] string? status,
-            [FromForm(Name = "totalAmount")] decimal? totalAmount,
-            [FromForm(Name = "customerName")] string? cusotmerName,
-            [FromForm(Name = "phoneNumber")] string? phoneNumber,
-            [FromForm(Name = "address")] string? address)
+        [HttpPut("update/{productUnitId}")]
+        public async Task<ActionResult<ApiResponse<ProductUnitResponse>>> updateProductUnit(
+            [FromRoute(Name = "productUnitId")] string productUnitId,
+            [FromForm(Name = "imei")] string? imei,
+            [FromForm(Name = "serialNumber")] string? serialNumber,
+            [FromForm(Name = "status")] string? status)
         {
-            var request = new OrderRequest
+            var request = new ProductUnitRequest
             {
-                status = status??string.Empty,
-                totalAmount = totalAmount??0,
-                customerName = cusotmerName??string.Empty,
-                phoneNumber = phoneNumber ?? string.Empty,
-                address = address ?? string.Empty
+                imei = imei,
+                serialNumber = serialNumber,
+                status = status ?? string.Empty
             };
-
-            var response = new ApiResponse<OrderResponse>()
+            var response = new ApiResponse<ProductUnitResponse>
             {
-                Message = "Update order Successfully"
+                Message = "Product unit updated successfully",
             };
             try
             {
-                var order = await _orderService.UpdateOrder(orderId, request);
-                response.Result = order;
+                var proudctUnit = await _productUnitService.UpdateProductUnit(productUnitId, request);
+                response.Result = proudctUnit;
                 return Ok(response);
             }
             catch (AppException ex)  // Catch AppException riêng
@@ -108,78 +100,78 @@ namespace ShopPC.Controllers
             }
         }
 
-        [HttpGet("getOrderByAccountId/{accountId}")]
-        public async Task<ActionResult<ApiResponse<List<OrderResponse>>>> getOrdersByAccountId(
-            [FromForm(Name = "accountId")] string accountId)
+        [HttpDelete("delete/{productUnitId}")]
+        public async Task<ActionResult<ApiResponse<string>>> deleteProductUnit(
+            [FromRoute(Name = "productUnitId")] string productUnitId)
         {
-            var response = new ApiResponse<List<OrderResponse>>()
+            var response = new ApiResponse<string>
             {
-                Message = "Get all orders by accountId successfully"
-            };
-
-            try
-            {
-                var order = await _orderService.GetOrdersByAccountId(accountId);
-                response.Result = order;
-                return Ok(response);
-            }
-            catch (AppException ex)  // Catch AppException riêng
-            {
-                response.Code = 400;
-                response.Message = ex.Message;
-                response.Result = null;
-                return BadRequest(response);
-            }
-            catch (Exception e)  // Catch Exception chung
-            {
-                response.Code = 500;
-                response.Message = e.Message;
-                response.Result = null;
-                return StatusCode(500, response);
-            }
-        }
-
-        [HttpGet("getAllOrders")]
-        public async Task<ActionResult<ApiResponse<List<OrderResponse>>>> getAllOrders()
-        {
-            var response = new ApiResponse<List<OrderResponse>>()
-            {
-                Message = "Get all orders successfully"
+                Message = "Delete product unit successfully",
             };
             try
             {
-                var order = await _orderService.GetAllOrders();
-                response.Result = order;
-                return Ok(response);
-            }
-            catch (AppException ex)  // Catch AppException riêng
-            {
-                response.Code = 400;
-                response.Message = ex.Message;
-                response.Result = null;
-                return BadRequest(response);
-            }
-            catch (Exception e)  // Catch Exception chung
-            {
-                response.Code = 500;
-                response.Message = e.Message;
-                response.Result = null;
-                return StatusCode(500, response);
-            }
-        }
-
-        [HttpDelete("deleteOrder/{orderId}")]
-        public async Task<ActionResult<ApiResponse<string>>> deleteOrder(
-            [FromRoute(Name = "orderId")] string orderId)
-        {
-            var response = new ApiResponse<string>()
-            {
-                Message = "Delete order Successfully"
-            };
-            try
-            {
-                var result = await _orderService.DeleteOrder(orderId);
+                var result = await _productUnitService.DeleteProductUnit(productUnitId);
                 response.Result = result;
+                return Ok(response);
+            }
+            catch (AppException ex)  // Catch AppException riêng
+            {
+                response.Code = 400;
+                response.Message = ex.Message;
+                response.Result = null;
+                return BadRequest(response);
+            }
+            catch (Exception e)  // Catch Exception chung
+            {
+                response.Code = 500;
+                response.Message = e.Message;
+                response.Result = null;
+                return StatusCode(500, response);
+            }
+        }
+
+        [HttpGet("getProductUnitByProductId/{productId}")]
+        public async Task<ActionResult<ApiResponse<List<ProductUnitResponse>>>> getProductUnitsByProductId(
+            [FromRoute(Name = "productId")] string productId)
+        {
+            var response = new ApiResponse<List<ProductUnitResponse>>
+            {
+                Message = "Get product units by product id successfully",
+            };
+            try
+            {
+                var productUnits = await _productUnitService.GetProductUnitsByProductId(productId);
+                response.Result = productUnits;
+                return Ok(response);
+            }
+            catch (AppException ex)  // Catch AppException riêng
+            {
+                response.Code = 400;
+                response.Message = ex.Message;
+                response.Result = null;
+                return BadRequest(response);
+            }
+            catch (Exception e)  // Catch Exception chung
+            {
+                response.Code = 500;
+                response.Message = e.Message;
+                response.Result = null;
+                return StatusCode(500, response);
+            }
+        }
+
+        [HttpGet("getProductUnitById/{productUnitId}")]
+        public async Task<ActionResult<ApiResponse<ProductUnitResponse>>> getProductUnitById(
+            [FromRoute(Name = "productUnitId")] string productUnitId)
+        {
+            var response = new ApiResponse<ProductUnitResponse>
+            {
+                Message = "Get product unit by id successfully",
+            };
+            try
+            {
+                var productUnit = await _productUnitService.GetProductUnitById(productUnitId);
+                response.Result = productUnit;
                 return Ok(response);
             }
             catch (AppException ex)  // Catch AppException riêng

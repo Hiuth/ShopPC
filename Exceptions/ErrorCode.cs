@@ -68,7 +68,14 @@ namespace ShopPC.Exceptions
             = new ErrorCode(5004, "Invalid product quantity", HttpStatusCode.BadRequest);
         public static readonly ErrorCode INVALID_PRODUCT_PRICE
             = new ErrorCode(5005, "Invalid product price", HttpStatusCode.BadRequest);
-
+        public static readonly ErrorCode PRODUCT_UNIT_NOT_EXISTS
+            = new ErrorCode(5006, "ProductUnit not exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode PRODUCT_UNIT_ALREADY_EXISTS
+            = new ErrorCode(5007, "ProductUnit already exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode PRODUCT_UNIT_IMEI_ALREADY_EXISTS
+            = new ErrorCode(5008, "ProductUnit IMEI already exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode PRODUCT_UNIT_SERIALNUMBER_ALREADY_EXISTS
+            = new ErrorCode(5009, "ProductUnit SerialNumber already exists", HttpStatusCode.BadRequest);
         //product img
         public static readonly ErrorCode PRODUCT_IMG_NOT_EXISTS
             = new ErrorCode(6001, "ProductImg not exists", HttpStatusCode.BadRequest);
