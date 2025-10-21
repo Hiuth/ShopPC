@@ -44,5 +44,12 @@ namespace ShopPC.Repository.ImplementationsRepository
             _dbSet.RemoveRange(cart);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<Cart?> GetCartByCartIdAsync(string cartId)
+        {
+            return await _dbSet
+                .Include(c => c.product)
+                .FirstOrDefaultAsync(c => c.id == cartId);
+        }
     }
 }

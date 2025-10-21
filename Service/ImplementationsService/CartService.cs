@@ -54,7 +54,7 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<CartResponse> UpdateCart(string cartId, CartRequest request)
         {
-            var cart = await _cartRepository.GetByIdAsync(cartId)
+            var cart = await _cartRepository.GetCartByCartIdAsync(cartId)
                 ?? throw new AppException(ErrorCode.CART_NOT_EXISTS);
 
             if (request.quantity > 0)

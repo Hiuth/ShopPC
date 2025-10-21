@@ -6,7 +6,7 @@ namespace ShopPC.Repository.InterfaceRepository
         Task<List<Cart>> GetCartByAccountIdAsync(string accountId);
         Task<Cart?> GetCartByProductIdAndProductIdAsync(string accountId, string productId);
         Task<bool> IsProductInCartAsync(string accountId, string productId);
-
+        Task<Cart?> GetCartByCartIdAsync(string cartId);
         Task ClearCartAsync(string cartId);
         Task ClearAllCartAsync(string accountId);
     }
