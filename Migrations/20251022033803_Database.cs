@@ -309,8 +309,8 @@ namespace ShopPC.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     productName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    price = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    stockQuantity = table.Column<int>(type: "int", nullable: false),
+                    price = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    stockQuantity = table.Column<int>(type: "int", nullable: true),
                     description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     thumbnail = table.Column<string>(type: "longtext", nullable: true)
@@ -321,7 +321,8 @@ namespace ShopPC.Migrations
                     brandId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     subCategoryId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    warrantyPeriod = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -489,6 +490,75 @@ namespace ShopPC.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "ProductUnits",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    productId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    imei = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    serialNumber = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    status = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    createdAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductUnits", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_ProductUnits_Products_productId",
+                        column: x => x.productId,
+                        principalTable: "Products",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "WarrantyRecords",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    startDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    endDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    status = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    productId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    orderId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    productUnitId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WarrantyRecords", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_WarrantyRecords_Order_orderId",
+                        column: x => x.orderId,
+                        principalTable: "Order",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WarrantyRecords_ProductUnits_productUnitId",
+                        column: x => x.productUnitId,
+                        principalTable: "ProductUnits",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WarrantyRecords_Products_productId",
+                        column: x => x.productId,
+                        principalTable: "Products",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Attributes_categoryId",
                 table: "Attributes",
@@ -570,6 +640,23 @@ namespace ShopPC.Migrations
                 column: "subCategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductUnits_imei",
+                table: "ProductUnits",
+                column: "imei",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductUnits_productId",
+                table: "ProductUnits",
+                column: "productId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductUnits_serialNumber",
+                table: "ProductUnits",
+                column: "serialNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Report_accountId",
                 table: "Report",
                 column: "accountId");
@@ -588,6 +675,22 @@ namespace ShopPC.Migrations
                 name: "IX_Users_email",
                 table: "Users",
                 column: "email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarrantyRecords_orderId",
+                table: "WarrantyRecords",
+                column: "orderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarrantyRecords_productId",
+                table: "WarrantyRecords",
+                column: "productId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarrantyRecords_productUnitId",
+                table: "WarrantyRecords",
+                column: "productUnitId",
                 unique: true);
         }
 
@@ -622,13 +725,10 @@ namespace ShopPC.Migrations
                 name: "RolePermissions");
 
             migrationBuilder.DropTable(
-                name: "Order");
+                name: "WarrantyRecords");
 
             migrationBuilder.DropTable(
                 name: "Attributes");
-
-            migrationBuilder.DropTable(
-                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Permissions");
@@ -637,7 +737,16 @@ namespace ShopPC.Migrations
                 name: "Roles");
 
             migrationBuilder.DropTable(
+                name: "Order");
+
+            migrationBuilder.DropTable(
+                name: "ProductUnits");
+
+            migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Brand");

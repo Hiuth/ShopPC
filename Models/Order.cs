@@ -19,5 +19,8 @@ namespace ShopPC.Models
 
         // 1 order có nhiều orderDetail
         public ICollection<OrderDetail> orderDetails { get; set; } = new List<OrderDetail>();
+
+        //1 order có nhiều warrantyRecord
+        public ICollection<WarrantyRecord> warrantyRecords { get; set; } = new List<WarrantyRecord>();
     }
 }

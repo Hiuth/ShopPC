@@ -18,5 +18,8 @@ namespace ShopPC.Models
 
         [ForeignKey("productId")]
         public Products product { get; set; } = null!;
+
+        //1 productUnit có một warrantyRecord
+        public WarrantyRecord warrantyRecord { get; set; } = null!;
     }
 }

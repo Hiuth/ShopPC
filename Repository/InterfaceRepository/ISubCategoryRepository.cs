@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using ShopPC.Models;
+
 namespace ShopPC.Repository.InterfaceRepository
 {
     public interface ISubCategoryRepository : IGenericRepository<SubCategory>

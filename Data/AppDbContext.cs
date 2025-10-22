@@ -27,6 +27,7 @@ namespace ShopPC.Data
         public DbSet<Comment> Comment { get; set; }
         public DbSet<Report> Report { get; set; }
         public DbSet<ProductUnit> ProductUnits { get; set; }
+        public DbSet<WarrantyRecord> WarrantyRecords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

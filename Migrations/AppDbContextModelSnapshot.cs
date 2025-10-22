@@ -419,7 +419,7 @@ namespace ShopPC.Migrations
                     b.Property<string>("description")
                         .HasColumnType("longtext");
 
-                    b.Property<decimal>("price")
+                    b.Property<decimal?>("price")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("productName")
@@ -430,7 +430,7 @@ namespace ShopPC.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("stockQuantity")
+                    b.Property<int?>("stockQuantity")
                         .HasColumnType("int");
 
                     b.Property<string>("subCategoryId")
@@ -440,7 +440,7 @@ namespace ShopPC.Migrations
                     b.Property<string>("thumbnail")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("warrantyPeriod")
+                    b.Property<int?>("warrantyPeriod")
                         .HasColumnType("int");
 
                     b.HasKey("id");
@@ -532,6 +532,45 @@ namespace ShopPC.Migrations
                     b.HasIndex("categoryId");
 
                     b.ToTable("SubCategory");
+                });
+
+            modelBuilder.Entity("ShopPC.Models.WarrantyRecord", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("endDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("orderId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("productId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("productUnitId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("startDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("orderId");
+
+                    b.HasIndex("productId");
+
+                    b.HasIndex("productUnitId")
+                        .IsUnique();
+
+                    b.ToTable("WarrantyRecords");
                 });
 
             modelBuilder.Entity("ShopPC.Models.Attributes", b =>
@@ -740,6 +779,33 @@ namespace ShopPC.Migrations
                     b.Navigation("category");
                 });
 
+            modelBuilder.Entity("ShopPC.Models.WarrantyRecord", b =>
+                {
+                    b.HasOne("ShopPC.Models.Order", "order")
+                        .WithMany("warrantyRecords")
+                        .HasForeignKey("orderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShopPC.Models.Products", "product")
+                        .WithMany("warrantyRecords")
+                        .HasForeignKey("productId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShopPC.Models.ProductUnit", "productUnit")
+                        .WithOne("warrantyRecord")
+                        .HasForeignKey("ShopPC.Models.WarrantyRecord", "productUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("order");
+
+                    b.Navigation("product");
+
+                    b.Navigation("productUnit");
+                });
+
             modelBuilder.Entity("ShopPC.Models.Account", b =>
                 {
                     b.Navigation("carts");
@@ -775,11 +841,19 @@ namespace ShopPC.Migrations
             modelBuilder.Entity("ShopPC.Models.Order", b =>
                 {
                     b.Navigation("orderDetails");
+
+                    b.Navigation("warrantyRecords");
                 });
 
             modelBuilder.Entity("ShopPC.Models.Permission", b =>
                 {
                     b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("ShopPC.Models.ProductUnit", b =>
+                {
+                    b.Navigation("warrantyRecord")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ShopPC.Models.Products", b =>
@@ -795,6 +869,8 @@ namespace ShopPC.Migrations
                     b.Navigation("productImgs");
 
                     b.Navigation("productUnits");
+
+                    b.Navigation("warrantyRecords");
                 });
 
             modelBuilder.Entity("ShopPC.Models.Role", b =>
