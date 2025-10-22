@@ -7,7 +7,7 @@ namespace ShopPC.Models
     {
         [Key]
         public string id { get; set; } = Guid.NewGuid().ToString();
-        public DateTime startDate { get; set; } = DateTime.Now;
+        public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
         public string status { get; set; } = string.Empty;
         public string productId { get; set; } = string.Empty;

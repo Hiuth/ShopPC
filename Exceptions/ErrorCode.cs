@@ -121,5 +121,11 @@ namespace ShopPC.Exceptions
             = new ErrorCode(11002, "Comment already exists", HttpStatusCode.BadRequest);
         public static readonly ErrorCode RATING_INVALID
             = new ErrorCode(11003, "Rating is invalid", HttpStatusCode.BadRequest);
+
+        //WarrantyRecord error codes
+        public static readonly ErrorCode WARRANTY_RECORD_NOT_EXISTS
+            = new ErrorCode(12001, "Warranty record not exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode WARRANTY_RECORD_ALREADY_EXISTS
+            = new ErrorCode(12002, "Warranty record already exists", HttpStatusCode.BadRequest);
     }
 }

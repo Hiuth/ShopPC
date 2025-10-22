@@ -12,7 +12,7 @@ using ShopPC.Data;
 namespace ShopPC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251022033803_Database")]
+    [Migration("20251022044857_Database")]
     partial class Database
     {
         /// <inheritdoc />
