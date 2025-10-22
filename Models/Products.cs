@@ -44,5 +44,8 @@ namespace ShopPC.Models
 
         //1 product có nhiều warrantyRecord
         public ICollection<WarrantyRecord> warrantyRecords { get; set; } = new List<WarrantyRecord>();
+
+        //1 product có nhiều pcBuildItem
+        public ICollection<PcBuildItem> pcBuildItems { get; set; } = new List<PcBuildItem>();
     }
 }

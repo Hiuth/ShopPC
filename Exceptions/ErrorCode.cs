@@ -78,6 +78,8 @@ namespace ShopPC.Exceptions
             = new ErrorCode(5009, "ProductUnit SerialNumber already exists", HttpStatusCode.BadRequest);
         public static readonly ErrorCode QUANTITY_EXCEEDS_STOCK
             = new ErrorCode(5010, "Quantity exceeds stock", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode PC_BUILD_NOT_EXISTS
+            = new ErrorCode(5011, "PC Build not exists", HttpStatusCode.BadRequest);
         //product img
         public static readonly ErrorCode PRODUCT_IMG_NOT_EXISTS
             = new ErrorCode(6001, "ProductImg not exists", HttpStatusCode.BadRequest);
@@ -127,5 +129,6 @@ namespace ShopPC.Exceptions
             = new ErrorCode(12001, "Warranty record not exists", HttpStatusCode.BadRequest);
         public static readonly ErrorCode WARRANTY_RECORD_ALREADY_EXISTS
             = new ErrorCode(12002, "Warranty record already exists", HttpStatusCode.BadRequest);
+
     }
 }

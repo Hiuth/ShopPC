@@ -28,6 +28,8 @@ namespace ShopPC.Data
         public DbSet<Report> Report { get; set; }
         public DbSet<ProductUnit> ProductUnits { get; set; }
         public DbSet<WarrantyRecord> WarrantyRecords { get; set; }
+        public DbSet<PcBuild> PcBuilds { get; set; }
+        public DbSet<PcBuildItem> PcBuildItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

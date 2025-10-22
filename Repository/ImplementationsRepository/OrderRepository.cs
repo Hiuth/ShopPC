@@ -16,5 +16,6 @@ namespace ShopPC.Repository.ImplementationsRepository
         {
             return await _dbSet.Where(o => o.accountId == userId).ToListAsync();
         }
+
     }
 }

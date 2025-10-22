@@ -102,7 +102,7 @@ namespace ShopPC.Service.ImplementationsService
 
             if (file != null)
             {
-                if (!string.IsNullOrEmpty(product.thumbnail))
+                if (!String.IsNullOrEmpty(product.thumbnail))
                 {
                     await _cloudinaryService.DeleteImageAsync(product.thumbnail);
                 }

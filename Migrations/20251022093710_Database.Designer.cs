@@ -12,7 +12,7 @@ using ShopPC.Data;
 namespace ShopPC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251022044857_Database")]
+    [Migration("20251022093710_Database")]
     partial class Database
     {
         /// <inheritdoc />
@@ -312,6 +312,31 @@ namespace ShopPC.Migrations
                     b.ToTable("PaymentLogs");
                 });
 
+            modelBuilder.Entity("ShopPC.Models.PcBuildItem", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("pcBuildId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("productId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("pcBuildId");
+
+                    b.HasIndex("productId");
+
+                    b.ToTable("PcBuildItems");
+                });
+
             modelBuilder.Entity("ShopPC.Models.Permission", b =>
                 {
                     b.Property<string>("permissionName")
@@ -412,6 +437,11 @@ namespace ShopPC.Migrations
                     b.Property<string>("id")
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("varchar(8)");
+
                     b.Property<string>("brandId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
@@ -453,6 +483,10 @@ namespace ShopPC.Migrations
                     b.HasIndex("subCategoryId");
 
                     b.ToTable("Products");
+
+                    b.HasDiscriminator().HasValue("Products");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("ShopPC.Models.Report", b =>
@@ -576,6 +610,13 @@ namespace ShopPC.Migrations
                     b.ToTable("WarrantyRecords");
                 });
 
+            modelBuilder.Entity("ShopPC.Models.PcBuild", b =>
+                {
+                    b.HasBaseType("ShopPC.Models.Products");
+
+                    b.HasDiscriminator().HasValue("PcBuild");
+                });
+
             modelBuilder.Entity("ShopPC.Models.Attributes", b =>
                 {
                     b.HasOne("ShopPC.Models.SubCategory", null)
@@ -677,6 +718,25 @@ namespace ShopPC.Migrations
                         .IsRequired();
 
                     b.Navigation("order");
+
+                    b.Navigation("product");
+                });
+
+            modelBuilder.Entity("ShopPC.Models.PcBuildItem", b =>
+                {
+                    b.HasOne("ShopPC.Models.PcBuild", "pcBuild")
+                        .WithMany("pcBuildItem")
+                        .HasForeignKey("pcBuildId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShopPC.Models.Products", "product")
+                        .WithMany("pcBuildItems")
+                        .HasForeignKey("productId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("pcBuild");
 
                     b.Navigation("product");
                 });
@@ -867,6 +927,8 @@ namespace ShopPC.Migrations
 
                     b.Navigation("orderDetails");
 
+                    b.Navigation("pcBuildItems");
+
                     b.Navigation("productAttributes");
 
                     b.Navigation("productImgs");
@@ -886,6 +948,11 @@ namespace ShopPC.Migrations
                     b.Navigation("attributes");
 
                     b.Navigation("products");
+                });
+
+            modelBuilder.Entity("ShopPC.Models.PcBuild", b =>
+                {
+                    b.Navigation("pcBuildItem");
                 });
 #pragma warning restore 612, 618
         }

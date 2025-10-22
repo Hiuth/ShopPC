@@ -277,5 +277,35 @@ namespace ShopPC.Controllers
                 return StatusCode(500, response);
             }
         }
+
+        [HttpGet("getById/{productId}")]
+        public async Task<ActionResult<ApiResponse<ProductResponse>>> getProductById(
+            [FromRoute(Name = "productId")] string productId)
+        {
+            var response = new ApiResponse<ProductResponse>()
+            {
+                Message = "Get product by id successfully"
+            };
+            try
+            {
+                var product = await _productService.GetProductById(productId);
+                response.Result = product;
+                return Ok(response);
+            }
+            catch (AppException ex)  // Catch AppException riêng
+            {
+                response.Code = 400;
+                response.Message = ex.Message;
+                response.Result = null;
+                return BadRequest(response);
+            }
+            catch (Exception e)  // Catch Exception chung
+            {
+                response.Code = 500;
+                response.Message = e.Message;
+                response.Result = null;
+                return StatusCode(500, response);
+            }
+        }
     }
 }

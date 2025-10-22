@@ -22,5 +22,7 @@ namespace ShopPC.Models
 
         //1 subCategory có nhiều attribute
         public ICollection<Attributes> attributes { get; set; } = new List<Attributes>();
+
+    
     }
 }
