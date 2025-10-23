@@ -80,6 +80,8 @@ namespace ShopPC.Exceptions
             = new ErrorCode(5010, "Quantity exceeds stock", HttpStatusCode.BadRequest);
         public static readonly ErrorCode PC_BUILD_NOT_EXISTS
             = new ErrorCode(5011, "PC Build not exists", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode PC_BUILD_ITEM_NOT_EXISTS
+            = new ErrorCode(5012, "PC Build Item not exists", HttpStatusCode.BadRequest);
         //product img
         public static readonly ErrorCode PRODUCT_IMG_NOT_EXISTS
             = new ErrorCode(6001, "ProductImg not exists", HttpStatusCode.BadRequest);

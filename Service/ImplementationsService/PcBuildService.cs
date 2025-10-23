@@ -17,11 +17,15 @@ namespace ShopPC.Service.ImplementationsService
         private readonly IPcBuildRepository _pcBuildRepository;
         private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly ICloudinaryService _cloudinaryService;
-        public PcBuildService(IPcBuildRepository pcBuildRepository, ISubCategoryRepository subCategoryRepository, ICloudinaryService cloudinaryService)
+        private readonly IPcBuildItemRepository _pcBuildItemRepository;
+        public PcBuildService(IPcBuildRepository pcBuildRepository, ISubCategoryRepository subCategoryRepository, 
+            ICloudinaryService cloudinaryService,
+            IPcBuildItemRepository pcBuildItemRepository)
         {
             _pcBuildRepository = pcBuildRepository;
             _subCategoryRepository = subCategoryRepository;
             _cloudinaryService = cloudinaryService;
+            _pcBuildItemRepository = pcBuildItemRepository;
         }
 
 
@@ -116,7 +120,7 @@ namespace ShopPC.Service.ImplementationsService
             }
 
             foreach(var item in pcBuild.pcBuildItems) {
-                
+                await _pcBuildItemRepository.DeleteAsync(item.id);
             }
 
             await _pcBuildRepository.DeleteAsync(pcBuild.id);
