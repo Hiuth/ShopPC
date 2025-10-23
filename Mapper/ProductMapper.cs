@@ -30,7 +30,7 @@ namespace ShopPC.Mapper
                 description = products.description,
                 thumbnail = products.thumbnail,
                 status = products.status,
-                brandId = products.brandId,
+                brandId = products.brandId!,
                 subCategoryId = products.subCategoryId,
                 createdAt = products.createdAt,
                 brandName = products.brand.brandName,

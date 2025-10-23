@@ -119,7 +119,7 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<ProductResponse> GetProductById(string id)
         {
-            var product = await _productRepository.GetByIdAsync(id) ??
+            var product = await _productRepository.GetProductByIdAsync(id) ??
                 throw new AppException(ErrorCode.PRODUCT_NOT_EXISTS);
             return ProductMapper.toProductResponse(product);
         }

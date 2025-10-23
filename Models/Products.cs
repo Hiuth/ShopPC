@@ -13,7 +13,7 @@ namespace ShopPC.Models
         public string? thumbnail { get; set; }
         public string status { get; set; } = string.Empty;
         public DateTime createdAt { get; set; } = DateTime.Now;
-        public string brandId { get; set; } = string.Empty;
+        public string? brandId { get; set; }
         public string subCategoryId { get; set; } = string.Empty;
         public int? warrantyPeriod { get; set; }
 

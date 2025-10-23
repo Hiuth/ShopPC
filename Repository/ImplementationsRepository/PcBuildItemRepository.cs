@@ -16,6 +16,7 @@ namespace ShopPC.Repository.ImplementationsRepository
         {
             return await _dbSet
                  .Include(item => item.product)
+                 .Include(item => item.pcBuild)
                 .Where(item => item.pcBuildId == pcBuildId)
                 .ToListAsync();
         }
@@ -24,6 +25,7 @@ namespace ShopPC.Repository.ImplementationsRepository
         {
             return await _context.PcBuildItems
                 .Include(item => item.product)
+                .Include(item => item.pcBuild)
                 .FirstOrDefaultAsync(item => item.id == id);
         }
     }

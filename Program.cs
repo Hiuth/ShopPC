@@ -55,6 +55,7 @@ builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IProductUnitRepository, ProductUnitRepository>();
 builder.Services.AddScoped<IPcBuildItemRepository, PcBuildItemRepository>();
 builder.Services.AddScoped<IPcBuildRepository, PcBuildRepository>();
+builder.Services.AddScoped<IWarrantyRecordRepository, WarrnatyRecordRepository>();
 
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -72,7 +73,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IProductUnitService, ProductUnitService>();
 builder.Services.AddScoped<IPcBuildItemService, PcBuildItemService>();
 builder.Services.AddScoped<IPcBuildService, PcBuildService>();
-
+builder.Services.AddScoped<IWarrantyRecordService, WarrantyService>();
 
 var app = builder.Build();
 

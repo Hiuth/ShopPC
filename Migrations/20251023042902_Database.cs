@@ -318,13 +318,11 @@ namespace ShopPC.Migrations
                     status = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     createdAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    brandId = table.Column<string>(type: "varchar(255)", nullable: false)
+                    brandId = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     subCategoryId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    warrantyPeriod = table.Column<int>(type: "int", nullable: true),
-                    Discriminator = table.Column<string>(type: "varchar(8)", maxLength: 8, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    warrantyPeriod = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -333,8 +331,7 @@ namespace ShopPC.Migrations
                         name: "FK_Products_Brand_brandId",
                         column: x => x.brandId,
                         principalTable: "Brand",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Products_SubCategory_subCategoryId",
                         column: x => x.subCategoryId,
@@ -439,29 +436,18 @@ namespace ShopPC.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "PcBuildItems",
+                name: "PcBuild",
                 columns: table => new
                 {
                     id = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    pcBuildId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    productId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    quantity = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PcBuildItems", x => x.id);
+                    table.PrimaryKey("PK_PcBuild", x => x.id);
                     table.ForeignKey(
-                        name: "FK_PcBuildItems_Products_pcBuildId",
-                        column: x => x.pcBuildId,
-                        principalTable: "Products",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PcBuildItems_Products_productId",
-                        column: x => x.productId,
+                        name: "FK_PcBuild_Products_id",
+                        column: x => x.id,
                         principalTable: "Products",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -543,6 +529,36 @@ namespace ShopPC.Migrations
                     table.PrimaryKey("PK_ProductUnits", x => x.id);
                     table.ForeignKey(
                         name: "FK_ProductUnits_Products_productId",
+                        column: x => x.productId,
+                        principalTable: "Products",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "PcBuildItems",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    pcBuildId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    productId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    quantity = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PcBuildItems", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_PcBuildItems_PcBuild_pcBuildId",
+                        column: x => x.pcBuildId,
+                        principalTable: "PcBuild",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PcBuildItems_Products_productId",
                         column: x => x.productId,
                         principalTable: "Products",
                         principalColumn: "id",
@@ -771,6 +787,9 @@ namespace ShopPC.Migrations
 
             migrationBuilder.DropTable(
                 name: "WarrantyRecords");
+
+            migrationBuilder.DropTable(
+                name: "PcBuild");
 
             migrationBuilder.DropTable(
                 name: "Attributes");

@@ -8,5 +8,7 @@ namespace ShopPC.Repository.InterfaceRepository
         Task<PcBuild?> GetPcBuildByIdAsync(string id);
      //   Task<PcBuild?> GetPcBuildByIdWithItemsAsyncAsync(string id);
         Task<List<PcBuild>> GetPcBuildsBySubCategoryIdAsync(string subCategoryId);
+
+        Task<List<PcBuild>> GetAllPcBuildAsync();
     }
 }

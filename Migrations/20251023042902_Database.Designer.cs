@@ -12,7 +12,7 @@ using ShopPC.Data;
 namespace ShopPC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251022093710_Database")]
+    [Migration("20251023042902_Database")]
     partial class Database
     {
         /// <inheritdoc />
@@ -437,13 +437,7 @@ namespace ShopPC.Migrations
                     b.Property<string>("id")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("varchar(8)");
-
                     b.Property<string>("brandId")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("createdAt")
@@ -484,9 +478,7 @@ namespace ShopPC.Migrations
 
                     b.ToTable("Products");
 
-                    b.HasDiscriminator().HasValue("Products");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("ShopPC.Models.Report", b =>
@@ -614,7 +606,7 @@ namespace ShopPC.Migrations
                 {
                     b.HasBaseType("ShopPC.Models.Products");
 
-                    b.HasDiscriminator().HasValue("PcBuild");
+                    b.ToTable("PcBuild", (string)null);
                 });
 
             modelBuilder.Entity("ShopPC.Models.Attributes", b =>
@@ -786,9 +778,7 @@ namespace ShopPC.Migrations
                 {
                     b.HasOne("ShopPC.Models.Brand", "brand")
                         .WithMany("products")
-                        .HasForeignKey("brandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("brandId");
 
                     b.HasOne("ShopPC.Models.SubCategory", "subCategory")
                         .WithMany("products")
@@ -867,6 +857,15 @@ namespace ShopPC.Migrations
                     b.Navigation("product");
 
                     b.Navigation("productUnit");
+                });
+
+            modelBuilder.Entity("ShopPC.Models.PcBuild", b =>
+                {
+                    b.HasOne("ShopPC.Models.Products", null)
+                        .WithOne()
+                        .HasForeignKey("ShopPC.Models.PcBuild", "id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ShopPC.Models.Account", b =>

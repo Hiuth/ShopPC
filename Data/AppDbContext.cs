@@ -45,6 +45,8 @@ namespace ShopPC.Data
                 .HasOne(rp => rp.Permission)
                 .WithMany(p => p.RolePermissions)
                 .HasForeignKey(rp => rp.PermissionName);
+
+            modelBuilder.Entity<PcBuild>().ToTable("PcBuild");
         }
 
         //public DbSet<RefreshToken> RefreshToken { get; set; }

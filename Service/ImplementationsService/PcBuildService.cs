@@ -7,7 +7,6 @@ using ShopPC.Models;
 using ShopPC.Repository.ImplementationsRepository;
 using ShopPC.Repository.InterfaceRepository;
 using ShopPC.Service.InterfaceService;
-using PagedList.Core;
 
 
 namespace ShopPC.Service.ImplementationsService
@@ -55,9 +54,9 @@ namespace ShopPC.Service.ImplementationsService
             return PcBuildMapper.toPcBuildResponse(createdPcBuild);
         }
 
-        public async Task<PcBuildResponse> UpdatePcBuild(string pcBuildId,string subCategoryId ,PcBuildRequest pcBuildRequest, IFormFile? file)
+        public async Task<PcBuildResponse> UpdatePcBuild(string pcBuildId,string? subCategoryId ,PcBuildRequest pcBuildRequest, IFormFile? file)
         {
-            var pcBuild = await _pcBuildRepository.GetByIdAsync(pcBuildId) ??
+            var pcBuild = await _pcBuildRepository.GetPcBuildByIdAsync(pcBuildId) ??
                 throw new AppException(ErrorCode.PC_BUILD_NOT_EXISTS);
             if (!String.IsNullOrWhiteSpace(pcBuildRequest.productName))
             {
@@ -91,21 +90,21 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<PcBuildResponse> GetPcBuildById(string pcBuildId)
         {
-            var pcBuild = await _pcBuildRepository.GetByIdAsync(pcBuildId) ??
+            var pcBuild = await _pcBuildRepository.GetPcBuildByIdAsync(pcBuildId) ??
                 throw new AppException(ErrorCode.PC_BUILD_NOT_EXISTS);
             return PcBuildMapper.toPcBuildResponse(pcBuild);
         }
 
         public async Task<PaginatedResponse<PcBuildResponse>> GetAllPcBuilds(int number, int pagesize)
         {
-            var pcBuilds = (await _pcBuildRepository.GetAllAsync()).AsQueryable();
+            var pcBuilds = (await _pcBuildRepository.GetAllPcBuildAsync()).AsQueryable();
             var pageList = new PagedList<PcBuild>(pcBuilds,number, pagesize);
             return ToPaginatedResponse(pageList);
         }
 
         public async Task<string> DeletePcBuild(string pcBuildId)
         {
-            var pcBuild = await _pcBuildRepository.GetByIdAsync(pcBuildId) ??
+            var pcBuild = await _pcBuildRepository.GetPcBuildByIdAsync(pcBuildId) ??
                 throw new AppException(ErrorCode.PC_BUILD_NOT_EXISTS);
             if (!String.IsNullOrEmpty(pcBuild.thumbnail))
             {

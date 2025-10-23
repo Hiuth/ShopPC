@@ -24,13 +24,22 @@ namespace ShopPC.Repository.ImplementationsRepository
         public async Task<PcBuild?> GetPcBuildByIdAsync(string id)
         {
             return await _dbSet
+                .Include(pb => pb.subCategory)
                 .FirstOrDefaultAsync(pb => pb.id == id);
         }
 
         public async Task<List<PcBuild>> GetPcBuildsBySubCategoryIdAsync(string subCategoryId)
         {
             return await _dbSet
+                .Include(pb => pb.subCategory)
                 .Where(pb => pb.subCategoryId == subCategoryId)
+                .ToListAsync();
+        }
+
+        public async Task<List<PcBuild>> GetAllPcBuildAsync()
+        {
+            return await _dbSet
+                .Include(pb => pb.subCategory)
                 .ToListAsync();
         }
     }
