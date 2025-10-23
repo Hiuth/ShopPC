@@ -18,6 +18,37 @@ namespace ShopPC.Controllers
             _accountService = accountService;
         }
 
+        [HttpGet("send-email")]
+        public async Task<ActionResult<ApiResponse<string>>> SendEmail(
+            [FromQuery(Name = "Email"), Required] string email)
+        {
+            var response = new ApiResponse<string>()
+            {
+                Message = "Send email successfully"
+            };
+            try
+            {
+                await _accountService.SendOtpRegisterAsync(email);
+                response.Result = "Email sent successfully";
+                return new OkObjectResult(response);
+            }
+            catch (AppException ex)  // Catch AppException riêng
+            {
+                response.Code = 400;
+                response.Message = ex.Message;
+                response.Result = null;
+                return new BadRequestObjectResult(response);
+            }
+            catch (Exception e)  // Catch Exception chung
+            {
+                response.Code = 500;
+                response.Message = e.Message;
+                response.Result = null;
+                return new ObjectResult(response) { StatusCode = 500 };
+            }
+        }
+
+
         [HttpPost("create")]
         public async Task<ActionResult<ApiResponse<AccountResponse>>> CreateAccount(
             [FromForm(Name ="userName"), Required ] string userName,
@@ -26,6 +57,7 @@ namespace ShopPC.Controllers
             [FromForm(Name = "gender"), Required] string gender,
             [FromForm(Name = "phoneNumber"), Required] string phoneNumber,
             [FromForm(Name = "address"), Required] string address,
+            [FromForm(Name = "otp"), Required] string otp,
             [Required] IFormFile  file)
         {
             var request = new AccountRequest
@@ -43,7 +75,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var account = await _accountService.CreateAccount(request, file);
+                var account = await _accountService.CreateAccount(otp,request, file);
                 response.Result = account;
                 return new OkObjectResult(response);
             }

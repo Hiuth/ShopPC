@@ -74,7 +74,9 @@ builder.Services.AddScoped<IProductUnitService, ProductUnitService>();
 builder.Services.AddScoped<IPcBuildItemService, PcBuildItemService>();
 builder.Services.AddScoped<IPcBuildService, PcBuildService>();
 builder.Services.AddScoped<IWarrantyRecordService, WarrantyService>();
-
+builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("EmailConfig"));
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddSingleton<OtpService>();
 var app = builder.Build();
 
 

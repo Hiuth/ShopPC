@@ -15,19 +15,43 @@ namespace ShopPC.Service.ImplementationsService
     {
         private readonly IAccountRepository _accountRepository;
         private readonly ICloudinaryService _cloudinaryService;
+        private readonly EmailService _emailService;
+        private readonly OtpService _otpService;
 
-        public AccountService(IAccountRepository accountRepository, ICloudinaryService cloudinaryService)
+        public AccountService(IAccountRepository accountRepository, ICloudinaryService cloudinaryService, EmailService emailService, OtpService otpService)
         {
             _accountRepository = accountRepository;
             _cloudinaryService = cloudinaryService;
+            _emailService = emailService;
+            _otpService = otpService;
         }
 
-        public async Task<AccountResponse> CreateAccount(AccountRequest request, IFormFile file)
+        public async Task<string> SendOtpRegisterAsync(string email)
         {
-            if (await _accountRepository.IsEmailUniqueAsync(request.email))
-            {
+            if (await _accountRepository.IsEmailUniqueAsync(email))
                 throw new AppException(ErrorCode.ACCOUNT_ALREADY_EXISTS);
-            }
+
+            var otp = _otpService.GenerateOtp(email);
+            var body = $@"
+            <div style='font-family: Arial;'>
+                <h2>Chào mừng đến với Nexora!</h2>
+                <p>Mã OTP xác thực đăng ký của bạn là:</p>
+                <h1 style='color: #2d89ef;'>{otp}</h1>
+                <p>Mã có hiệu lực trong <b>3 phút</b>.</p>
+            </div>";
+
+            await _emailService.SendEmailAsync(email, "Mã OTP đăng ký tài khoản", body);
+            return "Đã gửi OTP thành công.";
+        }
+
+
+
+        public async Task<AccountResponse> CreateAccount(string otp, AccountRequest request, IFormFile file)
+        {
+            if (!_otpService.VerifyOtp(request.email, otp))
+                throw new AppException(ErrorCode.INVALID_OTP);
+
+
             var account = AccountMapper.toAccount(request);
             account.accountImg = await _cloudinaryService.UploadImageAsync(file);
             await _accountRepository.AddAsync(account);
