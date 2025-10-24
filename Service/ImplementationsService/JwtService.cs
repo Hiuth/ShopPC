@@ -21,7 +21,7 @@ namespace ShopPC.Service.ImplementationsService
                 new Claim(JwtRegisteredClaimNames.Sub, user.email),//Địa chỉ email (định danh chính của user)
                 new Claim("userName", user.userName), //Tên người dùng
                 new Claim("userId", user.id), //ID của user trong hệ thống
-                new Claim(ClaimTypes.Role, user.roleName), //Vai trò (role) chính của user
+                new Claim("Role", user.roleName), //Vai trò (role) chính của user
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // Mã định danh duy nhất cho token này
             };
 
