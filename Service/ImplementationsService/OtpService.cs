@@ -9,7 +9,7 @@ namespace ShopPC.Service.ImplementationsService
         public string GenerateOtp(string email)
         {
             var otp = new Random().Next(100000, 999999).ToString();
-            _otpStorage[email] = (otp, DateTime.UtcNow.AddMinutes(3));
+            _otpStorage[email] = (otp, DateTime.UtcNow.AddMinutes(5));
             return otp;
         }
 

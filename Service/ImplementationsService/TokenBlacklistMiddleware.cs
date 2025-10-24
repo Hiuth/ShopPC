@@ -21,18 +21,41 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task Invoke(HttpContext context)
         {
-            var tokenValidator = context.RequestServices.GetRequiredService<TokenValidator>();
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();//Lấy token JWT từ header Authorization của request.
+           var path = context.Request.Path.Value?.ToLower();
+            string[] publicEndPoints =
+            {
+                "/api/auth/login",
+                "/api/account/send-email",
+                "/api/account/create"
+            };
+
+            // ⚠️ SỬA LẠI DÒNG NÀY
+            if (path != null && publicEndPoints.Any(p => path.StartsWith(p)))
+            {
+                await _next(context);
+                return;
+            }
+
+            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             if (token != null)
             {
-                if (tokenValidator.IsTokenInvalidated(token))
+                // Dùng try-catch để tránh lỗi khi token không hợp lệ
+                try
                 {
-                    context.Response.StatusCode = 401; // Unauthorized
-                    context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsync("""
-                    { "code": 401, "message": "Token has been invalidated", "result": null }
-                    """);
-                    return;
+                    var tokenValidator = context.RequestServices.GetRequiredService<TokenValidator>();
+                    if (tokenValidator.IsTokenInvalidated(token))
+                    {
+                        context.Response.StatusCode = 401; // Unauthorized
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsync("""
+                        { "code": 401, "message": "Token has been invalidated", "result": null }
+                        """);
+                        return;
+                    }
+                }
+                catch
+                {
+                    // Bỏ qua nếu token không thể đọc được, để Authentication middleware xử lý
                 }
             }
             await _next(context); //Chuyển tiếp request đến middleware tiếp theo trong pipeline.

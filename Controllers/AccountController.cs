@@ -5,11 +5,13 @@ using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AccountController: ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -19,6 +21,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("send-email")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<string>>> SendEmail(
             [FromQuery(Name = "Email"), Required] string email)
         {
@@ -50,6 +53,7 @@ namespace ShopPC.Controllers
 
 
         [HttpPost("create")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<AccountResponse>>> CreateAccount(
             [FromForm(Name ="userName"), Required ] string userName,
             [FromForm(Name = "email"), Required] string email,
@@ -97,6 +101,7 @@ namespace ShopPC.Controllers
 
 
         [HttpPut("update/{accountId}")]
+        [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<AccountResponse>>> UpdateAccount(
             [FromRoute(Name = "accountId"), Required] string accountId,
             [FromForm(Name = "userName"), Required] string? userName,
@@ -144,6 +149,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getAccountById/{accountId}")]
+        [Authorize(Roles = "ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<AccountResponse>>> GetAccountById(
             [FromRoute(Name = "accountId"), Required] string accountId)
         {
@@ -174,6 +180,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getAllAccount")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<List<AccountResponse>>>> GetAllAccount()
         {
             var response = new ApiResponse<List<AccountResponse>>()

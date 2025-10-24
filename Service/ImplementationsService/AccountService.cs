@@ -37,7 +37,7 @@ namespace ShopPC.Service.ImplementationsService
                 <h2>Chào mừng đến với Nexora!</h2>
                 <p>Mã OTP xác thực đăng ký của bạn là:</p>
                 <h1 style='color: #2d89ef;'>{otp}</h1>
-                <p>Mã có hiệu lực trong <b>3 phút</b>.</p>
+                <p>Mã có hiệu lực trong <b>5 phút</b>.</p>
             </div>";
 
             await _emailService.SendEmailAsync(email, "Mã OTP đăng ký tài khoản", body);

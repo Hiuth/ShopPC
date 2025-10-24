@@ -20,15 +20,25 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<string> Login(string email, string password)
         {
-            var account = await _context.Users
-                .Include(u => u.roleName)
-                .FirstOrDefaultAsync(u => u.email == email && u.password == password);
-            if (account == null || account.password != password)
+            var account = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+
+            if (account == null)
+            {
+                throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
+            }
+
+            if (account.password != password)
             {
                 throw new AppException(ErrorCode.INVALID_CREDENTIALS);
             }
-            var roles = new List<string> { account.roleName };
-            var token = _jwtService.GenerateToken(account, roles);
+
+            var roleName = account.roleName;
+            if (string.IsNullOrEmpty(roleName))
+            {
+                throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+
+            var token = _jwtService.GenerateToken(account, roleName);
             return token;
         }
 
@@ -38,7 +48,6 @@ namespace ShopPC.Service.ImplementationsService
                 throw new AppException(ErrorCode.TOKEN_INVALID_OR_EXPIRED);
 
             await _tokenValidator.InvalidateTokenAsync(token);
-
         }
     }
 }

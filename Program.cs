@@ -7,6 +7,7 @@ using ShopPC.Repository.ImplementationsRepository;
 using ShopPC.Repository.InterfaceRepository;
 using ShopPC.Service.ImplementationsService;
 using ShopPC.Service.InterfaceService;
+using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,12 +25,44 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API for ShopPC application"
     });
+
+    // Map IFormFile to file input in Swagger
     c.MapType<IFormFile>(() => new Microsoft.OpenApi.Models.OpenApiSchema
     {
         Type = "string",
         Format = "binary"
     });
+
+    // --- Thêm cấu hình JWT Bearer cho Swagger ---
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme.\r\n\r\nEnter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
 });
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
@@ -89,9 +122,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.UseMiddleware<TokenBlacklistMiddleware>();
 
-app.UseMiddleware<GlobalExceptionHandler>();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -118,12 +149,19 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseCors("AllowAll");
+
+// 1) Xác thực
 app.UseAuthentication();
+
+// 2) Kiểm tra blacklist (sau khi parse token, trước khi authorize)
+app.UseMiddleware<TokenBlacklistMiddleware>();
+
+// 3) Phân quyền
 app.UseAuthorization();
 
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Home}/{action=Index}/{id?}");
+// Global error handler bọc Controller
+app.UseMiddleware<GlobalExceptionHandler>();
+
 app.MapControllers();
 
 using (var scope = app.Services.CreateScope())

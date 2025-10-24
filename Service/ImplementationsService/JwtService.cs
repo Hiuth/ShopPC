@@ -14,7 +14,7 @@ namespace ShopPC.Service.ImplementationsService
             _configuration = configuration;
         }
 
-        public string GenerateToken(Account user, IList<string> roles)
+        public string GenerateToken(Account user, string roles)
         {
             var claims = new List<Claim>//Claim là thông tin nhúng trong token, chứa dữ liệu của người dùng, Một token có thể chứa nhiều claim, mỗi claim là một cặp key - value.
             {
@@ -25,10 +25,7 @@ namespace ShopPC.Service.ImplementationsService
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // Mã định danh duy nhất cho token này
             };
 
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role)); //Thêm các vai trò (roles) của user vào danh sách claim
-            }
+     
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)); //SymmetricSecurityKey: tạo khóa mã hóa dựa trên chuỗi “Key” trong cấu hình.
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256); //SigningCredentials: Tạo chữ ký số cho token sử dụng thuật toán HMAC SHA256 và khóa mã hóa đã tạo.
 
@@ -37,7 +34,7 @@ namespace ShopPC.Service.ImplementationsService
                 issuer: _configuration["Jwt:Issuer"], //Nguồn phát hành token (Nexora)   
                 audience: _configuration["Jwt:Audience"], //Đối tượng sử dụng token (NexoraUser -> người dùng)
                 claims: claims, //dữ liệu người dùng đã chuẩn bị ở trên
-                expires: DateTime.UtcNow.AddSeconds(Convert.ToDouble(_configuration["Jwt: ValidDuration"])),// thời điểm hết hạn token
+                expires: DateTime.UtcNow.AddSeconds(Convert.ToDouble(_configuration["Jwt:ValidDuration"])),// thời điểm hết hạn token
                 signingCredentials: creds //chữ ký số  
              );
 
