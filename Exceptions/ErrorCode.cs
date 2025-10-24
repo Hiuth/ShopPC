@@ -103,7 +103,10 @@ namespace ShopPC.Exceptions
             = new ErrorCode(8004, "Email not exists", HttpStatusCode.BadRequest);
         public static readonly ErrorCode INVALID_OTP
             = new ErrorCode(8005, "Invalid OTP", HttpStatusCode.BadRequest);
-
+        public static readonly ErrorCode INVALID_CREDENTIALS
+            = new ErrorCode(8006, "Invalid credentials, Email or password wrong", HttpStatusCode.Unauthorized);
+        public static readonly ErrorCode TOKEN_INVALID_OR_EXPIRED
+            = new ErrorCode(8007, "Token is invalid or expired", HttpStatusCode.Unauthorized);
 
         //cart error codes
         public static readonly ErrorCode CART_NOT_EXISTS

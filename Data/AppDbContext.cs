@@ -22,29 +22,36 @@ namespace ShopPC.Data
         public DbSet<ProductImg> ProductImg { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public DbSet<Permission> Permissions { get; set; }
-        public DbSet<RolePermission> RolePermissions { get; set; }
+        //public DbSet<Permission> Permissions { get; set; }
+        //public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<Comment> Comment { get; set; }
         public DbSet<Report> Report { get; set; }
         public DbSet<ProductUnit> ProductUnits { get; set; }
         public DbSet<WarrantyRecord> WarrantyRecords { get; set; }
         public DbSet<PcBuild> PcBuilds { get; set; }
         public DbSet<PcBuildItem> PcBuildItems { get; set; }
+        public DbSet<InvalidatedToken> InvalidatedTokens { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<RolePermission>()
-                .HasKey(rp => new { rp.RoleName, rp.PermissionName }); // Khóa chính của bảng trung gian
+            //modelBuilder.Entity<RolePermission>()
+            //    .HasKey(rp => new { rp.RoleName, rp.PermissionName }); // Khóa chính của bảng trung gian
 
-            modelBuilder.Entity<RolePermission>()
-                .HasOne(rp => rp.Role)
-                .WithMany(r => r.RolePermissions)
-                .HasForeignKey(rp => rp.RoleName);
+            //modelBuilder.Entity<RolePermission>()
+            //    .HasOne(rp => rp.Role)
+            //    .WithMany(r => r.RolePermissions)
+            //    .HasForeignKey(rp => rp.RoleName);
 
-            modelBuilder.Entity<RolePermission>()
-                .HasOne(rp => rp.Permission)
-                .WithMany(p => p.RolePermissions)
-                .HasForeignKey(rp => rp.PermissionName);
+            //modelBuilder.Entity<RolePermission>()
+            //    .HasOne(rp => rp.Permission)
+            //    .WithMany(p => p.RolePermissions)
+            //    .HasForeignKey(rp => rp.PermissionName);
+
+            modelBuilder.Entity<Role>().HasData(
+                 new Role { roleName = "ADMIN", description = "Quản trị hệ thống" },
+                 new Role { roleName = "USER", description = "Người dùng thông thường" }
+            );
 
             modelBuilder.Entity<PcBuild>().ToTable("PcBuild");
         }

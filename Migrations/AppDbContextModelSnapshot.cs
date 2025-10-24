@@ -54,6 +54,10 @@ namespace ShopPC.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("roleName")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("userName")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -62,6 +66,8 @@ namespace ShopPC.Migrations
 
                     b.HasIndex("email")
                         .IsUnique();
+
+                    b.HasIndex("roleName");
 
                     b.ToTable("Users");
                 });
@@ -183,6 +189,19 @@ namespace ShopPC.Migrations
                     b.HasIndex("productId");
 
                     b.ToTable("Comment");
+                });
+
+            modelBuilder.Entity("ShopPC.Models.InvalidatedToken", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("ExpiryTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("InvalidatedTokens");
                 });
 
             modelBuilder.Entity("ShopPC.Models.Notification", b =>
@@ -332,20 +351,6 @@ namespace ShopPC.Migrations
                     b.HasIndex("productId");
 
                     b.ToTable("PcBuildItems");
-                });
-
-            modelBuilder.Entity("ShopPC.Models.Permission", b =>
-                {
-                    b.Property<string>("permissionName")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("permissionName");
-
-                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("ShopPC.Models.ProductAttribute", b =>
@@ -517,21 +522,18 @@ namespace ShopPC.Migrations
                     b.HasKey("roleName");
 
                     b.ToTable("Roles");
-                });
 
-            modelBuilder.Entity("ShopPC.Models.RolePermission", b =>
-                {
-                    b.Property<string>("RoleName")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("PermissionName")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("RoleName", "PermissionName");
-
-                    b.HasIndex("PermissionName");
-
-                    b.ToTable("RolePermissions");
+                    b.HasData(
+                        new
+                        {
+                            roleName = "ADMIN",
+                            description = "Quản trị hệ thống"
+                        },
+                        new
+                        {
+                            roleName = "USER",
+                            description = "Người dùng thông thường"
+                        });
                 });
 
             modelBuilder.Entity("ShopPC.Models.SubCategory", b =>
@@ -604,6 +606,17 @@ namespace ShopPC.Migrations
                     b.HasBaseType("ShopPC.Models.Products");
 
                     b.ToTable("PcBuild", (string)null);
+                });
+
+            modelBuilder.Entity("ShopPC.Models.Account", b =>
+                {
+                    b.HasOne("ShopPC.Models.Role", "Role")
+                        .WithMany("Accounts")
+                        .HasForeignKey("roleName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("ShopPC.Models.Attributes", b =>
@@ -799,25 +812,6 @@ namespace ShopPC.Migrations
                     b.Navigation("account");
                 });
 
-            modelBuilder.Entity("ShopPC.Models.RolePermission", b =>
-                {
-                    b.HasOne("ShopPC.Models.Permission", "Permission")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShopPC.Models.Role", "Role")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("RoleName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("ShopPC.Models.SubCategory", b =>
                 {
                     b.HasOne("ShopPC.Models.Category", "category")
@@ -904,11 +898,6 @@ namespace ShopPC.Migrations
                     b.Navigation("warrantyRecords");
                 });
 
-            modelBuilder.Entity("ShopPC.Models.Permission", b =>
-                {
-                    b.Navigation("RolePermissions");
-                });
-
             modelBuilder.Entity("ShopPC.Models.ProductUnit", b =>
                 {
                     b.Navigation("warrantyRecord")
@@ -936,7 +925,7 @@ namespace ShopPC.Migrations
 
             modelBuilder.Entity("ShopPC.Models.Role", b =>
                 {
-                    b.Navigation("RolePermissions");
+                    b.Navigation("Accounts");
                 });
 
             modelBuilder.Entity("ShopPC.Models.SubCategory", b =>

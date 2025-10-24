@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using ShopPC.Configuration;
 using ShopPC.Data;
 using ShopPC.Exceptions;
@@ -77,8 +78,18 @@ builder.Services.AddScoped<IWarrantyRecordService, WarrantyService>();
 builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("EmailConfig"));
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddSingleton<OtpService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddSecurityConfiguration(builder.Configuration);
+builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<TokenValidator>();
+
+builder.Services.AddControllers();
+
+
 var app = builder.Build();
 
+app.UseMiddleware<TokenBlacklistMiddleware>();
 
 app.UseMiddleware<GlobalExceptionHandler>();
 // Configure the HTTP request pipeline.
@@ -106,6 +117,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseCors("AllowAll");
+app.UseAuthentication();
 app.UseAuthorization();
 
 //app.MapControllerRoute(

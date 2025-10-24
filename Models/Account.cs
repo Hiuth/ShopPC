@@ -20,6 +20,10 @@ namespace ShopPC.Models
         // 1 account có nhiều role
         //public ICollection<Role> roles { get; set; } = new List<Role>();
 
+        [ForeignKey(nameof(Role))]
+        public string roleName { get; set; } = "USER";
+        public Role Role { get; set; } = null!;
+
         // 1 account có nhiều order
         public ICollection<Order> orders { get; set; } = new List<Order>();
 
