@@ -17,15 +17,21 @@ namespace ShopPC.Service.ImplementationsService
         private readonly ICartRepository _cartRepository;
         private readonly IProductRepository _productRepository;
         private readonly IAccountRepository _accountRepository;
-        public CartService(ICartRepository cartRepository, IProductRepository productRepository, IAccountRepository accountRepository)
+        private readonly ICurrentUserService _currentUserService;
+        public CartService(ICartRepository cartRepository, IProductRepository productRepository, 
+            IAccountRepository accountRepository, ICurrentUserService currentUserService)
         {
             _cartRepository = cartRepository;
             _productRepository = productRepository;
             _accountRepository = accountRepository;
+            _currentUserService = currentUserService;
         }
 
-        public async Task<CartResponse> AddToCart(string accountId, string productId, CartRequest request)
+        public async Task<CartResponse> AddToCart(string productId, CartRequest request)
         {
+            var accountId = _currentUserService.GetCurrentUserId()
+                ?? throw new AppException(ErrorCode.NOT_AUTHENTICATED);
+
             var product = await _productRepository.GetByIdAsync(productId)
                 ?? throw new AppException(ErrorCode.PRODUCT_NOT_EXISTS);
             if (!await _productRepository.ExistsAsync(productId))
@@ -69,8 +75,10 @@ namespace ShopPC.Service.ImplementationsService
             return CartMapper.toCartResponse(cart);
         }
 
-        public async Task<List<CartResponse>> GetCartByAccountId(string accountId)
+        public async Task<List<CartResponse>> GetCartByAccountId()
         {
+            var accountId = _currentUserService.GetCurrentUserId()
+                ?? throw new AppException(ErrorCode.NOT_AUTHENTICATED);
             if (!await _accountRepository.ExistsAsync(accountId))
             {
                 throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
@@ -87,8 +95,10 @@ namespace ShopPC.Service.ImplementationsService
             return "Delete cart successfully";
         }
 
-        public async Task<string> ClearAllCart(string accountId)
+        public async Task<string> ClearAllCart()
         {
+            var accountId = _currentUserService.GetCurrentUserId()
+                ?? throw new AppException(ErrorCode.NOT_AUTHENTICATED);
             if (!await _accountRepository.ExistsAsync(accountId))
             {
                 throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);

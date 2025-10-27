@@ -18,9 +18,8 @@ namespace ShopPC.Controllers
             _cartService = cartService;
         }
 
-        [HttpPost("add/{accountId}/{productId}")]
+        [HttpPost("add/{productId}")]
         public async Task<ActionResult<ApiResponse<CartResponse>>> AddToCart(
-            [FromRoute(Name = "accountId"), Required] string accountId,
             [FromRoute(Name = "productId"), Required] string productId,
             [FromForm(Name = "quantity")][Required] int quantity)
         {
@@ -35,7 +34,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var cart = await _cartService.AddToCart(accountId, productId, request);
+                var cart = await _cartService.AddToCart( productId, request);
                 response.Result = cart;
                 return Ok(response);
             }
@@ -90,9 +89,8 @@ namespace ShopPC.Controllers
             }
         }
 
-        [HttpGet("get/{accountId}")]
-        public async Task<ActionResult<ApiResponse<List<CartResponse>>>> GetCartByAccountId(
-            [FromRoute(Name = "accountId"), Required] string accountId)
+        [HttpGet("getByAccount")]
+        public async Task<ActionResult<ApiResponse<List<CartResponse>>>> GetCartByAccountId()
         {
             var response = new ApiResponse<List<CartResponse>>()
             {
@@ -100,7 +98,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var carts = await _cartService.GetCartByAccountId(accountId);
+                var carts = await _cartService.GetCartByAccountId();
                 response.Result = carts;
                 return Ok(response);
             }
@@ -150,9 +148,8 @@ namespace ShopPC.Controllers
             }
         }
 
-        [HttpDelete("clearAll/{accountId}")]
-        public async Task<ActionResult<ApiResponse<string>>> ClearAllCart(
-            [FromRoute(Name = "accountId"), Required] string accountId)
+        [HttpDelete("clearAll")]
+        public async Task<ActionResult<ApiResponse<string>>> ClearAllCart()
         {
             var response = new ApiResponse<string>()
             {
@@ -160,7 +157,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var result = await _cartService.ClearAllCart(accountId);
+                var result = await _cartService.ClearAllCart();
                 response.Result = result;
                 return Ok(response);
             }

@@ -5,11 +5,13 @@ using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AttributeController : ControllerBase
     {
         private readonly IAttributesService _attributeService;
@@ -18,7 +20,9 @@ namespace ShopPC.Controllers
             _attributeService = attributeService;
         }
 
+
         [HttpPost("create/{categoryId}")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<AttributesResponse>>> CreateAttribute(
             [FromRoute(Name = "categoryId")] string categoryId,
             [FromForm(Name = "attributeName")][Required] string attributeName)
@@ -54,6 +58,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{attributeId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<AttributesResponse>>> UpdateAttribute(
             [FromRoute(Name = "attributeId")] string attributeId,
             [FromForm(Name = "attributeName")] string? attributeName,
@@ -91,6 +96,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getById/{attributeId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<AttributesResponse>>> GetAttributeById(
             [FromRoute(Name = "attributeId")] string attributeId)
         {
@@ -121,6 +127,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getAll")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<List<AttributesResponse>>>> GetAllAttributes()
         {
             var response = new ApiResponse<List<AttributesResponse>>()
@@ -150,6 +157,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getByCategoryId/{categoryId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<AttributesResponse>>>> GetAttributesByCategoryId(
             [FromRoute(Name = "categoryId")] string categoryId)
         {

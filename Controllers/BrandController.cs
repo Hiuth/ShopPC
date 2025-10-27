@@ -5,11 +5,13 @@ using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class BrandController: ControllerBase
     {
         private readonly IBrandService _brandService;
@@ -19,6 +21,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPost("create/{categoryId}")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<BrandResponse>>> createBrand(
             [FromRoute(Name = "categoryId")] string categoryId,
             [FromForm(Name = "brandName")][Required] string brandName)
@@ -54,6 +57,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{brandId}")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<BrandResponse>>> updateBrand(
             [FromRoute(Name = "brandId")] string brandId,
             [FromForm(Name = "brandName")] string? brandName,
@@ -90,6 +94,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getAll")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<BrandResponse>>>> getAllBrand()
         {
             var response = new ApiResponse<List<BrandResponse>>()
@@ -119,6 +124,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getById/{brandId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<BrandResponse>>> getBrandById(
             [FromRoute(Name = "brandId")] string brandId)
         {
@@ -149,6 +155,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getByCategoryId/{categoryId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<BrandResponse>>>> getBrandByCategoryId(
             [FromRoute(Name = "categoryId")] string categoryId)
         {
