@@ -31,6 +31,7 @@ namespace ShopPC.Data
         public DbSet<PcBuild> PcBuilds { get; set; }
         public DbSet<PcBuildItem> PcBuildItems { get; set; }
         public DbSet<InvalidatedToken> InvalidatedTokens { get; set; }
+        public DbSet<WarrantyUpdateLog> WarrantyUpdateLogs { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -24,12 +24,11 @@ namespace ShopPC.Controllers
         public async Task<ActionResult<ApiResponse<WarrantyRecordResponse>>> CreateWarrantyPeriod(
             [FromRoute][Required] string productId,
             [FromRoute][Required] string orderId,
-            [FromRoute][Required] string productUnitId,
-            [FromForm][Required] string status)
+            [FromRoute][Required] string productUnitId)
         {
             var request = new WarrantyRecordRequest
             {
-                status = status
+                status = "VALID"
             };
 
             var response = new ApiResponse<WarrantyRecordResponse>()
@@ -221,7 +220,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("GetByStatus/{status}")]
-        [Authorize(Roles = "ADMIN")]]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<List<WarrantyRecordResponse>>>> GetWarrantyRecordByStatus(
             [FromRoute][Required] string status)
         {
