@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
@@ -9,6 +10,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ShopPC.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
     public class OrderDetailController : ControllerBase
     {
         private readonly IOrderDetailService _orderDetailService;
@@ -16,7 +20,8 @@ namespace ShopPC.Controllers
         {
             _orderDetailService = orderDetailService;
         }
-        [HttpPost("/createOrderDetail/{orderId}/{productId}")]
+        [HttpPost("createOrderDetail/{orderId}/{productId}")]
+        [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<OrderDetailResponse>>> createOrderDetail(
             [FromRoute(Name = "orderId")] string orderId,
             [FromRoute(Name = "productId")] string productId,
@@ -54,7 +59,8 @@ namespace ShopPC.Controllers
             }
         }
 
-        [HttpGet("/getOrderDetails/{orderId}")]
+        [HttpGet("getOrderDetails/{orderId}")]
+        [Authorize(Roles ="ADMIN, USER")]
         public async Task<ActionResult<ApiResponse<List<OrderDetailResponse>>>> getOrderDetailsByOrderId(
             [FromRoute(Name = "orderId")] string orderId)
         {
@@ -85,6 +91,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpDelete("/deleteOrderDetails/{orderId}")]
+        [Authorize(Roles = "ADMIN, USER")]
         public async Task<ActionResult<ApiResponse<string>>> deleteOrderDetailsByOrderId(
             [FromRoute(Name = "orderId")] string orderId)
         {

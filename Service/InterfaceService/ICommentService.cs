@@ -11,9 +11,9 @@ namespace ShopPC.Service.InterfaceService
 {
     public interface ICommentService
     {
-        Task<CommentResponse> CreateComment(string accountId, string productId, CommentRequest request);
+        Task<CommentResponse> CreateComment(string productId, CommentRequest request);
         Task<List<CommentResponse>> GetCommentsByProductId(string productId);
-        Task<List<CommentResponse>> GetCommentsByAccountId(string accountId);
+        Task<List<CommentResponse>> GetCommentsByAccountId();
         Task<string> DeleteComment(string commentId);
         Task<CommentResponse> UpdateComment(string commentId, CommentRequest request);
         Task<RatingSummaryResponse> GetRatingSummaryByProductId(string productId);

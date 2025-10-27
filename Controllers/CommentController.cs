@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
@@ -11,6 +12,7 @@ namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _commentService;
@@ -20,6 +22,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPost("create/{accountId}/{productId}")]
+        [Authorize(Roles = "ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<CommentResponse>>> createComment(
             [FromRoute(Name = "productId")] string productId,
             [FromRoute(Name = "accountId")] string accountId,
@@ -38,7 +41,7 @@ namespace ShopPC.Controllers
 
             try
             {
-                var comment = await _commentService.CreateComment(accountId, productId, request);
+                var comment = await _commentService.CreateComment( productId, request);
                 response.Result = comment;
                 return Ok(response);
             }
@@ -59,6 +62,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{commentId}")]
+        [Authorize(Roles = "ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<CommentResponse>>> updateComment(
             [FromRoute(Name = "commentId")] string commentId,
             [FromForm(Name = "content")] string? content,
@@ -95,6 +99,7 @@ namespace ShopPC.Controllers
             }
         }
         [HttpDelete("delete/{commentId}")]
+        [Authorize(Roles = "ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<string>>> deleteComment(
             [FromRoute(Name = "commentId")] string commentId)
         {
@@ -126,6 +131,7 @@ namespace ShopPC.Controllers
 
 
         [HttpGet("getByProduct/{productId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<CommentResponse>>>> getCommentsByProductId(
             [FromRoute(Name = "productId")] string productId)
         {
@@ -156,6 +162,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getByAccount/{accountId}")]
+        [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<List<CommentResponse>>>> getCommentsByAccountId(
             [FromRoute(Name = "accountId")] string accountId)
         {
@@ -165,7 +172,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var comments = await _commentService.GetCommentsByAccountId(accountId);
+                var comments = await _commentService.GetCommentsByAccountId();
                 response.Result = comments;
                 return Ok(response);
             }
@@ -186,6 +193,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("summary/{productId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<RatingSummaryResponse>>> getRatingSummary(
             [FromRoute(Name ="productId")] string productId)
         {

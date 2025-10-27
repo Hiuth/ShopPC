@@ -1,4 +1,5 @@
 ﻿using CloudinaryDotNet;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
@@ -12,6 +13,7 @@ namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -20,9 +22,9 @@ namespace ShopPC.Controllers
             _orderService = orderService;
         }
 
-        [HttpPost("create/{accountId}")]
+        [HttpPost("create")]
+        [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<OrderResponse>>> createOrder(
-            [FromRoute(Name="accountId")] string accountId,
             [FromForm(Name ="status")] [Required] string status,
             [FromForm(Name ="totalAmount")] [Required] decimal totalAmount,
             [FromForm(Name ="customerName")] [Required] string cusotmerName,
@@ -44,7 +46,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var order = await _orderService.CreateOrder(accountId,request) ;
+                var order = await _orderService.CreateOrder(request) ;
                 response.Result = order;
                 return Ok(response);
             }
@@ -65,6 +67,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{orderId}")]
+        [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<OrderResponse>>> updateOrder(
             [FromRoute(Name = "orderId")] string orderId,
             [FromForm(Name = "status")] string? status,
@@ -108,9 +111,9 @@ namespace ShopPC.Controllers
             }
         }
 
-        [HttpGet("getOrderByAccountId/{accountId}")]
-        public async Task<ActionResult<ApiResponse<List<OrderResponse>>>> getOrdersByAccountId(
-            [FromForm(Name = "accountId")] string accountId)
+        [HttpGet("getOrderByAccountId")]
+        [Authorize(Roles ="ADMIN,USER")]
+        public async Task<ActionResult<ApiResponse<List<OrderResponse>>>> getOrdersByAccountId()
         {
             var response = new ApiResponse<List<OrderResponse>>()
             {
@@ -119,7 +122,7 @@ namespace ShopPC.Controllers
 
             try
             {
-                var order = await _orderService.GetOrdersByAccountId(accountId);
+                var order = await _orderService.GetOrdersByAccountId();
                 response.Result = order;
                 return Ok(response);
             }
@@ -140,6 +143,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getAllOrders")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<List<OrderResponse>>>> getAllOrders()
         {
             var response = new ApiResponse<List<OrderResponse>>()
@@ -169,6 +173,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpDelete("deleteOrder/{orderId}")]
+        [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<string>>> deleteOrder(
             [FromRoute(Name = "orderId")] string orderId)
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
@@ -11,6 +12,7 @@ namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class PcBuildController : ControllerBase
     {
         private readonly IPcBuildService _pcBuildService;
@@ -20,6 +22,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPost("create/{subCategoryId}")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<PcBuildResponse>>> CreatePcBuild(
             [FromRoute(Name = "subCategoryId")] string subCategoryId,
             [FromForm(Name = "pcBuildName")][Required] string pcBuildName,
@@ -63,6 +66,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{pcBuildId}")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<PcBuildResponse>>> UpdatePcBuild(
             [FromRoute(Name = "pcBuildId")] string pcBuildId,
             [FromForm(Name = "subCategoryId")] string? subCategoryId,
@@ -106,6 +110,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getById/{pcBuildId}")]
+        [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<PcBuildResponse>>> GetPcBuildById(
             [FromRoute(Name = "pcBuildId")] string pcBuildId)
         {
@@ -136,6 +141,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpDelete("delete/{pcBuildId}")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<string>>> DeletePcBuild(
             [FromRoute(Name = "pcBuildId")] string pcBuildId)
         {
@@ -167,6 +173,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getAll")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<PcBuildResponse>>>> GetAllPcBuilds(
             [FromQuery(Name = "pageNumber")] int pageNumber = 1,
             [FromQuery(Name = "pageSize")] int pageSize = 10)
@@ -198,6 +205,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getBySubCategory/{subCategoryId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<PcBuildResponse>>>> GetPcBuildsBySubCategoryId(
             [FromRoute(Name = "subCategoryId")] string subCategoryId,
             [FromQuery(Name = "pageNumber")] int pageNumber = 1,

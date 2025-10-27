@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
@@ -12,6 +13,7 @@ namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductUnitController : ControllerBase
     {
         private readonly IProductUnitService _productUnitService;
@@ -21,6 +23,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPost("create/{productId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<ProductUnitResponse>>> createProductUnit(
             [FromRoute(Name = "productId")] string productId,
             [FromForm(Name = "imei")] string? imei,
@@ -62,6 +65,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{productUnitId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<ProductUnitResponse>>> updateProductUnit(
             [FromRoute(Name = "productUnitId")] string productUnitId,
             [FromForm(Name = "imei")] string? imei,
@@ -101,6 +105,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpDelete("delete/{productUnitId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<string>>> deleteProductUnit(
             [FromRoute(Name = "productUnitId")] string productUnitId)
         {
@@ -131,6 +136,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getProductUnitByProductId/{productId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<List<ProductUnitResponse>>>> getProductUnitsByProductId(
             [FromRoute(Name = "productId")] string productId)
         {
@@ -161,6 +167,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getProductUnitById/{productUnitId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<ProductUnitResponse>>> getProductUnitById(
             [FromRoute(Name = "productUnitId")] string productUnitId)
         {

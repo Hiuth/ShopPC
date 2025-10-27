@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
@@ -10,6 +11,7 @@ namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class WarrantyRecordController : ControllerBase
     {
         private readonly IWarrantyRecordService _warrantyRecordService;
@@ -18,6 +20,7 @@ namespace ShopPC.Controllers
             _warrantyRecordService = warrantyRecordService;
         }
         [HttpPost("create/{productId}/{orderId}/{productUnitId}")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<WarrantyRecordResponse>>> CreateWarrantyPeriod(
             [FromRoute][Required] string productId,
             [FromRoute][Required] string orderId,
@@ -57,6 +60,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{warrantyPeriodId}")]
+        [Authorize(Roles = "ADMIN")]    
         public async Task<ActionResult<ApiResponse<WarrantyRecordResponse>>> UpdateWarrantyPeriod(
             [FromRoute][Required] string warrantyPeriodId,
             [FromForm][Required] string status)
@@ -92,6 +96,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("GetBySerialNumber/{serialNumber}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<WarrantyRecordResponse>>> GetWarrantyRecordBySerialNumber(
             [FromRoute][Required] string serialNumber)
         {
@@ -122,6 +127,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("GetByImei/{imei}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<WarrantyRecordResponse>>> GetWarrnatyRecordByImei(
             [FromRoute][Required] string imei)
         {
@@ -153,6 +159,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("GetByProductId/{productId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<List<WarrantyRecordResponse>>>> GetWarrantyRecordByProductId(
             [FromRoute][Required] string productId)
         {
@@ -183,6 +190,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("GetByOrderId/{orderId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<WarrantyRecordResponse>>>> GetWarrantyRecordByOrderId(
             [FromRoute][Required] string orderId)
         {
@@ -213,6 +221,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("GetByStatus/{status}")]
+        [Authorize(Roles = "ADMIN")]]
         public async Task<ActionResult<ApiResponse<List<WarrantyRecordResponse>>>> GetWarrantyRecordByStatus(
             [FromRoute][Required] string status)
         {
@@ -243,6 +252,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpDelete("delete/{warrantyPeriodId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<string>>> DeleteWarrnatyRecordById(
             [FromRoute][Required] string warrantyPeriodId)
         {

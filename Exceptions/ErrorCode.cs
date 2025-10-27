@@ -111,6 +111,8 @@ namespace ShopPC.Exceptions
             = new ErrorCode(8008, "User is not authenticated", HttpStatusCode.Unauthorized);
         public static readonly ErrorCode PASSWORD_CAN_NOT_LIKES_OLD_PASSWORD
             = new ErrorCode(8009, "New password can not be the same as the old password", HttpStatusCode.BadRequest);
+        public static readonly ErrorCode UNAUTHORIZED
+            = new ErrorCode(8010, "User is unauthorized to perform this action", HttpStatusCode.Unauthorized);
 
         //cart error codes
         public static readonly ErrorCode CART_NOT_EXISTS

@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
@@ -11,6 +12,7 @@ namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -20,6 +22,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPost("create/{brandId}/{subCategoryId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<ProductResponse>>> createProduct(
             [FromRoute(Name="brandId")] string brandId,
             [FromRoute(Name="subCategoryId")] string subCategoryId,
@@ -69,6 +72,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{productId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<ProductResponse>>> updateProduct(
             [FromRoute(Name="productId")] string productId,
             [FromForm(Name = "brandId")] string? brandId,
@@ -119,6 +123,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getAll")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<ProductResponse>>>> getAllProduct(
             [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
@@ -149,6 +154,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getBysubCategoryId/{subCategoryId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<ProductResponse>>>> getProductBySubCategoryId(
             [FromRoute(Name ="subCategoryId")] string subCategoryId,
             [FromQuery] int pageNumber = 1,
@@ -181,6 +187,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getByBrandId/{brandId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<ProductResponse>>>> getProductByBrandId(
             [FromRoute(Name="brandId")] string brandId,
             [FromQuery] int pageNumber = 1,
@@ -214,6 +221,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("searchProduct/{key}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<ProductResponse>>>> searchProduct(
             [FromRoute(Name="key")] string key,
             [FromQuery] int pageNumber = 1, 
@@ -247,6 +255,7 @@ namespace ShopPC.Controllers
 
 
         [HttpGet("getByPriceRange/{minPrice}/{maxPrice}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<ProductResponse>>>> getByPriceRange(
             [FromRoute(Name = "minPrice")] decimal minPrice,
             [FromRoute(Name ="maxPrice")] decimal maxPrice,
@@ -280,6 +289,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getById/{productId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<ProductResponse>>> getProductById(
             [FromRoute(Name = "productId")] string productId)
         {

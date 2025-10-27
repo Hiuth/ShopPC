@@ -5,11 +5,13 @@ using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -20,6 +22,7 @@ namespace ShopPC.Controllers
 
 
         [HttpPost("create")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<CategoryResponse>>> createCategory(
             [FromForm(Name ="categoryName")][Required] string categoryName, [Required] IFormFile file)
         {
@@ -54,6 +57,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{categoryId}")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<CategoryResponse>>> updateCategory(
             [FromRoute(Name ="categoryId")] string categoryId, [FromForm(Name ="categoryName")] string? categoryName, IFormFile? file)
         {
@@ -88,6 +92,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getAll")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<CategoryResponse>>>> getAllCategory()
         {
             var response = new ApiResponse<List<CategoryResponse>>()
@@ -117,6 +122,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getById/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<CategoryResponse>>> getCategoryById([FromRoute] string id)
         {
             var response = new ApiResponse<CategoryResponse>()

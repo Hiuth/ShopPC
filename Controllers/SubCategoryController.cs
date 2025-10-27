@@ -4,11 +4,13 @@ using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class SubCategoryController : ControllerBase
     {
         private readonly ISubCategoryService _subCategoryService;
@@ -18,6 +20,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPost("create/{categoryId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<SubCategoryResponse>>> createSubCategory(
             [FromForm(Name = "subCategoryName")] [Required] string subCategoryName,
             [FromRoute(Name = "categoryId")] string categoryId,
@@ -56,6 +59,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{subCategoryId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<SubCategoryResponse>>> updateSubCategory(
             [FromRoute(Name = "subCategoryId")] string subCategoryId,
             [FromForm(Name = "categoryId")] string? categoryId,
@@ -95,6 +99,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getAll")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<SubCategoryResponse>>>> getAllSubCategory()
         {
             var response = new ApiResponse<List<SubCategoryResponse>>()
@@ -124,6 +129,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getById/{subCategoryId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<SubCategoryResponse>>> getSubCategoryById(
             [FromRoute(Name = "subCategoryId")] string subCategoryId)
         {
@@ -154,6 +160,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getByCategoryId/{categoryId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<SubCategoryResponse>>>> getSubCategoryByCategoryId(
             [FromRoute(Name = "categoryId")] string categoryId)
         {

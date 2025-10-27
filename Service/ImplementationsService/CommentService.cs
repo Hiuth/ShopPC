@@ -14,15 +14,19 @@ namespace ShopPC.Service.ImplementationsService
         private readonly ICommentRepository _commentRepository;
         private readonly IProductRepository _productRepository;
         private readonly IAccountRepository _accountRepository;
-        public CommentService(ICommentRepository commentRepository, IProductRepository productRepository, IAccountRepository accountRepository)
+        private readonly ICurrentUserService _currentUserService;
+        public CommentService(ICommentRepository commentRepository, IProductRepository productRepository,
+            IAccountRepository accountRepository, ICurrentUserService currentUserService)
         {
             _commentRepository = commentRepository;
             _productRepository = productRepository;
             _accountRepository = accountRepository;
+            _currentUserService = currentUserService;
         }
 
-        public async Task<CommentResponse> CreateComment(string accountId, string productId, CommentRequest request)
+        public async Task<CommentResponse> CreateComment( string productId, CommentRequest request)
         {
+            var accountId = _currentUserService.GetCurrentUserId();
             if (!await _accountRepository.ExistsAsync(accountId))
             {
                 throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
@@ -44,8 +48,14 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<CommentResponse> UpdateComment(string commentId, CommentRequest request)
         {
+            var accountId = _currentUserService.GetCurrentUserId();
             var comment = await _commentRepository.GetByIdAsync(commentId) ??
                 throw new AppException(ErrorCode.COMMENT_NOT_EXISTS);
+            if (comment.accountId != accountId)
+            {
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
+
             if (!String.IsNullOrWhiteSpace(request.content))
             {
                 comment.content = request.content;
@@ -64,9 +74,14 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<string> DeleteComment(string commentId)
         {
+            var accountId = _currentUserService.GetCurrentUserId();
             var comment = await _commentRepository.GetByIdAsync(commentId) ??
                 throw new AppException(ErrorCode.COMMENT_NOT_EXISTS);
-            await _commentRepository.DeleteAsync(comment.id);
+            if (comment.accountId != accountId)
+            {
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
+             await _commentRepository.DeleteAsync(comment.id);
             if (await _commentRepository.ExistsAsync(commentId))
             {
                 return "Delete comment fail";
@@ -84,8 +99,9 @@ namespace ShopPC.Service.ImplementationsService
             return comments.Select(CommentMapper.toCommentResponse).ToList();
         }
 
-        public async Task<List<CommentResponse>> GetCommentsByAccountId(string accountId)
+        public async Task<List<CommentResponse>> GetCommentsByAccountId()
         {
+            var accountId = _currentUserService.GetCurrentUserId();
             if (!await _accountRepository.ExistsAsync(accountId))
             {
                 throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);

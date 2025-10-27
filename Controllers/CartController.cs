@@ -5,11 +5,13 @@ using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;
@@ -19,6 +21,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPost("add/{productId}")]
+        [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<CartResponse>>> AddToCart(
             [FromRoute(Name = "productId"), Required] string productId,
             [FromForm(Name = "quantity")][Required] int quantity)
@@ -55,6 +58,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{cartId}")]
+        [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<CartResponse>>> UpdateCart(
             [FromRoute(Name = "cartId"), Required] string cartId,
             [FromForm(Name = "quantity")] int? quantity)
@@ -90,6 +94,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getByAccount")]
+        [Authorize(Roles = "ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<List<CartResponse>>>> GetCartByAccountId()
         {
             var response = new ApiResponse<List<CartResponse>>()
@@ -119,6 +124,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpDelete("clear/{cartId}")]
+        [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<string>>> ClearCart(
             [FromRoute(Name = "cartId"), Required] string cartId)
         {
@@ -149,6 +155,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpDelete("clearAll")]
+        [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<string>>> ClearAllCart()
         {
             var response = new ApiResponse<string>()

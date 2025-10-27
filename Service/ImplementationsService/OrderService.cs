@@ -14,16 +14,20 @@ namespace ShopPC.Service.ImplementationsService
         private readonly IOrderRepository _orderRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IOrderDetailRepository _orderDetailRepository;
-        public OrderService(IOrderRepository orderRepository, IAccountRepository accountRepository, IOrderDetailRepository orderDetailRepository)
+        private readonly ICurrentUserService _currentUserService;
+        public OrderService(IOrderRepository orderRepository, IAccountRepository accountRepository,
+            IOrderDetailRepository orderDetailRepository, ICurrentUserService currentUserService)
         {
             _orderRepository = orderRepository;
             _accountRepository = accountRepository;
             _orderDetailRepository = orderDetailRepository;
+            _currentUserService = currentUserService;
         }
 
-        public async Task<OrderResponse> CreateOrder(string accountId, OrderRequest request)
+        public async Task<OrderResponse> CreateOrder( OrderRequest request)
         {
-            if(!await _accountRepository.ExistsAsync(accountId))
+            var accountId = _currentUserService.GetCurrentUserId();
+            if (!await _accountRepository.ExistsAsync(accountId))
             {
                 throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
             }
@@ -58,8 +62,9 @@ namespace ShopPC.Service.ImplementationsService
             return OrderMapper.toOrderResponse(order);
         }
 
-        public async Task<List<OrderResponse>> GetOrdersByAccountId(string accountId)
+        public async Task<List<OrderResponse>> GetOrdersByAccountId()
         {
+            var accountId = _currentUserService.GetCurrentUserId();
             if (!await _accountRepository.ExistsAsync(accountId))
             {
                 throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);

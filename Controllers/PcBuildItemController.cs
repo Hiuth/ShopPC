@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
@@ -12,6 +13,7 @@ namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class PcBuildItemController : ControllerBase
     {
         private readonly IPcBuildItemService _pcBuildItemService;
@@ -21,6 +23,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPost("create/{pcBuildId}/{productId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<PcBuildItemResponse>>> createPCBuildItem(
             [FromRoute(Name = "pcBuildId")] string pcBuildId,
             [FromRoute(Name = "productId")][Required] string productId,
@@ -60,6 +63,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{pcBuildItemId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<PcBuildItemResponse>>> updatePcBuildItem(
             [FromRoute(Name = "pcBuildItemId")] string pcBuildItemId,
             [FromForm(Name = "productId")] string? productId,
@@ -99,6 +103,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getAllByPcBuildById/{pcBuildItemId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<PcBuildItemResponse>>>> getAllPcBuildItem(
                [FromRoute(Name = "pcBuildItemId")] string pcBuildItemId)
         {
@@ -130,6 +135,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpDelete("delete/{pcBuildItemId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<string>>> deletePcBuildItem(
             [FromRoute(Name = "pcBuildItemId")] string pcBuildItemId)
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ShopPC.DTO.Request;
@@ -13,6 +14,7 @@ namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductImgController : ControllerBase
     {
         private readonly IProductImgService _productImgService;
@@ -22,6 +24,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPost("create/{productId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<ProductImgResponse>>> createProductImg(
             [FromRoute(Name ="productId")]string productId,
            [Required] IFormFile file)
@@ -54,6 +57,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getAllByProductId/{productId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<ProductImgResponse>>>> getProductImgByProductId(
             [FromRoute(Name="productId")] string productId)
         {
@@ -84,6 +88,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpDelete("delete/{productImgId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<string>> deleteProductImg(
             [FromRoute(Name="productImgId")] string productImgId)
         {

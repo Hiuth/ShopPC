@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopPC.DTO.Request;
 using ShopPC.DTO.Response;
 using ShopPC.Exceptions;
@@ -12,6 +13,7 @@ namespace ShopPC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductAttributeController: ControllerBase
     {
         private readonly IProductAttributeSerivce _IProductAttributeSerivce;
@@ -21,6 +23,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPost("create/{attributeId}/{productId}")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<ProductAttributeResponse>>> createProductAttribute(
             [FromRoute(Name="attributeId")] string attributeId,
             [FromRoute(Name="productId")] string productId,
@@ -58,6 +61,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{productAttributeId}")]
+        [Authorize(Roles="ADMIN")]
         public async Task<ActionResult<ApiResponse<ProductAttributeResponse>>> updateProductAttribute(
             [FromRoute(Name = "productAttributeId")] string productAttributeId,
             [FromForm(Name = "attributeId")] string? attributeId,
@@ -94,6 +98,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getByProductId/{productId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<List<ProductAttributeResponse>>>> getProductAttributeByProductId(
             [FromRoute(Name = "productId")] string productId)
         {
@@ -124,6 +129,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpDelete("delete/{productAttributeId}")]
+        [Authorize(Roles ="ADMIN")]
         public async Task<ActionResult<ApiResponse<string>>> deleteProductAttribute(
             [FromRoute(Name = "productAttributeId")] string productAttributeId)
         {
