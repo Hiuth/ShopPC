@@ -100,10 +100,9 @@ namespace ShopPC.Controllers
         }
 
 
-        [HttpPut("update/{accountId}")]
+        [HttpPut("update")]
         [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<AccountResponse>>> UpdateAccount(
-            [FromRoute(Name = "accountId"), Required] string accountId,
             [FromForm(Name = "userName"), Required] string? userName,
             [FromForm(Name = "email"), Required] string? email,
             [FromForm(Name = "password"), Required] string? password,
@@ -128,7 +127,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var account = await _accountService.UpdateAccount(accountId, request, file);
+                var account = await _accountService.UpdateAccount(request, file);
                 response.Result = account;
                 return new OkObjectResult(response);
             }
@@ -148,10 +147,9 @@ namespace ShopPC.Controllers
             }
         }
 
-        [HttpGet("getAccountById/{accountId}")]
+        [HttpGet("getAccountById")]
         [Authorize(Roles = "ADMIN,USER")]
-        public async Task<ActionResult<ApiResponse<AccountResponse>>> GetAccountById(
-            [FromRoute(Name = "accountId"), Required] string accountId)
+        public async Task<ActionResult<ApiResponse<AccountResponse>>> GetAccountById()
         {
             var response = new ApiResponse<AccountResponse>()
             {
@@ -159,7 +157,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var account = await _accountService.GetAccountById(accountId);
+                var account = await _accountService.GetAccountById();
                 response.Result = account;
                 return new OkObjectResult(response);
             }

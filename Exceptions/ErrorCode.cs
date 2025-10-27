@@ -107,6 +107,10 @@ namespace ShopPC.Exceptions
             = new ErrorCode(8006, "Invalid credentials, Email or password wrong", HttpStatusCode.Unauthorized);
         public static readonly ErrorCode TOKEN_INVALID_OR_EXPIRED
             = new ErrorCode(8007, "Token is invalid or expired", HttpStatusCode.Unauthorized);
+        public static readonly ErrorCode NOT_AUTHENTICATED
+            = new ErrorCode(8008, "User is not authenticated", HttpStatusCode.Unauthorized);
+        public static readonly ErrorCode PASSWORD_CAN_NOT_LIKES_OLD_PASSWORD
+            = new ErrorCode(8009, "New password can not be the same as the old password", HttpStatusCode.BadRequest);
 
         //cart error codes
         public static readonly ErrorCode CART_NOT_EXISTS

@@ -32,8 +32,9 @@ namespace ShopPC.Configuration
                     ValidateLifetime = true, // có kiểm tra thời gian sống của token hay không.
                     ValidIssuer = jwtSettings["Issuer"], // Issuer và audiece phải khớp với cấu hình trong token. 
                     ValidAudience = jwtSettings["Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(key)// Khóa bí mật dùng để mã hóa và giải mã token JWT.
+                    IssuerSigningKey = new SymmetricSecurityKey(key),// Khóa bí mật dùng để mã hóa và giải mã token JWT.
                     //Token nào không thỏa các điều kiện trên sẽ bị từ chối truy cập.
+                    RoleClaimType = "Role" // xác định claim nào trong token đại diện cho vai trò (role) của người dùng
                 };
 
                 options.Events = new JwtBearerEvents 

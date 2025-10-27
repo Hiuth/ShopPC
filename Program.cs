@@ -108,10 +108,14 @@ builder.Services.AddScoped<IProductUnitService, ProductUnitService>();
 builder.Services.AddScoped<IPcBuildItemService, PcBuildItemService>();
 builder.Services.AddScoped<IPcBuildService, PcBuildService>();
 builder.Services.AddScoped<IWarrantyRecordService, WarrantyService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
 builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("EmailConfig"));
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddSingleton<OtpService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<DatabaseInitializer>();
 
 builder.Services.AddSecurityConfiguration(builder.Configuration);
 builder.Services.AddScoped<JwtService>();
@@ -168,6 +172,9 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate(); // nếu chưa có schema, EF sẽ tạo
+
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+    await dbInitializer.InitializeAsync();
 }
 
 

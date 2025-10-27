@@ -9,9 +9,9 @@ namespace ShopPC.Service.InterfaceService
 
         Task<AccountResponse> CreateAccount(string otp,AccountRequest request,IFormFile file);
 
-        Task<AccountResponse> UpdateAccount(string accountId, AccountRequest request, IFormFile? file);
+        Task<AccountResponse> UpdateAccount(AccountRequest request, IFormFile? file);
 
-        Task<AccountResponse> GetAccountById(string accountId);
+        Task<AccountResponse> GetAccountById();
 
         Task<List<AccountResponse>> GetAllAccount();
 

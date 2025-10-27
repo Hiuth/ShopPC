@@ -8,6 +8,7 @@ using ShopPC.Exceptions;
 using ShopPC.Mapper;
 using System.Threading.Tasks;
 using PagedList.Core;
+using BC = BCrypt.Net.BCrypt;
 
 namespace ShopPC.Service.ImplementationsService
 {
@@ -15,15 +16,18 @@ namespace ShopPC.Service.ImplementationsService
     {
         private readonly IAccountRepository _accountRepository;
         private readonly ICloudinaryService _cloudinaryService;
+        private readonly ICurrentUserService _currentUserService;
         private readonly EmailService _emailService;
         private readonly OtpService _otpService;
 
-        public AccountService(IAccountRepository accountRepository, ICloudinaryService cloudinaryService, EmailService emailService, OtpService otpService)
+        public AccountService(IAccountRepository accountRepository, ICloudinaryService cloudinaryService, 
+            EmailService emailService, OtpService otpService, ICurrentUserService currentUserService)
         {
             _accountRepository = accountRepository;
             _cloudinaryService = cloudinaryService;
             _emailService = emailService;
             _otpService = otpService;
+            _currentUserService = currentUserService;
         }
 
         public async Task<string> SendOtpRegisterAsync(string email)
@@ -53,17 +57,15 @@ namespace ShopPC.Service.ImplementationsService
 
 
             var account = AccountMapper.toAccount(request);
+            account.password = BC.HashPassword(request.password);
             account.accountImg = await _cloudinaryService.UploadImageAsync(file);
             await _accountRepository.AddAsync(account);
             return AccountMapper.toAccountResponse(account);
         }
 
-        public async Task<AccountResponse> UpdateAccount(string accountId, AccountRequest request, IFormFile? file)
+        public async Task<AccountResponse> UpdateAccount(AccountRequest request, IFormFile? file)
         {
-            if (!await _accountRepository.ExistsAsync(accountId))
-            {
-                throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
-            }
+            var accountId= _currentUserService.GetCurrentUserId();
             var account = await _accountRepository.GetByIdAsync(accountId)
                 ?? throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
 
@@ -100,8 +102,9 @@ namespace ShopPC.Service.ImplementationsService
             return AccountMapper.toAccountResponse(account);
         }
 
-        public async Task<AccountResponse> GetAccountById(string accountId)
+        public async Task<AccountResponse> GetAccountById()
         {
+            var accountId = _currentUserService.GetCurrentUserId();
             var account = await _accountRepository.GetByIdAsync(accountId)
                 ?? throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
             return AccountMapper.toAccountResponse(account);
