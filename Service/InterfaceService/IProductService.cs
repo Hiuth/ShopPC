@@ -5,7 +5,7 @@ namespace ShopPC.Service.InterfaceService
 {
     public interface IProductService
     {
-        Task<ProductResponse> CreateProduct(string brandId,string subCategoryId ,ProductRequest request, IFormFile file);
+        Task<ProductResponse> CreateProduct(string brandId,string? subCategoryId ,ProductRequest request, IFormFile file);
         Task<ProductResponse> UpdateProduct(string productId,string? brandId,string? subCategoryId, ProductRequest request, IFormFile? file);
         Task<ProductResponse> GetProductById(string id);
         //Task<bool> DeleteProduct(string id);

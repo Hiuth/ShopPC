@@ -14,7 +14,7 @@ namespace ShopPC.Models
         public string status { get; set; } = string.Empty;
         public DateTime createdAt { get; set; } = DateTime.Now;
         public string? brandId { get; set; }
-        public string subCategoryId { get; set; } = string.Empty;
+        public string? subCategoryId { get; set; }
         public int? warrantyPeriod { get; set; }
 
         // 1 product thuộc về 1 brand

@@ -463,7 +463,6 @@ namespace ShopPC.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("subCategoryId")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("thumbnail")
@@ -599,6 +598,28 @@ namespace ShopPC.Migrations
                         .IsUnique();
 
                     b.ToTable("WarrantyRecords");
+                });
+
+            modelBuilder.Entity("ShopPC.Models.WarrantyUpdateLog", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("createdAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("description")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("expiredCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("updateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("WarrantyUpdateLogs");
                 });
 
             modelBuilder.Entity("ShopPC.Models.PcBuild", b =>
@@ -792,9 +813,7 @@ namespace ShopPC.Migrations
 
                     b.HasOne("ShopPC.Models.SubCategory", "subCategory")
                         .WithMany("products")
-                        .HasForeignKey("subCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("subCategoryId");
 
                     b.Navigation("brand");
 

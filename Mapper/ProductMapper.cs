@@ -31,10 +31,10 @@ namespace ShopPC.Mapper
                 thumbnail = products.thumbnail,
                 status = products.status,
                 brandId = products.brandId!,
-                subCategoryId = products.subCategoryId,
+                subCategoryId = products.subCategoryId??string.Empty,
                 createdAt = products.createdAt,
                 brandName = products.brand.brandName,
-                subCategoryName = products.subCategory.subCategoryName,
+                subCategoryName = products.subCategory?.subCategoryName??string.Empty,
                 warrantyPeriod = products.warrantyPeriod ?? 0
             };
         }

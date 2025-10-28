@@ -39,21 +39,25 @@ namespace ShopPC.Service.ImplementationsService
         }
 
 
-        public async Task<ProductResponse> CreateProduct(string brandId, string subCategoryId, ProductRequest request, IFormFile file)
+        public async Task<ProductResponse> CreateProduct(string brandId, string? subCategoryId, ProductRequest request, IFormFile file)
         {
             if (!await _brandRepository.ExistsAsync(brandId))
             {
                 throw new AppException(ErrorCode.BRAND_NOT_EXISTS);
             }
 
-            if (!await _subCategoryRepository.ExistsAsync(subCategoryId))
+            var product = ProductMapper.toProducts(request);
+
+            if (!String.IsNullOrWhiteSpace(subCategoryId))
             {
-                throw new AppException(ErrorCode.SUB_CATEGORY_NOT_EXISTS);
+                if (!await _subCategoryRepository.ExistsAsync(subCategoryId))
+                {
+                    throw new AppException(ErrorCode.SUB_CATEGORY_NOT_EXISTS);
+                }
+                product.subCategoryId = subCategoryId;
             }
 
-            var product = ProductMapper.toProducts(request);
             product.brandId = brandId;
-            product.subCategoryId = subCategoryId;
             product.thumbnail = await _cloudinaryService.UploadImageAsync(file);
             await _productRepository.AddAsync(product);
             return ProductMapper.toProductResponse(product);

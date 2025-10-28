@@ -27,8 +27,8 @@ namespace ShopPC.Mapper
                 description = response.description,
                 thumbnail = response.thumbnail!,
                 status = response.status,
-                subCategoryId = response.subCategoryId,
-                subCategoryName = response.subCategory.subCategoryName
+                subCategoryId = response.subCategoryId??string.Empty,
+                subCategoryName = response.subCategory?.subCategoryName ?? string.Empty,
             };
         }
     }

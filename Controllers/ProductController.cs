@@ -21,11 +21,11 @@ namespace ShopPC.Controllers
             _productService = productService;
         }
 
-        [HttpPost("create/{brandId}/{subCategoryId}")]
+        [HttpPost("create/{brandId}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<ProductResponse>>> createProduct(
             [FromRoute(Name="brandId")] string brandId,
-            [FromRoute(Name="subCategoryId")] string subCategoryId,
+            [FromForm(Name="subCategoryId")] string? subCategoryId,
             [FromForm(Name ="productName")][Required] string productName,
             [FromForm(Name = "price")][Required] decimal price,
             [FromForm(Name = "stockQuantity")][Required] int stockQuantity,
