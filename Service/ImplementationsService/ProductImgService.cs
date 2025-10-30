@@ -55,7 +55,7 @@ namespace ShopPC.Service.ImplementationsService
             ProductImg productImg = await _productImgRepository.GetByIdAsync(productImgId) ??
                 throw new AppException(ErrorCode.PRODUCT_IMG_NOT_EXISTS);
             await _cloudinaryService.DeleteImageAsync(productImg.imgUrl);
-            await _productImgRepository.DeleteAsync(productImg.productId);
+            await _productImgRepository.DeleteAsync(productImgId);
             if(await _productImgRepository.ExistsAsync(productImgId))
             {
                 return "Delete product img fail";
