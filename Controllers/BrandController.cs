@@ -12,7 +12,7 @@ namespace ShopPC.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class BrandController: ControllerBase
+    public class BrandController : ControllerBase
     {
         private readonly IBrandService _brandService;
         public BrandController(IBrandService brandService)
@@ -20,10 +20,9 @@ namespace ShopPC.Controllers
             _brandService = brandService;
         }
 
-        [HttpPost("create/{categoryId}")]
-        [Authorize(Roles ="ADMIN")]
+        [HttpPost("create")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<BrandResponse>>> createBrand(
-            [FromRoute(Name = "categoryId")] string categoryId,
             [FromForm(Name = "brandName")][Required] string brandName)
         {
             var request = new BrandRequest
@@ -36,7 +35,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var brand = await _brandService.createBrand(categoryId,request);
+                var brand = await _brandService.createBrand(request);
                 response.Result = brand;  // Gán kết quả vào response
                 return Ok(response);
             }
@@ -57,11 +56,10 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{brandId}")]
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<BrandResponse>>> updateBrand(
             [FromRoute(Name = "brandId")] string brandId,
-            [FromForm(Name = "brandName")] string? brandName,
-            [FromForm(Name = "categoryId")] string? categoryId)
+            [FromForm(Name = "brandName")] string? brandName)
         {
             var request = new BrandRequest
             {
@@ -73,7 +71,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var brand = await _brandService.updateBrand(brandId,categoryId,request);
+                var brand = await _brandService.updateBrand(brandId, request);
                 response.Result = brand;  // Gán kết quả vào response
                 return Ok(response);
             }
@@ -154,35 +152,5 @@ namespace ShopPC.Controllers
             }
         }
 
-        [HttpGet("getByCategoryId/{categoryId}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<ApiResponse<List<BrandResponse>>>> getBrandByCategoryId(
-            [FromRoute(Name = "categoryId")] string categoryId)
-        {
-            var response = new ApiResponse<List<BrandResponse>>()
-            {
-                Message = "Get brand by category id successfully"
-            };
-            try
-            {
-                var brands = await _brandService.getBrandByCategoryId(categoryId);
-                response.Result = brands;  // Gán kết quả vào response
-                return Ok(response);
-            }
-            catch (AppException ex)  // Catch AppException riêng
-            {
-                response.Code = 400;
-                response.Message = ex.Message;
-                response.Result = null;
-                return BadRequest(response);
-            }
-            catch (Exception e)  // Catch Exception chung
-            {
-                response.Code = 500;
-                response.Message = e.Message;
-                response.Result = null;
-                return StatusCode(500, response);
-            }
-        }
     }
 }

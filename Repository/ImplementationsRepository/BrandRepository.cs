@@ -17,9 +17,9 @@ namespace ShopPC.Repository.ImplementationsRepository
             return !await _dbSet.AnyAsync(b => b.brandName == brandName);
         }
 
-        public async Task<IEnumerable<Brand>> GetBrandByCategoryIdAsync(string categoryId)
-        {
-            return await _dbSet.Where(p => p.categoryId == categoryId).ToListAsync();
-        }
+        //public async Task<IEnumerable<Brand>> GetBrandByCategoryIdAsync(string categoryId)
+        //{
+        //    return await _dbSet.Where(p => p.categoryId == categoryId).ToListAsync();
+        //}
     }
 }

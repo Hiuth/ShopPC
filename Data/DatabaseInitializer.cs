@@ -28,7 +28,7 @@ namespace ShopPC.Data
                     {
                         id = Guid.NewGuid().ToString(),
                         userName = "admin",
-                        email = "admin",
+                        email = "nextaura2025@gmail.com",
                         password = BC.HashPassword("admin"),
                         roleName = "ADMIN",
                         gender = "Male",

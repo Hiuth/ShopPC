@@ -20,36 +20,22 @@ namespace ShopPC.Service.ImplementationsService
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<BrandResponse> createBrand(string categoryId, BrandRequest request)
+        public async Task<BrandResponse> createBrand(BrandRequest request)
         {
             if (!await _brandReopsitory.IsBrandNameUniqueAsync(request.brandName))
             {
                 throw new AppException(ErrorCode.BRAND_ALREADY_EXISTS);
             }
-            if(!await _categoryRepository.ExistsAsync(categoryId))
-            {
-                 throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
-            }
 
             var brand = BrandMapper.toBrand(request);
-            brand.categoryId = categoryId;
             var createdBrand = await _brandReopsitory.AddAsync(brand);
             return BrandMapper.toBrandResponse(createdBrand);
         }
 
-        public async Task<BrandResponse> updateBrand(string brandId, string? categoryId, BrandRequest request)
+        public async Task<BrandResponse> updateBrand(string brandId, BrandRequest request)
         {
              var brand = await _brandReopsitory.GetByIdAsync(brandId) ??
                 throw new AppException(ErrorCode.BRAND_NOT_EXISTS);
-
-            if(!String.IsNullOrWhiteSpace(categoryId))
-            {
-                if (!await _categoryRepository.ExistsAsync(categoryId))
-                {
-                    throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
-                }
-                brand.categoryId = categoryId;
-            }
    
                 
             if(!String.IsNullOrWhiteSpace(request.brandName))
@@ -75,16 +61,6 @@ namespace ShopPC.Service.ImplementationsService
             var brand = await _brandReopsitory.GetByIdAsync(id) ??
                 throw new AppException(ErrorCode.BRAND_NOT_EXISTS);
             return BrandMapper.toBrandResponse(brand);
-        }
-
-        public async Task<List<BrandResponse>> getBrandByCategoryId(string id)
-        {
-            if(!await _categoryRepository.ExistsAsync(id))
-            {
-                 throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
-            }
-            var brands = await _brandReopsitory.GetBrandByCategoryIdAsync(id);
-            return brands.Select(BrandMapper.toBrandResponse).ToList();
         }
     }
 }

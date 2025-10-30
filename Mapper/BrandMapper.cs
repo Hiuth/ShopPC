@@ -20,7 +20,6 @@ namespace ShopPC.Mapper
             {
                 id = brand.id,
                 brandName = brand.brandName,
-                categoryId = brand.categoryId
             };
         }
     }

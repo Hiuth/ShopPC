@@ -17,8 +17,6 @@ namespace ShopPC.Models
         // 1 category có nhiều subcategory
         public ICollection<SubCategory> subCategories { get; set; } = new List<SubCategory>();
 
-        public ICollection<Brand> brands { get; set; } = new List<Brand>();
-
         public ICollection<Attributes> attributes { get; set; } = new List<Attributes>();
     }
 }

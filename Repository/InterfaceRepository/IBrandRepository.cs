@@ -6,7 +6,5 @@ namespace ShopPC.Repository.InterfaceRepository
     public interface IBrandRepository: IGenericRepository<Brand>
     {
         Task<bool> IsBrandNameUniqueAsync(string brandName);
-
-        Task<IEnumerable<Brand>> GetBrandByCategoryIdAsync(string categoryId);
     }
 }
