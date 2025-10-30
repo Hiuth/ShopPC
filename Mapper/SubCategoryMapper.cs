@@ -25,6 +25,7 @@ namespace ShopPC.Mapper
                 subCategoryImg = subCategory.subCategoryImg,
                 description = subCategory.description,
                 categoryId = subCategory.categoryId,
+                categoryName = subCategory.category.categoryName
             };
         }
     }

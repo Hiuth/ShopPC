@@ -43,7 +43,7 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<SubCategoryResponse> updateSubCategory(string subCategoryId,string? categoryId,SubCategoryRequest request, IFormFile? file)
         {
-            var subCategory = await _subCategoryRepository.GetByIdAsync(subCategoryId) ??
+            var subCategory = await _subCategoryRepository.GetSubCategoryByIdAsync(subCategoryId) ??
                 throw new AppException(ErrorCode.SUB_CATEGORY_NOT_EXISTS);
 
             if (!String.IsNullOrWhiteSpace(request.subCategoryName))
@@ -88,13 +88,13 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task<List<SubCategoryResponse>> getAllSubCategory()
         {
-           var subCategories = await _subCategoryRepository.GetAllAsync();
+           var subCategories = await _subCategoryRepository.GetAllSubCategoryAsync();
            return subCategories.Select(SubCategoryMapper.toSubCategoryResponse).ToList();
         }
 
         public async Task<SubCategoryResponse> getSubCategoryById(string id)
         {
-            var subCategory = await _subCategoryRepository.GetByIdAsync(id) ??
+            var subCategory = await _subCategoryRepository.GetSubCategoryByIdAsync(id) ??
                 throw new AppException(ErrorCode.SUB_CATEGORY_NOT_EXISTS);
             return SubCategoryMapper.toSubCategoryResponse(subCategory);
         }

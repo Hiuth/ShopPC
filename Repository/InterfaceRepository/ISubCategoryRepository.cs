@@ -7,6 +7,10 @@ namespace ShopPC.Repository.InterfaceRepository
     {
         Task<bool> IsSubCategoryNameUniqueAsync(string subCategoryName);
 
+        Task<SubCategory?> GetSubCategoryByIdAsync(string subCategoryId);
+
+        Task<List<SubCategory>> GetAllSubCategoryAsync();
+
         Task<IEnumerable<SubCategory>> GetSubCategoriesByCategoryIdAsync(string categoryId);
     }
 }

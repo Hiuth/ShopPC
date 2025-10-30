@@ -19,9 +19,24 @@ namespace ShopPC.Repository.ImplementationsRepository
 
         public async Task<IEnumerable<SubCategory>> GetSubCategoriesByCategoryIdAsync(string categoryId)
         {
-            return await _dbSet.Where(sc => sc.categoryId == categoryId).ToListAsync();
+            return await _dbSet
+                .Include(sc => sc.category)
+                .Where(sc => sc.categoryId == categoryId).ToListAsync();
         }
 
+        public async Task<SubCategory?> GetSubCategoryByIdAsync(string subCategoryId)
+        {
+            return await _dbSet
+                .Include(sc => sc.category)
+                .FirstOrDefaultAsync(sc => sc.id == subCategoryId);
+        }
+
+        public async Task<List<SubCategory>> GetAllSubCategoryAsync()
+        {
+            return await _dbSet
+                .Include(sc => sc.category)
+                .ToListAsync();
+        }
 
     }
 }
