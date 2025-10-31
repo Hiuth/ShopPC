@@ -21,17 +21,18 @@ namespace ShopPC.Controllers
             _productService = productService;
         }
 
-        [HttpPost("create/{brandId}")]
+        [HttpPost("create/{categoryId}/{brandId}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<ProductResponse>>> createProduct(
-            [FromRoute(Name="brandId")] string brandId,
-            [FromForm(Name="subCategoryId")] string? subCategoryId,
-            [FromForm(Name ="productName")][Required] string productName,
+            [FromRoute(Name = "categoryId")] string categoryId,
+            [FromRoute(Name = "brandId")] string brandId,
+            [FromForm(Name = "subCategoryId")] string? subCategoryId,
+            [FromForm(Name = "productName")][Required] string productName,
             [FromForm(Name = "price")][Required] decimal price,
             [FromForm(Name = "stockQuantity")][Required] int stockQuantity,
-            [FromForm(Name = "description")] [Required] string description,
-            [FromForm(Name = "status")] [Required] string status,
-            [FromForm(Name ="warrantyPeriod")] [Required] int warrantyPeriod,
+            [FromForm(Name = "description")][Required] string description,
+            [FromForm(Name = "status")][Required] string status,
+            [FromForm(Name = "warrantyPeriod")][Required] int warrantyPeriod,
             IFormFile thumbnail)
         {
             var request = new ProductRequest
@@ -51,7 +52,7 @@ namespace ShopPC.Controllers
 
             try
             {
-                var proudct = await _productService.CreateProduct(brandId,subCategoryId,request,thumbnail);
+                var proudct = await _productService.CreateProduct(brandId, categoryId, subCategoryId, request, thumbnail);
                 response.Result = proudct;
                 return Ok(response);
             }
@@ -74,8 +75,9 @@ namespace ShopPC.Controllers
         [HttpPut("update/{productId}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<ProductResponse>>> updateProduct(
-            [FromRoute(Name="productId")] string productId,
+            [FromRoute(Name = "productId")] string productId,
             [FromForm(Name = "brandId")] string? brandId,
+            [FromForm(Name = "categoryId")] string? categoryId,
             [FromForm(Name = "subCategoryId")] string? subCategoryId,
             [FromForm(Name = "productName")] string? productName,
             [FromForm(Name = "price")] decimal? price,
@@ -97,12 +99,12 @@ namespace ShopPC.Controllers
 
             var response = new ApiResponse<ProductResponse>()
             {
-              Message = "Update product successfully"
+                Message = "Update product successfully"
             };
 
             try
             {
-                var product = await _productService.UpdateProduct(productId, brandId, subCategoryId, request, thumbnail);
+                var product = await _productService.UpdateProduct(productId, brandId, categoryId, subCategoryId, request, thumbnail);
                 response.Result = product;
                 return Ok(response);
             }
@@ -131,9 +133,9 @@ namespace ShopPC.Controllers
             {
                 Message = "Get all product successfully"
             };
-            try 
+            try
             {
-                var product = await _productService.GetAllProduct(pageNumber,pageSize);
+                var product = await _productService.GetAllProduct(pageNumber, pageSize);
                 response.Result = product;
                 return Ok(response);
             }
@@ -156,7 +158,7 @@ namespace ShopPC.Controllers
         [HttpGet("getBysubCategoryId/{subCategoryId}")]
         [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<ProductResponse>>>> getProductBySubCategoryId(
-            [FromRoute(Name ="subCategoryId")] string subCategoryId,
+            [FromRoute(Name = "subCategoryId")] string subCategoryId,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
@@ -166,7 +168,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var product = await _productService.GetProductsBySubCategoryId(subCategoryId,pageNumber,pageSize);
+                var product = await _productService.GetProductsBySubCategoryId(subCategoryId, pageNumber, pageSize);
                 response.Result = product;
                 return Ok(response);
             }
@@ -189,7 +191,7 @@ namespace ShopPC.Controllers
         [HttpGet("getByBrandId/{brandId}")]
         [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<ProductResponse>>>> getProductByBrandId(
-            [FromRoute(Name="brandId")] string brandId,
+            [FromRoute(Name = "brandId")] string brandId,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
@@ -200,7 +202,7 @@ namespace ShopPC.Controllers
 
             try
             {
-                var product = await _productService.GetProductsByBrandId(brandId,pageNumber,pageSize);
+                var product = await _productService.GetProductsByBrandId(brandId, pageNumber, pageSize);
                 response.Result = product;
                 return Ok(response);
             }
@@ -223,8 +225,8 @@ namespace ShopPC.Controllers
         [HttpGet("searchProduct/{key}")]
         [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<ProductResponse>>>> searchProduct(
-            [FromRoute(Name="key")] string key,
-            [FromQuery] int pageNumber = 1, 
+            [FromRoute(Name = "key")] string key,
+            [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
             var response = new ApiResponse<PaginatedResponse<ProductResponse>>()
@@ -258,7 +260,7 @@ namespace ShopPC.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<ProductResponse>>>> getByPriceRange(
             [FromRoute(Name = "minPrice")] decimal minPrice,
-            [FromRoute(Name ="maxPrice")] decimal maxPrice,
+            [FromRoute(Name = "maxPrice")] decimal maxPrice,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
@@ -268,7 +270,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var product = await _productService.GetProductsByPriceRange(minPrice,maxPrice, pageNumber, pageSize);
+                var product = await _productService.GetProductsByPriceRange(minPrice, maxPrice, pageNumber, pageSize);
                 response.Result = product;
                 return Ok(response);
             }
@@ -300,6 +302,39 @@ namespace ShopPC.Controllers
             try
             {
                 var product = await _productService.GetProductById(productId);
+                response.Result = product;
+                return Ok(response);
+            }
+            catch (AppException ex)  // Catch AppException riêng
+            {
+                response.Code = 400;
+                response.Message = ex.Message;
+                response.Result = null;
+                return BadRequest(response);
+            }
+            catch (Exception e)  // Catch Exception chung
+            {
+                response.Code = 500;
+                response.Message = e.Message;
+                response.Result = null;
+                return StatusCode(500, response);
+            }
+        }
+
+        [HttpGet("getByCategoryId/{categoryId}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<ProductResponse>>>> getProductByCategoryId(
+            [FromRoute(Name = "categoryId")] string categoryId,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
+        {
+            var response = new ApiResponse<PaginatedResponse<ProductResponse>>()
+            {
+                Message = "Get products by Category successfully"
+            };
+            try
+            {
+                var product = await _productService.GetProductByCategoryId(categoryId, pageNumber, pageSize);
                 response.Result = product;
                 return Ok(response);
             }

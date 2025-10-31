@@ -35,6 +35,8 @@ namespace ShopPC.Mapper
                 createdAt = products.createdAt,
                 brandName = products.brand.brandName,
                 subCategoryName = products.subCategory?.subCategoryName??string.Empty,
+                categoryId = products.categoryId,
+                categoryName = products.category?.categoryName??string.Empty,
                 warrantyPeriod = products.warrantyPeriod ?? 0
             };
         }

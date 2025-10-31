@@ -14,6 +14,8 @@
         public string brandName { get; set; } = string.Empty;
         public string subCategoryId { get; set; } = string.Empty;
         public string subCategoryName { get; set; } = string.Empty;
+        public string categoryId { get; set; } = string.Empty;
+        public string categoryName { get; set; } = string.Empty;
         public int warrantyPeriod { get; set; }
     }
 }

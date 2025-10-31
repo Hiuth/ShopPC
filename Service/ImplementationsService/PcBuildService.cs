@@ -17,14 +17,16 @@ namespace ShopPC.Service.ImplementationsService
         private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly ICloudinaryService _cloudinaryService;
         private readonly IPcBuildItemRepository _pcBuildItemRepository;
+        private readonly ICategoryRepository _categoryRepository;
         public PcBuildService(IPcBuildRepository pcBuildRepository, ISubCategoryRepository subCategoryRepository, 
             ICloudinaryService cloudinaryService,
-            IPcBuildItemRepository pcBuildItemRepository)
+            IPcBuildItemRepository pcBuildItemRepository, ICategoryRepository categoryRepository)
         {
             _pcBuildRepository = pcBuildRepository;
             _subCategoryRepository = subCategoryRepository;
             _cloudinaryService = cloudinaryService;
             _pcBuildItemRepository = pcBuildItemRepository;
+            _categoryRepository = categoryRepository;
         }
 
 
@@ -41,20 +43,29 @@ namespace ShopPC.Service.ImplementationsService
             };
         }
 
-        public async Task<PcBuildResponse> CreatePcBuild(string subCategoryId,PcBuildRequest pcBuildRequest, IFormFile file)
+        public async Task<PcBuildResponse> CreatePcBuild(string categoryId,string? subCategoryId,PcBuildRequest pcBuildRequest, IFormFile file)
         {
-            if (!await _subCategoryRepository.ExistsAsync(subCategoryId))
+            if (!await _categoryRepository.ExistsAsync(categoryId))
             {
-                 throw new AppException(ErrorCode.SUB_CATEGORY_NOT_EXISTS);
+                throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
             }
             var pcBuild = PcBuildMapper.toPcBuild(pcBuildRequest);
-            pcBuild.subCategoryId = subCategoryId;
+
+            if (!String.IsNullOrWhiteSpace(subCategoryId))
+            {
+                if (!await _subCategoryRepository.ExistsAsync(subCategoryId))
+                {
+                    throw new AppException(ErrorCode.SUB_CATEGORY_NOT_EXISTS);
+                }
+                pcBuild.subCategoryId = subCategoryId;
+            }
+           pcBuild.categoryId = categoryId;
             pcBuild.thumbnail = await _cloudinaryService.UploadImageAsync(file);
             var createdPcBuild = await _pcBuildRepository.AddAsync(pcBuild);
             return PcBuildMapper.toPcBuildResponse(createdPcBuild);
         }
 
-        public async Task<PcBuildResponse> UpdatePcBuild(string pcBuildId,string? subCategoryId ,PcBuildRequest pcBuildRequest, IFormFile? file)
+        public async Task<PcBuildResponse> UpdatePcBuild(string pcBuildId,string? categoryId,string? subCategoryId ,PcBuildRequest pcBuildRequest, IFormFile? file)
         {
             var pcBuild = await _pcBuildRepository.GetPcBuildByIdAsync(pcBuildId) ??
                 throw new AppException(ErrorCode.PC_BUILD_NOT_EXISTS);
@@ -74,6 +85,24 @@ namespace ShopPC.Service.ImplementationsService
             if (!String.IsNullOrWhiteSpace(pcBuildRequest.status))
             {
                 pcBuild.status = pcBuildRequest.status;
+            }
+
+            if (!String.IsNullOrWhiteSpace(categoryId))
+            {
+                if (!await _categoryRepository.ExistsAsync(categoryId))
+                {
+                    throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
+                }
+                pcBuild.categoryId = categoryId;
+            }
+
+            if (!String.IsNullOrWhiteSpace(subCategoryId))
+            {
+                if (!await _subCategoryRepository.ExistsAsync(subCategoryId))
+                {
+                    throw new AppException(ErrorCode.SUB_CATEGORY_NOT_EXISTS);
+                }
+                pcBuild.subCategoryId = subCategoryId;
             }
 
             if (file != null)
@@ -134,6 +163,13 @@ namespace ShopPC.Service.ImplementationsService
         public async Task<PaginatedResponse<PcBuildResponse>> GetPcBuildsBySubCategoryId(string subCategoryId, int pageNumber,int pageSize)
         { 
             var pcBuilds = (await _pcBuildRepository.GetPcBuildsBySubCategoryIdAsync(subCategoryId)).AsQueryable();
+            var pageList = new PagedList<PcBuild>(pcBuilds, pageNumber, pageSize);
+            return ToPaginatedResponse(pageList);
+        }
+
+        public async Task<PaginatedResponse<PcBuildResponse>> GetPcBuildsByCategoryId(string categoryId, int pageNumber, int pageSize)
+        {
+            var pcBuilds = (await _pcBuildRepository.GetPcBuildsByCategoryIdAsync(categoryId)).AsQueryable();
             var pageList = new PagedList<PcBuild>(pcBuilds, pageNumber, pageSize);
             return ToPaginatedResponse(pageList);
         }

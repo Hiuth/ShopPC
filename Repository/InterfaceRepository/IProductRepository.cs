@@ -14,6 +14,8 @@ namespace ShopPC.Repository.InterfaceRepository
 
         Task<IEnumerable<Products>> GetAllProductAsync();
 
+        Task<IEnumerable<Products>> GetProductsByCategoryIdAsync(string categoryId);
+
         Task<Products?> GetProductByIdAsync(string id);
 
         //Task<IEnumerable<Products>> GetTopRatedProductsAsync(int count);

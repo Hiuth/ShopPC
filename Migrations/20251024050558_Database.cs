@@ -220,7 +220,7 @@ namespace ShopPC.Migrations
                     createdAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     brandId = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    subCategoryId = table.Column<string>(type: "varchar(255)", nullable: false)
+                    subCategoryId = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     warrantyPeriod = table.Column<int>(type: "int", nullable: true)
                 },

@@ -18,12 +18,15 @@ namespace ShopPC.Service.ImplementationsService
         private readonly IBrandRepository _brandRepository;
         private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly ICloudinaryService _cloudinaryService;
-        public ProductService(IProductRepository productRepository, IBrandRepository brandRepository, ISubCategoryRepository subCategoryRepository, ICloudinaryService cloudinaryService)
+        private readonly ICategoryRepository _categoryRepository;
+        public ProductService(IProductRepository productRepository, IBrandRepository brandRepository,
+            ISubCategoryRepository subCategoryRepository, ICloudinaryService cloudinaryService, ICategoryRepository categoryRepository)
         {
             _productRepository = productRepository;
             _brandRepository = brandRepository;
             _subCategoryRepository = subCategoryRepository;
             _cloudinaryService = cloudinaryService;
+            _categoryRepository = categoryRepository;
         }
 
         private PaginatedResponse<ProductResponse> ToPaginatedResponse(IPagedList<Products> pagedList)
@@ -39,11 +42,16 @@ namespace ShopPC.Service.ImplementationsService
         }
 
 
-        public async Task<ProductResponse> CreateProduct(string brandId, string? subCategoryId, ProductRequest request, IFormFile file)
+        public async Task<ProductResponse> CreateProduct(string brandId, string categoryId, string? subCategoryId, ProductRequest request, IFormFile file)
         {
             if (!await _brandRepository.ExistsAsync(brandId))
             {
                 throw new AppException(ErrorCode.BRAND_NOT_EXISTS);
+            }
+
+            if(!await _categoryRepository.ExistsAsync(categoryId))
+            {
+                    throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
             }
 
             var product = ProductMapper.toProducts(request);
@@ -58,12 +66,13 @@ namespace ShopPC.Service.ImplementationsService
             }
 
             product.brandId = brandId;
+            product.categoryId = categoryId;
             product.thumbnail = await _cloudinaryService.UploadImageAsync(file);
             await _productRepository.AddAsync(product);
             return ProductMapper.toProductResponse(product);
         }
 
-        public async Task<ProductResponse> UpdateProduct(string productId, string? brandId, string? subCategoryId, ProductRequest request, IFormFile? file)
+        public async Task<ProductResponse> UpdateProduct(string productId,string? categoryId ,string? brandId, string? subCategoryId, ProductRequest request, IFormFile? file)
         {
             var product = await _productRepository.GetProductByIdAsync(productId) ??
                 throw new AppException(ErrorCode.PRODUCT_NOT_EXISTS);
@@ -75,6 +84,16 @@ namespace ShopPC.Service.ImplementationsService
                 }
                 product.brandId = brandId;
             }
+
+            if (!String.IsNullOrWhiteSpace(categoryId))
+            {
+                if (!await _categoryRepository.ExistsAsync(categoryId))
+                {
+                    throw new AppException(ErrorCode.CATEGORY_NOT_EXISTS);
+                }
+                product.categoryId = categoryId;
+            }
+
             if (!String.IsNullOrWhiteSpace(subCategoryId))
             {
                 if (!await _subCategoryRepository.ExistsAsync(subCategoryId))
@@ -147,6 +166,13 @@ namespace ShopPC.Service.ImplementationsService
         public async Task<PaginatedResponse<ProductResponse>> GetProductsByBrandId(string brandId, int pageNumber, int pageSize)
         {
             var products = (await _productRepository.GetProductsByBrandIdAsync(brandId)).AsQueryable();
+            var pagedList = new PagedList<Products>(products, pageNumber, pageSize);
+            return ToPaginatedResponse(pagedList);
+        }
+
+        public async Task<PaginatedResponse<ProductResponse>> GetProductByCategoryId(string categoryId, int pageNumber, int pageSize)
+        {
+            var products = (await _productRepository.GetProductsByCategoryIdAsync(categoryId)).AsQueryable();
             var pagedList = new PagedList<Products>(products, pageNumber, pageSize);
             return ToPaginatedResponse(pagedList);
         }

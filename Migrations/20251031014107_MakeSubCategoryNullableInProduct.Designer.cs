@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShopPC.Data;
 
@@ -11,9 +12,11 @@ using ShopPC.Data;
 namespace ShopPC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251031014107_MakeSubCategoryNullableInProduct")]
+    partial class MakeSubCategoryNullableInProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -436,10 +439,6 @@ namespace ShopPC.Migrations
                     b.Property<string>("brandId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("categoryId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("datetime(6)");
 
@@ -472,8 +471,6 @@ namespace ShopPC.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("brandId");
-
-                    b.HasIndex("categoryId");
 
                     b.HasIndex("subCategoryId");
 
@@ -800,19 +797,11 @@ namespace ShopPC.Migrations
                         .WithMany("products")
                         .HasForeignKey("brandId");
 
-                    b.HasOne("ShopPC.Models.Category", "category")
-                        .WithMany("products")
-                        .HasForeignKey("categoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ShopPC.Models.SubCategory", "subCategory")
                         .WithMany("products")
                         .HasForeignKey("subCategoryId");
 
                     b.Navigation("brand");
-
-                    b.Navigation("category");
 
                     b.Navigation("subCategory");
                 });
@@ -901,8 +890,6 @@ namespace ShopPC.Migrations
             modelBuilder.Entity("ShopPC.Models.Category", b =>
                 {
                     b.Navigation("attributes");
-
-                    b.Navigation("products");
 
                     b.Navigation("subCategories");
                 });

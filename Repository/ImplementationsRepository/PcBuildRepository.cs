@@ -7,9 +7,9 @@ using ShopPC.Models;
 
 namespace ShopPC.Repository.ImplementationsRepository
 {
-    public class PcBuildRepository : GenericReopository<PcBuild>,IPcBuildRepository
+    public class PcBuildRepository : GenericReopository<PcBuild>, IPcBuildRepository
     {
-        public PcBuildRepository(AppDbContext context): base(context)
+        public PcBuildRepository(AppDbContext context) : base(context)
         {
         }
 
@@ -24,6 +24,7 @@ namespace ShopPC.Repository.ImplementationsRepository
         public async Task<PcBuild?> GetPcBuildByIdAsync(string id)
         {
             return await _dbSet
+                .Include(pb => pb.category)
                 .Include(pb => pb.subCategory)
                 .FirstOrDefaultAsync(pb => pb.id == id);
         }
@@ -31,6 +32,7 @@ namespace ShopPC.Repository.ImplementationsRepository
         public async Task<List<PcBuild>> GetPcBuildsBySubCategoryIdAsync(string subCategoryId)
         {
             return await _dbSet
+                .Include(pb => pb.category)
                 .Include(pb => pb.subCategory)
                 .Where(pb => pb.subCategoryId == subCategoryId)
                 .ToListAsync();
@@ -39,8 +41,18 @@ namespace ShopPC.Repository.ImplementationsRepository
         public async Task<List<PcBuild>> GetAllPcBuildAsync()
         {
             return await _dbSet
+                .Include(pb => pb.category)
                 .Include(pb => pb.subCategory)
                 .ToListAsync();
+        }
+        public async Task<List<PcBuild>> GetPcBuildsByCategoryIdAsync(string categoryId)
+        {
+            return await _dbSet
+                .Include(pb => pb.category)
+                .Include(pb => pb.subCategory)
+                .Where(pb => pb.categoryId == categoryId)
+                .ToListAsync();
+
         }
     }
 }

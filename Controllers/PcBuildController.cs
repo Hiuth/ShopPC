@@ -21,10 +21,11 @@ namespace ShopPC.Controllers
             _pcBuildService = pcBuildService;
         }
 
-        [HttpPost("create/{subCategoryId}")]
-        [Authorize(Roles ="ADMIN")]
+        [HttpPost("create/{categoryId}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<PcBuildResponse>>> CreatePcBuild(
-            [FromRoute(Name = "subCategoryId")] string subCategoryId,
+            [FromRoute(Name = "categoryId")] string categoryId,
+            [FromForm(Name = "subCategoryId")] string? subCategoryId,
             [FromForm(Name = "pcBuildName")][Required] string pcBuildName,
             [FromForm(Name = "description")] string description,
             [FromForm(Name = "price")] decimal price,
@@ -45,7 +46,7 @@ namespace ShopPC.Controllers
 
             try
             {
-                var pcBuild = await _pcBuildService.CreatePcBuild(subCategoryId, request, file);
+                var pcBuild = await _pcBuildService.CreatePcBuild(categoryId, subCategoryId, request, file);
                 response.Result = pcBuild;
                 return Ok(response);
             }
@@ -66,9 +67,10 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{pcBuildId}")]
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<PcBuildResponse>>> UpdatePcBuild(
             [FromRoute(Name = "pcBuildId")] string pcBuildId,
+            [FromForm(Name = "categoryId")] string? categoryId,
             [FromForm(Name = "subCategoryId")] string? subCategoryId,
             [FromForm(Name = "pcBuildName")] string? pcBuildName,
             [FromForm(Name = "description")] string? description,
@@ -89,7 +91,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var pcBuild = await _pcBuildService.UpdatePcBuild(pcBuildId, subCategoryId, request, file);
+                var pcBuild = await _pcBuildService.UpdatePcBuild(pcBuildId, categoryId, subCategoryId, request, file);
                 response.Result = pcBuild;
                 return Ok(response);
             }
@@ -110,7 +112,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getById/{pcBuildId}")]
-        [Authorize(Roles ="ADMIN,USER")]
+        [Authorize(Roles = "ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<PcBuildResponse>>> GetPcBuildById(
             [FromRoute(Name = "pcBuildId")] string pcBuildId)
         {
@@ -141,7 +143,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpDelete("delete/{pcBuildId}")]
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<string>>> DeletePcBuild(
             [FromRoute(Name = "pcBuildId")] string pcBuildId)
         {
@@ -236,6 +238,40 @@ namespace ShopPC.Controllers
                 return StatusCode(500, response);
             }
 
+
+        }
+
+        [HttpGet("getByCategory/{categoryId}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<PcBuildResponse>>>> GetPcBuildsByCategoryId(
+            [FromRoute(Name = "categoryId")] string categoryId,
+            [FromQuery(Name = "pageNumber")] int pageNumber = 1,
+            [FromQuery(Name = "pageSize")] int pageSize = 10)
+        {
+            var response = new ApiResponse<PaginatedResponse<PcBuildResponse>>()
+            {
+                Message = "Get PC Builds By Category Successfully"
+            };
+            try
+            {
+                var pcBuilds = await _pcBuildService.GetPcBuildsByCategoryId(categoryId, pageNumber, pageSize);
+                response.Result = pcBuilds;
+                return Ok(response);
+            }
+            catch (AppException ex)  // Catch AppException riêng
+            {
+                response.Code = 400;
+                response.Message = ex.Message;
+                response.Result = null;
+                return BadRequest(response);
+            }
+            catch (Exception e)  // Catch Exception chung
+            {
+                response.Code = 500;
+                response.Message = e.Message;
+                response.Result = null;
+                return StatusCode(500, response);
+            }
 
         }
     }

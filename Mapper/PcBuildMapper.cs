@@ -29,6 +29,8 @@ namespace ShopPC.Mapper
                 status = response.status,
                 subCategoryId = response.subCategoryId??string.Empty,
                 subCategoryName = response.subCategory?.subCategoryName ?? string.Empty,
+                categoryId = response.categoryId,
+                categoryName = response.category?.categoryName ?? string.Empty,
             };
         }
     }
