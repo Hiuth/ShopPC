@@ -18,7 +18,9 @@ namespace ShopPC.Repository.ImplementationsRepository
                 .Include(p => p.category)
                 .Include(p => p.subCategory)
                 .Include(p => p.brand)
-                .Where(p => p.subCategoryId == SubCategoryId).ToListAsync();
+                .Where(p => p.subCategoryId == SubCategoryId)
+                .Where(p=> !(p is PcBuild))
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Products>> GetProductsByBrandIdAsync(string brandId)
@@ -27,7 +29,9 @@ namespace ShopPC.Repository.ImplementationsRepository
                 .Include(p => p.category)
                 .Include(p => p.subCategory)
                 .Include(p => p.brand)
-                .Where(p => p.brandId == brandId).ToListAsync();
+                .Where(p => p.brandId == brandId)
+                 .Where(p => !(p is PcBuild))
+                 .ToListAsync();
         }
 
         public async Task<IEnumerable<Products>> SearchProductsAsync(string searchTerm)// phải nâng cấp sớm
@@ -36,7 +40,9 @@ namespace ShopPC.Repository.ImplementationsRepository
                 .Include(p => p.category)
                  .Include(p => p.subCategory)
                 .Include(p => p.brand)
-                .Where(p => p.productName.Contains(searchTerm)).ToListAsync();
+                .Where(p => p.productName.Contains(searchTerm))
+                 .Where(p => !(p is PcBuild))
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Products>> GetProductsByPriceRangeAsync(decimal minPrice, decimal maxPrice)
@@ -45,7 +51,9 @@ namespace ShopPC.Repository.ImplementationsRepository
                 .Include(p => p.category)
                  .Include(p => p.subCategory)
                 .Include(p => p.brand)
-                .Where(p => p.price >= minPrice && p.price <= maxPrice).ToListAsync();
+                .Where(p => p.price >= minPrice && p.price <= maxPrice)
+                 .Where(p => !(p is PcBuild))
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Products>> GetAllProductAsync()
@@ -54,6 +62,7 @@ namespace ShopPC.Repository.ImplementationsRepository
                 .Include(p => p.category)
                 .Include(p => p.subCategory)
                 .Include(p => p.brand)
+                 .Where(p => !(p is PcBuild))
                 .ToListAsync();
         }
 
@@ -63,6 +72,7 @@ namespace ShopPC.Repository.ImplementationsRepository
                 .Include(p => p.category)
                 .Include(p => p.subCategory)
                 .Include(p => p.brand)
+                 .Where(p => !(p is PcBuild))
                 .FirstOrDefaultAsync(p => p.id == id);
         }
 
@@ -72,7 +82,9 @@ namespace ShopPC.Repository.ImplementationsRepository
                 .Include(p => p.category)
                 .Include(p => p.subCategory)
                 .Include(p => p.brand)
-                .Where(p => p.categoryId == categoryId).ToListAsync();
+                .Where(p => p.categoryId == categoryId)
+                .Where(p => !(p is PcBuild))
+                .ToListAsync();
         }
     }
 }
