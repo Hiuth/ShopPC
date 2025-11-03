@@ -8,6 +8,10 @@ namespace ShopPC.Repository.InterfaceRepository
 
         Task<PcBuildItem?> GetPcBuildItemByIdAsync(string pcBuildId);
 
+        Task<bool> isProductIdInPcBuildItemAsync(string productId);
+
+        Task<List<PcBuildItem>> GetPcBuildItemByProductIdAsync(string productId);
+
         //Task<string> DeletePcBuildItemsByPcBuildIdAsync(string pcBuildId);
     }
 }

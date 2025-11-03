@@ -12,5 +12,6 @@ namespace ShopPC.Repository.InterfaceRepository
         Task<List<PcBuild>> GetPcBuildsByCategoryIdAsync(string categoryId);
 
         Task<List<PcBuild>> GetAllPcBuildAsync();
+
     }
 }

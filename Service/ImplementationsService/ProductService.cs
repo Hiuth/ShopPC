@@ -19,14 +19,20 @@ namespace ShopPC.Service.ImplementationsService
         private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly ICloudinaryService _cloudinaryService;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IPcBuildRepository _pcBuildRepository;
+        private readonly IPcBuildItemRepository _pcBuildItemRepository;
         public ProductService(IProductRepository productRepository, IBrandRepository brandRepository,
-            ISubCategoryRepository subCategoryRepository, ICloudinaryService cloudinaryService, ICategoryRepository categoryRepository)
+            ISubCategoryRepository subCategoryRepository, ICloudinaryService cloudinaryService, 
+            ICategoryRepository categoryRepository, IPcBuildRepository pcBuildRepository,
+            IPcBuildItemRepository pcBuildItemRepository)
         {
             _productRepository = productRepository;
             _brandRepository = brandRepository;
             _subCategoryRepository = subCategoryRepository;
             _cloudinaryService = cloudinaryService;
             _categoryRepository = categoryRepository;
+            _pcBuildRepository = pcBuildRepository;
+            _pcBuildItemRepository = pcBuildItemRepository;
         }
 
         private PaginatedResponse<ProductResponse> ToPaginatedResponse(IPagedList<Products> pagedList)
@@ -106,9 +112,30 @@ namespace ShopPC.Service.ImplementationsService
             {
                 product.productName = request.productName;
             }
+
             if (request.price.HasValue)
             {
-                product.price = request.price.Value;
+                decimal? oldPrice = product.price;
+                decimal newPrice = request.price.Value;
+
+                // Cập nhật giá sản phẩm
+                product.price = newPrice;
+
+                // Nếu giá có thay đổi, cập nhật các pcBuild chứa sản phẩm này
+                if (newPrice != oldPrice)
+                {
+                    var pcBuildItems = await _pcBuildItemRepository.GetPcBuildItemByProductIdAsync(productId);
+
+                    foreach (var item in pcBuildItems)
+                    {
+                        var pcBuild = await _pcBuildRepository.GetPcBuildByIdAsync(item.pcBuildId);
+                        if (pcBuild != null)
+                        {
+                            pcBuild.price = pcBuild.price - (oldPrice * item.quantity) + (newPrice * item.quantity);
+                            await _pcBuildRepository.UpdateAsync(pcBuild);
+                        }
+                    }
+                }
             }
             if (request.stockQuantity.HasValue)
             {

@@ -25,6 +25,7 @@ namespace ShopPC.Mapper
                 productName = productUnit.product.productName ?? string.Empty,
                 imei = productUnit.imei,
                 status = productUnit.status,
+                createdAt = productUnit.createdAt,
                 serialNumber = productUnit.serialNumber
             };
         }

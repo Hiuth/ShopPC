@@ -23,10 +23,24 @@ namespace ShopPC.Repository.ImplementationsRepository
 
         public async Task<PcBuildItem?> GetPcBuildItemByIdAsync(string id)
         {
-            return await _context.PcBuildItems
+            return await _dbSet
                 .Include(item => item.product)
                 .Include(item => item.pcBuild)
                 .FirstOrDefaultAsync(item => item.id == id);
+        }
+
+        public async Task<bool> isProductIdInPcBuildItemAsync(string productId)
+        {
+            return await _dbSet.AnyAsync(item => item.productId == productId);
+        }
+
+        public async Task<List<PcBuildItem>> GetPcBuildItemByProductIdAsync(string productId)
+        {
+            return await _dbSet
+                .Include(item => item.product)
+                .Include(item => item.pcBuild)
+                .Where (item => item.productId == productId)
+                .ToListAsync();
         }
     }
 }
