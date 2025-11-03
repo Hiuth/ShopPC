@@ -135,5 +135,30 @@ namespace ShopPC.Controllers
             }
         }
 
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ApiResponse<string>>> RefreshToken(
+            [FromForm] string refreshToken)
+        {
+            var response = new ApiResponse<string> { Message = "Token refreshed successfully" };
+            try
+            {
+                var newToken = await _authService.RefreshToken(refreshToken);
+                response.Result = newToken;
+                return Ok(response);
+            }
+            catch (AppException ex)
+            {
+                response.Code = (int)ex.ErrorCode.Status;
+                response.Message = ex.Message;
+                return new ObjectResult(response) { StatusCode = (int)ex.ErrorCode.Status };
+            }
+            catch (Exception)
+            {
+                response.Code = 500;
+                response.Message = "An unexpected internal server error occurred.";
+                return StatusCode(500, response);
+            }
+        }
     }
 }

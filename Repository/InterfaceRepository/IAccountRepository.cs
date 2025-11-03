@@ -6,5 +6,7 @@ namespace ShopPC.Repository.InterfaceRepository
         Task<bool> IsEmailUniqueAsync(string email);
 
         Task<List<Account>> searchAccountAsync(string key);
+
+        Task<Account?> GetAccountById(string id);
     }
 }

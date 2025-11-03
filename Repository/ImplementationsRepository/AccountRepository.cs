@@ -21,5 +21,10 @@ namespace ShopPC.Repository.ImplementationsRepository
         {
             return await _dbSet.Where(p => p.userName.Contains(key)|| p.email.Contains(key)).ToListAsync();
         }
+
+        public async Task<Account?> GetAccountById(string id)
+        {
+            return await _dbSet.FirstOrDefaultAsync(a => a.id == id);
+        }
     }
 }

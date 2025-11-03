@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopPC.Data;
 using ShopPC.Exceptions;
+using ShopPC.Models;
 using ShopPC.Repository.InterfaceRepository;
 using ShopPC.Service.InterfaceService;
+using System.IdentityModel.Tokens.Jwt;
 using BC = BCrypt.Net.BCrypt;
 
 namespace ShopPC.Service.ImplementationsService
@@ -207,6 +209,44 @@ namespace ShopPC.Service.ImplementationsService
                 throw new AppException(ErrorCode.TOKEN_INVALID_OR_EXPIRED);
 
             await _tokenValidator.InvalidateTokenAsync(token);
+        }
+
+        public async Task<string> RefreshToken(string refreshToken)
+        {
+            JwtSecurityToken jwt;
+            try
+            {
+                jwt = _jwtService.verifyToken(refreshToken, true);
+            }
+            catch
+            {
+                throw new AppException(ErrorCode.TOKEN_INVALID_OR_EXPIRED);
+            }
+
+            //lấy jti và expiry time để lưu vào bảng thu hồi token
+            var jti = jwt.Id; 
+            var expiry = jwt.ValidTo;
+
+            // nếu token đã bị thu hồi thì không cho phép refresh lại
+            if (_context.InvalidatedTokens.Any(t => t.id == jti))
+                throw new AppException(ErrorCode.TOKEN_INVALID_OR_EXPIRED);
+
+            // Thu hồi token cũ (rotation)
+            _context.InvalidatedTokens.Add(new InvalidatedToken
+            {
+                id = jti,
+                ExpiryTime = expiry
+            });
+            await _context.SaveChangesAsync();
+
+            var accountId = jwt.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
+            var account = await _accountRepository.GetAccountById(accountId!) 
+                ?? throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
+
+            // sinh token mới
+            var newToken = _jwtService.GenerateToken(account, account.roleName);
+
+            return newToken;
         }
     }
 }

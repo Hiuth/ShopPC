@@ -40,5 +40,43 @@ namespace ShopPC.Service.ImplementationsService
 
             return new JwtSecurityTokenHandler().WriteToken(token); //Trả về chuỗi token đã được mã hóa dưới dạng JWT
         }
+
+        public JwtSecurityToken verifyToken(string token, bool isRefresh)
+        {
+            var tokenHander = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);// tạo khóa mã hóa từ cấu hình
+
+            var parameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidIssuer = _configuration["Jwt:Issuer"],
+                ValidAudience = _configuration["Jwt:Audience"],
+                ClockSkew = TimeSpan.Zero,
+                ValidateLifetime = true
+            };
+            try
+            {
+                tokenHander.ValidateToken(token, parameters, out var validatedToken);
+                var jwtToken = (JwtSecurityToken)validatedToken;
+
+                if (isRefresh)
+                {
+                    var issuedAt = jwtToken.IssuedAt;
+                    var refreshDuration = TimeSpan.FromSeconds(Convert.ToDouble(_configuration["Jwt:RefreshDuration"]));
+
+                    if (issuedAt.Add(refreshDuration) < DateTime.UtcNow) {
+                        throw new SecurityTokenException("Refresh token expired");
+                    }
+                }
+                return jwtToken;
+
+            } catch (Exception ex)
+            {
+                throw new SecurityTokenException("Invalid token", ex);
+            }
+        }
     }
 }

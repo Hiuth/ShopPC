@@ -8,5 +8,7 @@
         Task<string> SendOtpForgotPassword();
 
         Task<string> ResetPassword(string otp, string newPassword);
+
+        Task<string> RefreshToken(string refreshToken);
     }
 }
