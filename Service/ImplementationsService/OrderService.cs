@@ -24,15 +24,24 @@ namespace ShopPC.Service.ImplementationsService
             _currentUserService = currentUserService;
         }
 
-        public async Task<OrderResponse> CreateOrder( OrderRequest request)
+        public async Task<OrderResponse> CreateOrder(OrderRequest request)
         {
             var accountId = _currentUserService.GetCurrentUserId();
-            if (!await _accountRepository.ExistsAsync(accountId))
+            Account? account = null;
+
+            if (!string.IsNullOrWhiteSpace(accountId))
             {
-                throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
+                account = await _accountRepository.GetAccountById(accountId);
+                if (account == null)
+                    throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
+
+                if (account.roleName == "ADMIN")
+                    accountId = null;
             }
+
             var order = OrderMapper.toOrder(request);
             order.accountId = accountId;
+
             await _orderRepository.AddAsync(order);
             return OrderMapper.toOrderResponse(order);
         }

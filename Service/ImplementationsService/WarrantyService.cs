@@ -41,12 +41,18 @@ namespace ShopPC.Service.ImplementationsService
             if (!await _productUnitRepository.ExistsAsync(productUnitId))
                 throw new AppException(ErrorCode.PRODUCT_UNIT_NOT_EXISTS);
 
+            var productUnit =  await _productUnitRepository.GetProductUnitByIdAsync(productUnitId);
+
             var warranty = WarrantyRecordMapper.toWarrantyRecord(request);
             warranty.productId = productId;
             warranty.orderId = orderId;
             warranty.productUnitId = productUnitId;
             warranty.startDate = DateTime.Now;
             warranty.endDate = CalculateEndDate(warranty.startDate, product.warrantyPeriod ?? 0);
+
+            productUnit!.status = "SOLD";
+
+            await _productUnitRepository.UpdateAsync(productUnit);
             await _warrantyRecordRepository.AddAsync(warranty);
             return WarrantyRecordMapper.toWarrantyRecordResponse(warranty);
         }

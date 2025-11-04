@@ -104,7 +104,7 @@ namespace ShopPC.Controllers
 
             try
             {
-                var product = await _productService.UpdateProduct(productId, brandId, categoryId, subCategoryId, request, thumbnail);
+                var product = await _productService.UpdateProduct(productId, categoryId, brandId, subCategoryId, request, thumbnail);
                 response.Result = product;
                 return Ok(response);
             }
