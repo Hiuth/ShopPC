@@ -59,9 +59,12 @@ namespace ShopPC.Service.ImplementationsService
                 }
             }
 
+           
             var productUnit = ProductUnitMapper.toProductUnit(request);
             productUnit.productId = productId;
             await _productUnitRepository.AddAsync(productUnit);
+            product.stockQuantity = await _productUnitRepository.CountProductUnitAvailableByProductIdAsync(productId);
+            await _productRepository.UpdateAsync(product);
             return ProductUnitMapper.toProductUnitResponse(productUnit);
         }
 

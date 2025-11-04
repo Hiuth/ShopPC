@@ -8,5 +8,6 @@ namespace ShopPC.Service.InterfaceService
         Task<OrderDetailResponse> CreateOrderDetail(string orderId, string productId,OrderDetailRequest request);
         Task<List<OrderDetailResponse>> GetOrderDetailByOrderId(string orderId);
         Task<string> DeleteOrderDetailbyOrderId(string orderId);
+        Task<string> DeleteOrderDetailbyId(string orderDetailId);
     }
 }

@@ -50,10 +50,13 @@ namespace ShopPC.Service.ImplementationsService
             warranty.startDate = DateTime.Now;
             warranty.endDate = CalculateEndDate(warranty.startDate, product.warrantyPeriod ?? 0);
 
-            productUnit!.status = "SOLD";
+            productUnit!.status = "WARRANTY";
 
             await _productUnitRepository.UpdateAsync(productUnit);
             await _warrantyRecordRepository.AddAsync(warranty);
+
+            
+
             return WarrantyRecordMapper.toWarrantyRecordResponse(warranty);
         }
 

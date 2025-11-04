@@ -33,6 +33,9 @@ namespace ShopPC.Service.ImplementationsService
             {
                throw new AppException(ErrorCode.PRODUCT_NOT_EXISTS);
             }
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            order!.totalAmount += request.unitPrice * request.quantity;
+
             var orderDetail = OrderDetailMapper.toOrderDetail(request);
             orderDetail.orderId = orderId;
             orderDetail.productId = productId;
@@ -62,6 +65,17 @@ namespace ShopPC.Service.ImplementationsService
                 await _orderDetailRepository.DeleteAsync(od.orderId);
             }
             return "Deleted all order details for orderId: " + orderId;
+        }
+
+        public async Task<string> DeleteOrderDetailbyId(string orderDetailId)
+        {
+            var orderDetail = await _orderDetailRepository.GetByIdAsync(orderDetailId) ??
+                throw new AppException(ErrorCode.ORDER_DETAIL_NOT_EXISTS);
+            var order = await _orderRepository.GetByIdAsync(orderDetail.orderId);
+            order!.totalAmount -= orderDetail.unitPrice * orderDetail.quantity;
+            await _orderRepository.UpdateAsync(order);
+            await _orderDetailRepository.DeleteAsync(orderDetailId);
+            return "Deleted order detail with id: " + orderDetailId;
         }
     }
 }

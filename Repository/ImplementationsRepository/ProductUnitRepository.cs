@@ -49,5 +49,20 @@ namespace ShopPC.Repository.ImplementationsRepository
         {
             return !await _dbSet.AnyAsync(pu => pu.serialNumber == serialNumber);
         }
+
+        public async Task<int> CountProductUnitAvailableByProductIdAsync(string productId)
+        {
+            return await _dbSet
+                .Where(pu => pu.productId == productId && pu.status == "AVAILABLE")
+                .CountAsync();
+        }
+
+        public async Task<List<ProductUnit>> GetAvailableUnitsByProductId(string productId, int quantity)
+        {
+            return await _dbSet
+                .Where(pu => pu.productId == productId && pu.status == "AVAILABLE")
+                .Take(quantity)
+                .ToListAsync();
+        }
     }
 }

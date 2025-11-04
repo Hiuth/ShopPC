@@ -15,5 +15,9 @@ namespace ShopPC.Repository.InterfaceRepository
         Task<bool> isImeiUniqueAsync(string imei);
 
         Task<bool> isSerialNumberUniqueAsync(string serialNumber);
+
+        Task<int> CountProductUnitAvailableByProductIdAsync(string productId);
+
+        Task<List<ProductUnit>> GetAvailableUnitsByProductId(string productId,int quantity);
     }
 }
