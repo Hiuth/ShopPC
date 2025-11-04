@@ -16,6 +16,7 @@ namespace ShopPC.Mapper
                 description = productRequest.description,
                 status = productRequest.status,
                 warrantyPeriod = productRequest.warrantyPeriod,
+                isSerial = productRequest.isSerial
             };
         }
 
@@ -37,7 +38,8 @@ namespace ShopPC.Mapper
                 subCategoryName = products.subCategory?.subCategoryName??string.Empty,
                 categoryId = products.categoryId,
                 categoryName = products.category?.categoryName??string.Empty,
-                warrantyPeriod = products.warrantyPeriod ?? 0
+                warrantyPeriod = products.warrantyPeriod ?? 0,
+                isSerial = products.isSerial??null
             };
         }
     }

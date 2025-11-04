@@ -33,6 +33,7 @@ namespace ShopPC.Controllers
             [FromForm(Name = "description")][Required] string description,
             [FromForm(Name = "status")][Required] string status,
             [FromForm(Name = "warrantyPeriod")][Required] int warrantyPeriod,
+            [FromForm(Name ="isSerial")][Required] bool isSerial,
             IFormFile thumbnail)
         {
             var request = new ProductRequest
@@ -42,7 +43,8 @@ namespace ShopPC.Controllers
                 stockQuantity = stockQuantity,
                 description = description,
                 status = status,
-                warrantyPeriod = warrantyPeriod
+                warrantyPeriod = warrantyPeriod,
+                isSerial = isSerial,
             };
 
             var response = new ApiResponse<ProductResponse>()
@@ -85,6 +87,7 @@ namespace ShopPC.Controllers
             [FromForm(Name = "description")] string? description,
             [FromForm(Name = "status")] string? status,
             [FromForm(Name = "warrantyPeriod")] int? warrantyPeriod,
+            [FromForm(Name = "isSerial")] bool? isSerial,
             IFormFile? thumbnail)
         {
             var request = new ProductRequest
@@ -94,7 +97,9 @@ namespace ShopPC.Controllers
                 stockQuantity = stockQuantity,
                 description = description ?? string.Empty,
                 status = status ?? string.Empty,
-                warrantyPeriod = warrantyPeriod
+                warrantyPeriod = warrantyPeriod,
+                isSerial = isSerial??null,
+               
             };
 
             var response = new ApiResponse<ProductResponse>()

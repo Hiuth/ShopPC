@@ -113,6 +113,11 @@ namespace ShopPC.Service.ImplementationsService
                 product.productName = request.productName;
             }
 
+            if (request.isSerial.HasValue)
+            {
+                product.isSerial = request.isSerial.Value;
+            }
+
             if (request.price.HasValue)
             {
                 decimal? oldPrice = product.price;

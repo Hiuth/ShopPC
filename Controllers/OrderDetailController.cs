@@ -90,7 +90,7 @@ namespace ShopPC.Controllers
             }
         }
 
-        [HttpDelete("/deleteOrderDetails/{orderId}")]
+        [HttpDelete("deleteOrderDetails/{orderId}")]
         [Authorize(Roles = "ADMIN, USER")]
         public async Task<ActionResult<ApiResponse<string>>> deleteOrderDetailsByOrderId(
             [FromRoute(Name = "orderId")] string orderId)

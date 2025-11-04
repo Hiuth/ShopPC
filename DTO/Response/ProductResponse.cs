@@ -17,5 +17,6 @@
         public string categoryId { get; set; } = string.Empty;
         public string categoryName { get; set; } = string.Empty;
         public int warrantyPeriod { get; set; }
+        public bool? isSerial { get; set; }
     }
 }

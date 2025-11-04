@@ -8,5 +8,6 @@
         public string? description { get; set; }
         public string status { get; set; } = string.Empty;
         public int? warrantyPeriod { get; set; }
+        public bool? isSerial { get; set; }
     }
 }

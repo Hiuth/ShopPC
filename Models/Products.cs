@@ -17,7 +17,7 @@ namespace ShopPC.Models
         public string? subCategoryId { get; set; }
         public int? warrantyPeriod { get; set; }
         public string categoryId { get; set; } = string.Empty;
-
+        public bool? isSerial { get; set; }
         // 1 product thuộc về 1 brand
         [ForeignKey("brandId")]
         public Brand brand { get; set; } = null!;
