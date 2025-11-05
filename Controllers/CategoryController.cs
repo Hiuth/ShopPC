@@ -16,15 +16,15 @@ namespace ShopPC.Controllers
     {
         private readonly ICategoryService _categoryService;
         public CategoryController(ICategoryService categoryService)
-        { 
+        {
             _categoryService = categoryService;
         }
 
 
         [HttpPost("create")]
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<CategoryResponse>>> createCategory(
-            [FromForm(Name ="categoryName")][Required] string categoryName, [Required] IFormFile file)
+            [FromForm(Name = "categoryName")][Required] string categoryName, [Required] IFormFile file)
         {
             var request = new CategoryRequest
             {
@@ -57,9 +57,9 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("update/{categoryId}")]
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<CategoryResponse>>> updateCategory(
-            [FromRoute(Name ="categoryId")] string categoryId, [FromForm(Name ="categoryName")] string? categoryName, IFormFile? file)
+            [FromRoute(Name = "categoryId")] string categoryId, [FromForm(Name = "categoryName")] string? categoryName, IFormFile? file)
         {
             var request = new CategoryRequest
             {
@@ -151,6 +151,36 @@ namespace ShopPC.Controllers
             }
         }
 
+        [HttpGet("revenueSummary")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<ActionResult<ApiResponse<CategoryRevenueResponse>>> getCategoryRevenueSummary()
+        {
+            var response = new ApiResponse<CategoryRevenueResponse>()
+            {
+                Message = "Get category revenue summary successfully"
+            };
+            try
+            {
+                var categoryRevenue = await _categoryService.getCategoryRevenueSummaryAsync();
+                response.Result = categoryRevenue;  // Gán kết quả vào response
+                return Ok(response);
+            }
+            catch (AppException ex)  // Catch AppException riêng
+            {
+                response.Code = 400;
+                response.Message = ex.Message;
+                response.Result = null;
+                return BadRequest(response);
+            }
+            catch (Exception e)  // Catch Exception chung
+            {
+                response.Code = 500;
+                response.Message = e.Message;
+                response.Result = null;
+                return StatusCode(500, response);
+            }
+
+        }
     }
 
 }

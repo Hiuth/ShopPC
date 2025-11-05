@@ -67,5 +67,10 @@ namespace ShopPC.Service.ImplementationsService
                 throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
             return CategoryMapper.toCategoryResponse(category);
         }
+
+        public async Task<CategoryRevenueResponse> getCategoryRevenueSummaryAsync()
+        {
+            return await _categoryRepository.GetCategoryRevenueSummaryAsync();
+        }
     }
 }

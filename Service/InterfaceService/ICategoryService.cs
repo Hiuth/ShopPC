@@ -10,5 +10,6 @@ namespace ShopPC.Service.InterfaceService
         //Task<bool> deleteCategory(string id);
         Task<List<CategoryResponse>> getAllCategory();
         Task<CategoryResponse> getCategoryById(string id);
+        Task<CategoryRevenueResponse> getCategoryRevenueSummaryAsync();
     }
 }
