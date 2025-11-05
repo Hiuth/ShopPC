@@ -14,7 +14,7 @@ namespace ShopPC.Service.ImplementationsService
             _configuration = configuration;
         }
 
-        public string GenerateToken(Account user, string roles)
+        public string GenerateAccessToken(Account user)
         {
             var claims = new List<Claim>//Claim là thông tin nhúng trong token, chứa dữ liệu của người dùng, Một token có thể chứa nhiều claim, mỗi claim là một cặp key - value.
             {
@@ -22,7 +22,8 @@ namespace ShopPC.Service.ImplementationsService
                 new Claim("userName", user.userName), //Tên người dùng
                 new Claim("userId", user.id), //ID của user trong hệ thống
                 new Claim("Role", user.roleName), //Vai trò (role) chính của user
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // Mã định danh duy nhất cho token này
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Mã định danh duy nhất cho token này
+                new Claim("type","access")
             };
 
      
@@ -41,9 +42,9 @@ namespace ShopPC.Service.ImplementationsService
             return new JwtSecurityTokenHandler().WriteToken(token); //Trả về chuỗi token đã được mã hóa dưới dạng JWT
         }
 
-        public JwtSecurityToken verifyToken(string token, bool isRefresh)
+        public JwtSecurityToken verifyToken(string token)
         {
-            var tokenHander = new JwtSecurityTokenHandler();
+            var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);// tạo khóa mã hóa từ cấu hình
 
             var parameters = new TokenValidationParameters
@@ -54,29 +55,37 @@ namespace ShopPC.Service.ImplementationsService
                 ValidateAudience = true,
                 ValidIssuer = _configuration["Jwt:Issuer"],
                 ValidAudience = _configuration["Jwt:Audience"],
-                ClockSkew = TimeSpan.Zero,
-                ValidateLifetime = true
+                ClockSkew = TimeSpan.FromMinutes(10),
+                ValidateLifetime =  false
             };
-            try
+            tokenHandler.ValidateToken(token, parameters, out var validatedToken);
+            return (JwtSecurityToken)validatedToken;
+        }
+
+        public string GenerateRefreshToken(Account user)
+        {
+            var claims = new List<Claim>
             {
-                tokenHander.ValidateToken(token, parameters, out var validatedToken);
-                var jwtToken = (JwtSecurityToken)validatedToken;
+                new Claim(JwtRegisteredClaimNames.Sub, user.email),//Địa chỉ email (định danh chính của user)
+                new Claim("userName", user.userName), //Tên người dùng
+                new Claim("userId", user.id), //ID của user trong hệ thống
+                new Claim("Role", user.roleName), //Vai trò (role) chính của user
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("type","refresh")
+            };
 
-                if (isRefresh)
-                {
-                    var issuedAt = jwtToken.IssuedAt;
-                    var refreshDuration = TimeSpan.FromSeconds(Convert.ToDouble(_configuration["Jwt:RefreshDuration"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                    if (issuedAt.Add(refreshDuration) < DateTime.UtcNow) {
-                        throw new SecurityTokenException("Refresh token expired");
-                    }
-                }
-                return jwtToken;
+            var refreshToken = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"], //Nguồn phát hành token (Nexora)   
+                audience: _configuration["Jwt:Audience"], //Đối tượng sử dụng token (NexoraUser -> người dùng)
+                claims: claims, //dữ liệu người dùng đã chuẩn bị ở trên
+                expires: DateTime.UtcNow.AddSeconds(Convert.ToDouble(_configuration["Jwt:RefreshableDurationss"])),// thời điểm hết hạn token
+                signingCredentials: creds
+            );
 
-            } catch (Exception ex)
-            {
-                throw new SecurityTokenException("Invalid token", ex);
-            }
+            return new JwtSecurityTokenHandler().WriteToken(refreshToken);
         }
     }
 }

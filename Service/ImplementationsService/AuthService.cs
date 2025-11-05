@@ -179,7 +179,7 @@ namespace ShopPC.Service.ImplementationsService
 
 
 
-        public async Task<string> Login(string email, string password)
+        public async Task<(string AccessToken, string RefreshToken)> Login(string email, string password)
         {
             var account = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
 
@@ -193,14 +193,9 @@ namespace ShopPC.Service.ImplementationsService
                 throw new AppException(ErrorCode.INVALID_CREDENTIALS);
             }
 
-            var roleName = account.roleName;
-            if (string.IsNullOrEmpty(roleName))
-            {
-                throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
-            }
-
-            var token = _jwtService.GenerateToken(account, roleName);
-            return token;
+            var accessToken = _jwtService.GenerateAccessToken(account);
+            var refreshToken = _jwtService.GenerateRefreshToken(account);
+            return (accessToken,refreshToken);
         }
 
         public async Task Logout(string token)
@@ -211,42 +206,24 @@ namespace ShopPC.Service.ImplementationsService
             await _tokenValidator.InvalidateTokenAsync(token);
         }
 
-        public async Task<string> RefreshToken(string refreshToken)
+        public async Task<(string accessToken, string refreshToken)> RefreshTokenAsync(string refreshToken)
         {
-            JwtSecurityToken jwt;
-            try
-            {
-                jwt = _jwtService.verifyToken(refreshToken, true);
-            }
-            catch
-            {
-                throw new AppException(ErrorCode.TOKEN_INVALID_OR_EXPIRED);
-            }
+            var jwt = _jwtService.verifyToken(refreshToken);
 
-            //lấy jti và expiry time để lưu vào bảng thu hồi token
-            var jti = jwt.Id; 
-            var expiry = jwt.ValidTo;
-
-            // nếu token đã bị thu hồi thì không cho phép refresh lại
-            if (_context.InvalidatedTokens.Any(t => t.id == jti))
+            // Kiểm tra xem có đúng loại refresh không
+            if (jwt.Claims.FirstOrDefault(c => c.Type == "type")?.Value != "refresh")
                 throw new AppException(ErrorCode.TOKEN_INVALID_OR_EXPIRED);
 
-            // Thu hồi token cũ (rotation)
-            _context.InvalidatedTokens.Add(new InvalidatedToken
-            {
-                id = jti,
-                ExpiryTime = expiry
-            });
-            await _context.SaveChangesAsync();
-
-            var accountId = jwt.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
-            var account = await _accountRepository.GetAccountById(accountId!) 
+            // Lấy user từ token
+            var userId = jwt.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
+            var account = await _context.Users.FirstOrDefaultAsync(u => u.id == userId)
                 ?? throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
 
-            // sinh token mới
-            var newToken = _jwtService.GenerateToken(account, account.roleName);
+            // Sinh lại 2 token mới
+            var newAccessToken = _jwtService.GenerateAccessToken(account);
+            var newRefreshToken = _jwtService.GenerateRefreshToken(account);
 
-            return newToken;
+            return (newAccessToken, newRefreshToken);
         }
     }
 }

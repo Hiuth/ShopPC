@@ -29,7 +29,6 @@ namespace ShopPC.Service.ImplementationsService
                 "/api/account/create"
             };
 
-            // ⚠️ SỬA LẠI DÒNG NÀY
             if (path != null && publicEndPoints.Any(p => path.StartsWith(p)))
             {
                 await _next(context);

@@ -20,13 +20,21 @@ namespace ShopPC.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<ApiResponse<string>>> Login([FromForm] string email, [FromForm] string password)
+        public async Task<ActionResult<ApiResponse<LoginResponse>>> Login(
+        [FromForm] string email,
+        [FromForm] string password)
         {
-            var response = new ApiResponse<string> { Message = "Login successfully" };
+            var response = new ApiResponse<LoginResponse> { Message = "Login successfully" };
+
             try
             {
-                var token = await _authService.Login(email, password);
-                response.Result = token;
+                var result = await _authService.Login(email, password);
+                response.Result = new LoginResponse
+                {
+                    AccessToken = result.AccessToken,
+                    RefreshToken = result.RefreshToken
+                };
+
                 return Ok(response);
             }
             catch (AppException ex)
@@ -137,14 +145,19 @@ namespace ShopPC.Controllers
 
         [HttpPost("refresh")]
         [AllowAnonymous]
-        public async Task<ActionResult<ApiResponse<string>>> RefreshToken(
-            [FromForm] string refreshToken)
+        public async Task<ActionResult<ApiResponse<LoginResponse>>> RefreshToken([FromForm] string refreshToken)
         {
-            var response = new ApiResponse<string> { Message = "Token refreshed successfully" };
+            var response = new ApiResponse<LoginResponse> { Message = "Token refreshed successfully" };
+
             try
             {
-                var newToken = await _authService.RefreshToken(refreshToken);
-                response.Result = newToken;
+                var result = await _authService.RefreshTokenAsync(refreshToken);
+                response.Result = new LoginResponse
+                {
+                    AccessToken = result.accessToken,
+                    RefreshToken = result.refreshToken
+                };
+
                 return Ok(response);
             }
             catch (AppException ex)
@@ -157,6 +170,7 @@ namespace ShopPC.Controllers
             {
                 response.Code = 500;
                 response.Message = "An unexpected internal server error occurred.";
+                response.Result = null;
                 return StatusCode(500, response);
             }
         }
