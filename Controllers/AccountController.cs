@@ -61,8 +61,7 @@ namespace ShopPC.Controllers
             [FromForm(Name = "gender"), Required] string gender,
             [FromForm(Name = "phoneNumber"), Required] string phoneNumber,
             [FromForm(Name = "address"), Required] string address,
-            [FromForm(Name = "otp"), Required] string otp,
-            [Required] IFormFile  file)
+            [FromForm(Name = "otp"), Required] string otp)
         {
             var request = new AccountRequest
             {
@@ -79,7 +78,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var account = await _accountService.CreateAccount(otp,request, file);
+                var account = await _accountService.CreateAccount(otp,request);
                 response.Result = account;
                 return new OkObjectResult(response);
             }
@@ -103,12 +102,12 @@ namespace ShopPC.Controllers
         [HttpPut("update")]
         [Authorize(Roles ="ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<AccountResponse>>> UpdateAccount(
-            [FromForm(Name = "userName"), Required] string? userName,
-            [FromForm(Name = "email"), Required] string? email,
-            [FromForm(Name = "password"), Required] string? password,
-            [FromForm(Name = "gender"), Required] string? gender,
-            [FromForm(Name = "phoneNumber"), Required] string? phoneNumber,
-            [FromForm(Name = "address"), Required] string? address,
+            [FromForm(Name = "userName")] string? userName,
+            [FromForm(Name = "email")] string? email,
+            [FromForm(Name = "password")] string? password,
+            [FromForm(Name = "gender")] string? gender,
+            [FromForm(Name = "phoneNumber")] string? phoneNumber,
+            [FromForm(Name = "address")] string? address,
             IFormFile? file)
         {
             var request = new AccountRequest

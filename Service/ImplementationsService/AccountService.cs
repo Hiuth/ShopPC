@@ -50,7 +50,7 @@ namespace ShopPC.Service.ImplementationsService
 
 
 
-        public async Task<AccountResponse> CreateAccount(string otp, AccountRequest request, IFormFile file)
+        public async Task<AccountResponse> CreateAccount(string otp, AccountRequest request)
         {
             if (!_otpService.VerifyOtp(request.email, otp))
                 throw new AppException(ErrorCode.INVALID_OTP);
@@ -58,7 +58,7 @@ namespace ShopPC.Service.ImplementationsService
 
             var account = AccountMapper.toAccount(request);
             account.password = BC.HashPassword(request.password);
-            account.accountImg = await _cloudinaryService.UploadImageAsync(file);
+            account.accountImg = "https://res.cloudinary.com/dggt29zsn/image/upload/v1761529832/Funny_Cat_Faces_upxnd6.jpg";
             await _accountRepository.AddAsync(account);
             return AccountMapper.toAccountResponse(account);
         }

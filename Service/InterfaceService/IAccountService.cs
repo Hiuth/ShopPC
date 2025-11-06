@@ -7,7 +7,7 @@ namespace ShopPC.Service.InterfaceService
     {
         Task<string> SendOtpRegisterAsync(string email);
 
-        Task<AccountResponse> CreateAccount(string otp,AccountRequest request,IFormFile file);
+        Task<AccountResponse> CreateAccount(string otp,AccountRequest request);
 
         Task<AccountResponse> UpdateAccount(AccountRequest request, IFormFile? file);
 

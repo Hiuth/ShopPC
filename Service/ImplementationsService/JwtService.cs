@@ -22,6 +22,7 @@ namespace ShopPC.Service.ImplementationsService
                 new Claim("userName", user.userName), //Tên người dùng
                 new Claim("userId", user.id), //ID của user trong hệ thống
                 new Claim("Role", user.roleName), //Vai trò (role) chính của user
+                new Claim("avatar", user.accountImg), //Ảnh đại diện của user)
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Mã định danh duy nhất cho token này
                 new Claim("type","access")
             };
@@ -70,6 +71,7 @@ namespace ShopPC.Service.ImplementationsService
                 new Claim("userName", user.userName), //Tên người dùng
                 new Claim("userId", user.id), //ID của user trong hệ thống
                 new Claim("Role", user.roleName), //Vai trò (role) chính của user
+                new Claim("avatar", user.accountImg), //Ảnh đại diện của user)
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("type","refresh")
             };
