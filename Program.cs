@@ -4,7 +4,6 @@ using Microsoft.OpenApi.Models;
 using ShopPC.Configuration;
 using ShopPC.Data;
 using ShopPC.Exceptions;
-using ShopPC.Repository;
 using ShopPC.Repository.ImplementationsRepository;
 using ShopPC.Repository.InterfaceRepository;
 using ShopPC.Service.ImplementationsService;

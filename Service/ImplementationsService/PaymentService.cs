@@ -132,5 +132,21 @@ namespace ShopPC.Service.ImplementationsService
 
             await _paymentRepository.AddAsync(log);
         }
+
+        public string BuildFrontendRedirectUrl(IDictionary<string, string> vnPayQueryParams, string clientBaseUrl)
+        {
+            if (string.IsNullOrWhiteSpace(clientBaseUrl))
+                throw new ArgumentException("clientBaseUrl không được rỗng.", nameof(clientBaseUrl));
+
+            // Lọc các key bắt đầu bằng vnp_ (nếu muốn giữ nguyên 100%) – hoặc giữ tất cả nếu cần
+            var pairs = vnPayQueryParams
+                .Where(kv => !string.IsNullOrEmpty(kv.Value))
+                .Select(kv => $"{WebUtility.UrlEncode(kv.Key)}={WebUtility.UrlEncode(kv.Value)}");
+
+            string queryString = string.Join("&", pairs);
+
+            // Ghép thành URL cuối cùng
+            return $"{clientBaseUrl.TrimEnd('/')}/payment/return?{queryString}";
+        }
     }
 }

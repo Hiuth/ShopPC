@@ -17,10 +17,11 @@ namespace ShopPC.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
-        public PaymentController(IPaymentService paymentService)
+        private readonly IConfiguration _config;
+        public PaymentController(IPaymentService paymentService, IConfiguration config)
         {
             _paymentService = paymentService;
-
+            _config = config;
         }
 
         [HttpGet("create")]
@@ -60,47 +61,46 @@ namespace ShopPC.Controllers
 
         [HttpGet("vnpay-return")]
         [AllowAnonymous]
-        public async Task<ActionResult<ApiResponse<string>>> VNPayReturn()
+        public async Task<IActionResult> VNPayReturn()
         {
-            var response = new ApiResponse<string>
-            {
-                Message = "",
-                Result = null,
-                Code = 200
-            };
-
             try
             {
                 var queryParams = Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString());
 
-                // 1. Xác thực chữ ký
+                // 1) Xác thực chữ ký
                 if (!_paymentService.ValidateResponse(queryParams))
                 {
-                    response.Code = 400;
-                    response.Message = "Chữ ký không hợp lệ!";
-                    return BadRequest(response);
+                    // Chuyển hướng về FE với thông báo lỗi để UI hiển thị đẹp hơn
+                    var clientBase = _config["Client:BaseUrl"] ?? "http://localhost:3000";
+                    var original = HttpContext.Request.QueryString.Value ?? "";
+                    var separator = string.IsNullOrEmpty(original) ? "?" : "&";
+                    var targetUrl = $"{clientBase.TrimEnd('/')}/payment/return{original}{separator}error=invalid_signature";
+                    return Redirect(targetUrl);
                 }
 
-                // 2. Lấy thông tin từ query
+                // 2) Lấy dữ liệu cần thiết
                 string orderId = queryParams["vnp_TxnRef"];
                 string transactionId = queryParams.GetValueOrDefault("vnp_TransactionNo", "");
                 string responseCode = queryParams.GetValueOrDefault("vnp_ResponseCode", "");
                 decimal amount = decimal.Parse(queryParams["vnp_Amount"]) / 100;
 
-                // 3. Lưu log thanh toán
+                // 3) Lưu log
                 string status = responseCode == "00" ? "Success" : "Failed";
                 await _paymentService.SavePaymentLogAsync(orderId, amount, status, transactionId);
 
-                response.Message = status == "Success" ? "Thanh toán thành công" : "Thanh toán thất bại";
-                response.Result = orderId;
+                // 4) Redirect trình duyệt về FE /payment/return kèm nguyên query VNPay
+                var clientBaseUrl = _config["Client:BaseUrl"] ?? "http://localhost:3000";
+                var originalQuery = HttpContext.Request.QueryString.Value ?? "";
+                var redirectUrl = $"{clientBaseUrl.TrimEnd('/')}/payment/return{originalQuery}";
 
-                return Ok(response);
+                return Redirect(redirectUrl);
             }
-            catch (Exception ex)
+            catch
             {
-                response.Code = 500;
-                response.Message = $"Internal server error: {ex.Message}";
-                return StatusCode(500, response);
+                // Có lỗi hệ thống: chuyển về FE với flag lỗi để UI xử lý
+                var clientBase = _config["Client:BaseUrl"] ?? "http://localhost:3000";
+                var redirectUrl = $"{clientBase.TrimEnd('/')}/payment/return?error=server_error";
+                return Redirect(redirectUrl);
             }
         }
 
