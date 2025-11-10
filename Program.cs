@@ -111,6 +111,9 @@ builder.Services.AddScoped<IWarrantyRecordService, WarrantyService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
+builder.Services.Configure<VnPayConfig>(
+    builder.Configuration.GetSection("VNPay"));
+
 builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("EmailConfig"));
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddSingleton<OtpService>();
