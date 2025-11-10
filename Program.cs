@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.OpenApi.Models;
 using ShopPC.Configuration;
 using ShopPC.Data;
 using ShopPC.Exceptions;
+using ShopPC.Repository;
 using ShopPC.Repository.ImplementationsRepository;
 using ShopPC.Repository.InterfaceRepository;
 using ShopPC.Service.ImplementationsService;
 using ShopPC.Service.InterfaceService;
-using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -90,6 +91,7 @@ builder.Services.AddScoped<IProductUnitRepository, ProductUnitRepository>();
 builder.Services.AddScoped<IPcBuildItemRepository, PcBuildItemRepository>();
 builder.Services.AddScoped<IPcBuildRepository, PcBuildRepository>();
 builder.Services.AddScoped<IWarrantyRecordRepository, WarrnatyRecordRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -107,6 +109,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IProductUnitService, ProductUnitService>();
 builder.Services.AddScoped<IPcBuildItemService, PcBuildItemService>();
 builder.Services.AddScoped<IPcBuildService, PcBuildService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IWarrantyRecordService, WarrantyService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
