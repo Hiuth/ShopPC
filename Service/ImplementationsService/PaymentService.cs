@@ -22,15 +22,33 @@ namespace ShopPC.Service.ImplementationsService
 
         private string BuildDataToSign(IDictionary<string, string> data)
         {
-            return string.Join("&", data.OrderBy(x => x.Key)
-                .Where(x => !string.IsNullOrEmpty(x.Value))
-                .Select(x => $"{x.Key}={x.Value}"));
+            var sortedParams = data.OrderBy(x => x.Key)
+                .Where(x => !string.IsNullOrEmpty(x.Value));
+            
+            var hashData = "";
+            int i = 0;
+            foreach (var param in sortedParams)
+            {
+                if (i == 1)
+                {
+                    hashData += "&" + WebUtility.UrlEncode(param.Key) + "=" + WebUtility.UrlEncode(param.Value);
+                }
+                else
+                {
+                    hashData += WebUtility.UrlEncode(param.Key) + "=" + WebUtility.UrlEncode(param.Value);
+                    i = 1;
+                }
+            }
+            return hashData;
         }
 
         private string BuildQuery(IDictionary<string, string> data)
         {
-            return string.Join("&", data.OrderBy(x => x.Key)
-                .Select(kv => $"{WebUtility.UrlEncode(kv.Key)}={WebUtility.UrlEncode(kv.Value)}"));
+            var sortedParams = data.OrderBy(x => x.Key)
+                .Where(x => !string.IsNullOrEmpty(x.Value));
+            
+            return string.Join("&", sortedParams.Select(kv => 
+                $"{WebUtility.UrlEncode(kv.Key)}={WebUtility.UrlEncode(kv.Value)}"));
         }
 
         private string HmacSHA512(string key, string input)
@@ -54,28 +72,48 @@ namespace ShopPC.Service.ImplementationsService
                 { "vnp_CurrCode", "VND" },
                 { "vnp_IpAddr", ipAddress },
                 { "vnp_Locale", "vn" },
-                { "vnp_OrderInfo", "Thanh toán đơn hàng #" + orderId },
+                { "vnp_OrderInfo", "Thanh toan don hang " + orderId },
                 { "vnp_OrderType", "other" },
                 { "vnp_ReturnUrl", _vnpayConfig.ReturnUrl },
                 { "vnp_TxnRef", orderId }
             };
 
-            string query = BuildQuery(vnp_Params);
-            string signData = BuildDataToSign(vnp_Params);
-            string vnp_SecureHash = HmacSHA512(_vnpayConfig.HashSecret, signData);
 
-            return $"{_vnpayConfig.BaseUrl}?{query}&vnp_SecureHash={vnp_SecureHash}";
+            // 1. Tạo chuỗi để ký (theo cách VNPay docs)
+            string signData = BuildDataToSign(vnp_Params);
+            
+            // 2. Tạo hash
+            string vnp_SecureHash = HmacSHA512(_vnpayConfig.HashSecret, signData);
+            
+            // 3. Tạo query string cho URL (có URL encode)
+            string query = BuildQuery(vnp_Params);
+            
+            // 4. Tạo URL cuối cùng
+            string finalUrl = $"{_vnpayConfig.BaseUrl}?{query}&vnp_SecureHash={vnp_SecureHash}";
+            
+            return finalUrl;
         }
 
         // 🧩 Xác thực callback từ VNPay
         public bool ValidateResponse(IDictionary<string, string> queryParams)
         {
-            if (!queryParams.ContainsKey("vnp_SecureHash")) return false;
+            if (!queryParams.ContainsKey("vnp_SecureHash")) 
+            {
+                return false;
+            }
 
             string receivedHash = queryParams["vnp_SecureHash"];
-            queryParams.Remove("vnp_SecureHash");
+            
+            var paramsForSign = new SortedDictionary<string, string>();
+            foreach (var param in queryParams)
+            {
+                if (param.Key != "vnp_SecureHash" && param.Key != "vnp_SecureHashType")
+                {
+                    paramsForSign[param.Key] = param.Value;
+                }
+            }
 
-            string signData = BuildDataToSign(queryParams);
+            string signData = BuildDataToSign(paramsForSign);
             string computedHash = HmacSHA512(_vnpayConfig.HashSecret, signData);
 
             return receivedHash.Equals(computedHash, StringComparison.InvariantCultureIgnoreCase);

@@ -115,7 +115,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services.Configure<VnPayConfig>(
-    builder.Configuration.GetSection("VNPay"));
+    builder.Configuration.GetSection("VnPay"));
 
 builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("EmailConfig"));
 builder.Services.AddScoped<EmailService>();

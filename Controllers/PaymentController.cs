@@ -59,6 +59,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("vnpay-return")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<string>>> VNPayReturn()
         {
             var response = new ApiResponse<string>
@@ -104,6 +105,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("vnpay-ipn")]
+        [AllowAnonymous]
         public async Task<IActionResult> VNPayIpn()
         {
             try
