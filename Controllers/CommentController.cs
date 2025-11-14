@@ -21,11 +21,10 @@ namespace ShopPC.Controllers
             _commentService = commentService;
         }
 
-        [HttpPost("create/{accountId}/{productId}")]
+        [HttpPost("create/{productId}")]
         [Authorize(Roles = "ADMIN,USER")]
         public async Task<ActionResult<ApiResponse<CommentResponse>>> createComment(
             [FromRoute(Name = "productId")] string productId,
-            [FromRoute(Name = "accountId")] string accountId,
             [FromForm(Name = "content")][Required] string content,
             [FromForm(Name ="rating")][Required] int rating)
         {

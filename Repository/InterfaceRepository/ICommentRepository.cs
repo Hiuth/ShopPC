@@ -7,6 +7,7 @@ namespace ShopPC.Repository.InterfaceRepository
     {
         Task<List<Comment>> GetCommentByProductIdAsync(string productId);
         Task<List<Comment>> GetCommentByAccountIdAsync(string accountId);
+        Task<Comment?> GetCommentByCommentIdAsync(string commentId); 
         Task<(double avg, int total, int[] dist)> GetRatingSummaryByProductIdAsync(string productId);
     }
 }

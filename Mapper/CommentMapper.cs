@@ -23,6 +23,7 @@ namespace ShopPC.Mapper
                 productId = comment.productId,
                 accountId = comment.accountId,
                 accountName = comment.account.userName ?? string.Empty,
+                accountAvatar = comment.account.accountImg ?? string.Empty,
                 content = comment.content,
                 rating = comment.rating,
                 createdAt = comment.createdAt

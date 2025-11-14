@@ -49,7 +49,7 @@ namespace ShopPC.Service.ImplementationsService
         public async Task<CommentResponse> UpdateComment(string commentId, CommentRequest request)
         {
             var accountId = _currentUserService.GetCurrentUserId();
-            var comment = await _commentRepository.GetByIdAsync(commentId) ??
+            var comment = await _commentRepository.GetCommentByCommentIdAsync(commentId) ??
                 throw new AppException(ErrorCode.COMMENT_NOT_EXISTS);
             if (comment.accountId != accountId)
             {
@@ -75,7 +75,7 @@ namespace ShopPC.Service.ImplementationsService
         public async Task<string> DeleteComment(string commentId)
         {
             var accountId = _currentUserService.GetCurrentUserId();
-            var comment = await _commentRepository.GetByIdAsync(commentId) ??
+            var comment = await _commentRepository.GetCommentByCommentIdAsync(commentId) ??
                 throw new AppException(ErrorCode.COMMENT_NOT_EXISTS);
             if (comment.accountId != accountId)
             {

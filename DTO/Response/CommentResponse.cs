@@ -5,6 +5,7 @@
         public string id { get; set; } = string.Empty;
         public string accountId { get; set; } = string.Empty;
         public string accountName { get; set; } = string.Empty;
+        public string accountAvatar { get; set; } = string.Empty;
         public string productId { get; set; } = string.Empty;
         public string content { get; set; } = string.Empty;
         public int rating { get; set; }

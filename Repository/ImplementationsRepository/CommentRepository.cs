@@ -24,6 +24,13 @@ namespace ShopPC.Repository.ImplementationsRepository
                 .Where(c => c.accountId == accountId).ToListAsync();
         }
 
+        public async Task<Comment?> GetCommentByCommentIdAsync(string commentId)
+        {
+            return await _dbSet
+                .Include(c => c.account)
+                .FirstOrDefaultAsync(c => c.id == commentId);
+        }
+
         public async Task<(double avg, int total, int[] dist)> GetRatingSummaryByProductIdAsync(string productId)
         {
             var q = _dbSet.Where(c => c.productId == productId).Select(c => c.rating);
