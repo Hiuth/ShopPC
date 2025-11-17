@@ -75,7 +75,8 @@ namespace ShopPC.Controllers
             [FromForm(Name = "totalAmount")] decimal? totalAmount,
             [FromForm(Name = "customerName")] string? cusotmerName,
             [FromForm(Name = "phoneNumber")] string? phoneNumber,
-            [FromForm(Name = "address")] string? address)
+            [FromForm(Name = "address")] string? address,
+            [FromForm(Name ="isPaid")] bool? isPaid)
         {
             var request = new OrderRequest
             {
@@ -83,7 +84,8 @@ namespace ShopPC.Controllers
                 totalAmount = totalAmount??0,
                 customerName = cusotmerName??string.Empty,
                 phoneNumber = phoneNumber ?? string.Empty,
-                address = address ?? string.Empty
+                address = address ?? string.Empty,
+                isPaid = isPaid??null
             };
 
             var response = new ApiResponse<OrderResponse>()

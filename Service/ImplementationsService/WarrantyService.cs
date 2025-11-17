@@ -38,10 +38,6 @@ namespace ShopPC.Service.ImplementationsService
             if (!await _orderRepository.ExistsAsync(orderId))
                 throw new AppException(ErrorCode.ORDER_NOT_EXISTS);
 
-            if (!await _productUnitRepository.ExistsAsync(productUnitId))
-                throw new AppException(ErrorCode.PRODUCT_UNIT_NOT_EXISTS);
-
-            var productUnit =  await _productUnitRepository.GetProductUnitByIdAsync(productUnitId);
 
             var warranty = WarrantyRecordMapper.toWarrantyRecord(request);
             warranty.productId = productId;
@@ -50,9 +46,15 @@ namespace ShopPC.Service.ImplementationsService
             warranty.startDate = DateTime.Now;
             warranty.endDate = CalculateEndDate(warranty.startDate, product.warrantyPeriod ?? 0);
 
-            productUnit!.status = "WARRANTY";
+            if (!String.IsNullOrWhiteSpace(productUnitId))
+            {
+                if (!await _productUnitRepository.ExistsAsync(productUnitId))
+                    throw new AppException(ErrorCode.PRODUCT_UNIT_NOT_EXISTS);
+                var productUnit = await _productUnitRepository.GetProductUnitByIdAsync(productUnitId);
+                productUnit!.status = "WARRANTY";
+                await _productUnitRepository.UpdateAsync(productUnit);
+            }
 
-            await _productUnitRepository.UpdateAsync(productUnit);
             await _warrantyRecordRepository.AddAsync(warranty);
 
             

@@ -562,7 +562,7 @@ namespace ShopPC.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     orderId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    productUnitId = table.Column<string>(type: "varchar(255)", nullable: false)
+                    productUnitId = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>

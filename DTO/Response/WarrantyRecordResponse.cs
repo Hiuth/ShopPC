@@ -10,7 +10,7 @@
         public string productName { get; set; } = string.Empty;
         public int warrantyPeriod { get; set; }
         public string orderId { get; set; } = string.Empty;
-        public string productUnitId { get; set; } = string.Empty;
+        public string? productUnitId { get; set; } = string.Empty;
         public string? serialNumber { get; set; }
         public string? imei { get; set; }
     }

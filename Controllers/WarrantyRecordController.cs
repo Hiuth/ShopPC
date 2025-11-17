@@ -19,44 +19,45 @@ namespace ShopPC.Controllers
         {
             _warrantyRecordService = warrantyRecordService;
         }
-        [HttpPost("create/{productId}/{orderId}/{productUnitId}")]
-        [Authorize(Roles ="ADMIN")]
-        public async Task<ActionResult<ApiResponse<WarrantyRecordResponse>>> CreateWarrantyPeriod(
-            [FromRoute][Required] string productId,
-            [FromRoute][Required] string orderId,
-            [FromRoute][Required] string productUnitId)
-        {
-            var request = new WarrantyRecordRequest
+            [HttpPost("create/{productId}/{orderId}/{productUnitId?}")]
+            [Authorize(Roles ="ADMIN")]
+            public async Task<ActionResult<ApiResponse<WarrantyRecordResponse>>> CreateWarrantyPeriod(
+                [FromRoute][Required] string productId,
+                [FromRoute][Required] string orderId,
+                [FromRoute] string? productUnitId)
             {
-                status = "VALID"
-            };
+                productUnitId = productUnitId == "null" ? string.Empty : productUnitId;
+                var request = new WarrantyRecordRequest
+                {
+                    status = "VALID"
+                };
 
-            var response = new ApiResponse<WarrantyRecordResponse>()
-            {
-                Message = "Create warranty period successfully"
-            };
+                var response = new ApiResponse<WarrantyRecordResponse>()
+                {
+                    Message = "Create warranty period successfully"
+                };
 
-            try
-            {
-                var warranty = await _warrantyRecordService.CreateWarrantyPeriod(productId, orderId, productUnitId, request);
-                response.Result = warranty;
-                return Ok(response);
+                try
+                {
+                    var warranty = await _warrantyRecordService.CreateWarrantyPeriod(productId, orderId, productUnitId, request);
+                    response.Result = warranty;
+                    return Ok(response);
+                }
+                catch (AppException ex)  // Catch AppException riêng
+                {
+                    response.Code = 400;
+                    response.Message = ex.Message;
+                    response.Result = null;
+                    return BadRequest(response);
+                }
+                catch (Exception e)  // Catch Exception chung
+                {
+                    response.Code = 500;
+                    response.Message = e.Message;
+                    response.Result = null;
+                    return StatusCode(500, response);
+                }
             }
-            catch (AppException ex)  // Catch AppException riêng
-            {
-                response.Code = 400;
-                response.Message = ex.Message;
-                response.Result = null;
-                return BadRequest(response);
-            }
-            catch (Exception e)  // Catch Exception chung
-            {
-                response.Code = 500;
-                response.Message = e.Message;
-                response.Result = null;
-                return StatusCode(500, response);
-            }
-        }
 
         [HttpPut("update/{warrantyPeriodId}")]
         [Authorize(Roles = "ADMIN")]    

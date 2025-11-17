@@ -12,7 +12,7 @@ namespace ShopPC.Models
         public string status { get; set; } = string.Empty;
         public string productId { get; set; } = string.Empty;
         public string orderId { get; set; } = string.Empty;
-        public string productUnitId { get; set; } = string.Empty;
+        public string? productUnitId { get; set; } = string.Empty;
 
         [ForeignKey("productId")]
         public Products product { get; set; } = null!;

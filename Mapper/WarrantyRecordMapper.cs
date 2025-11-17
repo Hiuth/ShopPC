@@ -26,9 +26,9 @@ namespace ShopPC.Mapper
                 productName = request.product.productName,
                 warrantyPeriod = request.product.warrantyPeriod ??0,
                 orderId = request.orderId,
-                productUnitId = request.productUnitId,
-                serialNumber = request.productUnit.serialNumber,
-                imei = request.productUnit.imei
+                productUnitId = request.productUnitId??string.Empty,
+                serialNumber = request.productUnit?.serialNumber??string.Empty,
+                imei = request.productUnit?.imei ?? string.Empty
             };
         }
     }
