@@ -13,6 +13,7 @@ namespace ShopPC.Models
         public string CustomerName { get; set; } = string.Empty;
         public string phoneNumber { get; set; } = string.Empty;
         public string address { get; set; } = string.Empty;
+        public bool isPaid { get; set; }
         // 1 order thuộc về 1 account
         [ForeignKey("accountId")]
         public Account account { get; set; } = null!;

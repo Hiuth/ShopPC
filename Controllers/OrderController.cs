@@ -37,7 +37,8 @@ namespace ShopPC.Controllers
                 totalAmount = totalAmount,
                 customerName =cusotmerName,
                 phoneNumber = phoneNumber,
-                address = address
+                address = address,
+                isPaid = false
             };
 
             var response = new ApiResponse<OrderResponse>()

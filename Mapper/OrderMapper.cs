@@ -28,7 +28,8 @@ namespace ShopPC.Mapper
                 totalAmount = order.totalAmount,
                 CustomerName = order.CustomerName,
                 phoneNumber = order.phoneNumber,
-                address = order.address
+                address = order.address,
+                isPaid = order.isPaid
             };
         }
     }

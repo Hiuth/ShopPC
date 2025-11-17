@@ -120,6 +120,11 @@ namespace ShopPC.Service.ImplementationsService
                 order.address = request.address;
             }
 
+            if (request.isPaid.HasValue)
+            {
+                order.isPaid = request.isPaid.Value;
+            }
+
             await _orderRepository.UpdateAsync(order);
             return OrderMapper.toOrderResponse(order);
         }

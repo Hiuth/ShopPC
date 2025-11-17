@@ -8,5 +8,6 @@ namespace ShopPC.DTO.Request
         public string customerName { get; set; } = string.Empty;
         public string phoneNumber { get; set; } = string.Empty;
         public string address { get; set; } = string.Empty;
+        public bool? isPaid { get; set; }
     }
 }
