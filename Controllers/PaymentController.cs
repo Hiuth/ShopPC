@@ -39,7 +39,7 @@ namespace ShopPC.Controllers
             {
                string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
  
-
+                
                 // Tạo URL thanh toán
                 var paymentUrl = _paymentService.CreatePaymentUrl(orderId, amount, ipAddress);
                 response.Result = paymentUrl;

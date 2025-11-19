@@ -112,7 +112,7 @@ namespace ShopPC.Controllers
         }
 
         [HttpGet("getById/{pcBuildId}")]
-        [Authorize(Roles = "ADMIN,USER")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<PcBuildResponse>>> GetPcBuildById(
             [FromRoute(Name = "pcBuildId")] string pcBuildId)
         {

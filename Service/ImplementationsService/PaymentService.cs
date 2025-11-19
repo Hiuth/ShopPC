@@ -67,7 +67,7 @@ namespace ShopPC.Service.ImplementationsService
                 { "vnp_Version", "2.1.0" },
                 { "vnp_Command", "pay" },
                 { "vnp_TmnCode", _vnpayConfig.TmnCode },
-                { "vnp_Amount", ((int)(amount * 100)).ToString() },
+                { "vnp_Amount", ((decimal)(amount * 100)).ToString() },
                 { "vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss") },
                 { "vnp_CurrCode", "VND" },
                 { "vnp_IpAddr", ipAddress },

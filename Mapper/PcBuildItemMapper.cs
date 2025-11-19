@@ -24,6 +24,7 @@ namespace ShopPC.Mapper
                 productName = response.product.productName,
                 price = response.product.price ?? 0,
                 thumbnail = response.product.thumbnail!,
+                stockQuantity = response.product.stockQuantity ??0,
             };
         }
     }

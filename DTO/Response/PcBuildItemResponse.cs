@@ -9,5 +9,6 @@
         public string productName { get; set; } = string.Empty;
         public decimal price { get; set; }
         public string thumbnail { get; set; } = string.Empty;
+        public int stockQuantity { get; set; }    
     }
 }
