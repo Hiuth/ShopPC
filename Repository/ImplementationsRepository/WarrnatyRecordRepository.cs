@@ -68,6 +68,14 @@ namespace ShopPC.Repository.ImplementationsRepository
                 .Where(wr => wr.status == status)
                 .ToListAsync();
         }
-
+        public async Task<List<WarrantyRecord>> GetWarrantyRecordsByPhoneNumberAsync(string phoneNumber)
+        {
+            return await _dbSet
+                .Include(wr => wr.product)
+                .Include(wr => wr.order)
+                .Include(wr => wr.productUnit)
+                .Where(wr => wr.order.phoneNumber == phoneNumber)
+                .ToListAsync();
+        }
     }
 }

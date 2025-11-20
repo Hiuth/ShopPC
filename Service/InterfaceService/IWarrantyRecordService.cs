@@ -19,6 +19,8 @@ namespace ShopPC.Service.InterfaceService
 
         Task<WarrantyRecordResponse> GetWarrnatyRecordByImei(string imei);
 
+        Task<List<WarrantyRecordResponse>> GetWarrantyRecordsByPhoneNumber(string phoneNumber);
+
         Task<string> DeleteWarrnatyRecordById(string id);
     }
 }

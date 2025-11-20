@@ -16,6 +16,8 @@ namespace ShopPC.Repository.InterfaceRepository
         Task<List<WarrantyRecord>> GetWarrantyRecordsByOrderIdAsync(string orderId);
 
         Task<List<WarrantyRecord>> GetWarrantyRecordsByStatusAsync(string status);
+        
+        Task<List<WarrantyRecord>> GetWarrantyRecordsByPhoneNumberAsync(string phoneNumber);
 
         //Task<bool> IsWarrantyActiveAsync(string productId, string orderId);
     }

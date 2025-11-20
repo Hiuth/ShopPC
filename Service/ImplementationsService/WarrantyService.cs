@@ -57,7 +57,7 @@ namespace ShopPC.Service.ImplementationsService
 
             await _warrantyRecordRepository.AddAsync(warranty);
 
-            
+
 
             return WarrantyRecordMapper.toWarrantyRecordResponse(warranty);
         }
@@ -106,6 +106,12 @@ namespace ShopPC.Service.ImplementationsService
                 throw new AppException(ErrorCode.WARRANTY_RECORD_NOT_EXISTS);
             await _warrantyRecordRepository.DeleteAsync(warranty.id);
             return "Warranty record deleted successfully.";
+        }
+
+        public async Task<List<WarrantyRecordResponse>> GetWarrantyRecordsByPhoneNumber(string phoneNumber)
+        {
+            var warranties = await _warrantyRecordRepository.GetWarrantyRecordsByPhoneNumberAsync(phoneNumber);
+            return warranties.Select(WarrantyRecordMapper.toWarrantyRecordResponse).ToList();
         }
     }
       

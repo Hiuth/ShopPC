@@ -220,6 +220,37 @@ namespace ShopPC.Controllers
             }
         }
 
+        [HttpGet("GetByPhoneNumber/{phoneNumber}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ApiResponse<List<WarrantyRecordResponse>>>> GetWarrantyRecordByPhoneNumber(
+          [FromRoute][Required] string phoneNumber)
+        {
+            var response = new ApiResponse<List<WarrantyRecordResponse>>()
+            {
+                Message = "Get warranty records by order id successfully"
+            };
+            try
+            {
+                var warranties = await _warrantyRecordService.GetWarrantyRecordsByPhoneNumber(phoneNumber);
+                response.Result = warranties;
+                return Ok(response);
+            }
+            catch (AppException ex)  // Catch AppException riêng
+            {
+                response.Code = 400;
+                response.Message = ex.Message;
+                response.Result = null;
+                return BadRequest(response);
+            }
+            catch (Exception e)  // Catch Exception chung
+            {
+                response.Code = 500;
+                response.Message = e.Message;
+                response.Result = null;
+                return StatusCode(500, response);
+            }
+        }
+
         [HttpGet("GetByStatus/{status}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse<List<WarrantyRecordResponse>>>> GetWarrantyRecordByStatus(
