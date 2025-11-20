@@ -46,6 +46,10 @@ namespace ShopPC.Service.ImplementationsService
             {
                 var newCart = await _cartRepository.GetCartByProductIdAndProductIdAsync(accountId, productId)
                     ?? throw new AppException(ErrorCode.CART_NOT_EXISTS);
+                if((newCart.quantity + request.quantity) > product.stockQuantity)
+                {
+                    throw new AppException(ErrorCode.QUANTITY_EXCEEDS_STOCK);
+                }
                 newCart.quantity += request.quantity;
                 await _cartRepository.UpdateAsync(newCart);
                 return CartMapper.toCartResponse(newCart);
