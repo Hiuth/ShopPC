@@ -94,7 +94,6 @@ namespace ShopPC.Service.ImplementationsService
             return finalUrl;
         }
 
-        // 🧩 Xác thực callback từ VNPay
         public bool ValidateResponse(IDictionary<string, string> queryParams)
         {
             if (!queryParams.ContainsKey("vnp_SecureHash")) 

@@ -37,9 +37,9 @@ namespace ShopPC.Controllers
 
             try
             {
-               string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
- 
-                
+               //string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
+
+                string ipAddress = "127.0.0.1";
                 // Tạo URL thanh toán
                 var paymentUrl = _paymentService.CreatePaymentUrl(orderId, amount, ipAddress);
                 response.Result = paymentUrl;
@@ -70,7 +70,6 @@ namespace ShopPC.Controllers
                 // 1) Xác thực chữ ký
                 if (!_paymentService.ValidateResponse(queryParams))
                 {
-                    // Chuyển hướng về FE với thông báo lỗi để UI hiển thị đẹp hơn
                     var clientBase = _config["Client:BaseUrl"] ?? "http://localhost:3000";
                     var original = HttpContext.Request.QueryString.Value ?? "";
                     var separator = string.IsNullOrEmpty(original) ? "?" : "&";
