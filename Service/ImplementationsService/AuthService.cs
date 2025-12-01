@@ -32,10 +32,10 @@ namespace ShopPC.Service.ImplementationsService
 
         }
 
-        public async Task<string> SendOtpForgotPassword()
+        public async Task<string> SendOtpForgotPassword(string email)
         {
-            var account = await _accountRepository.GetByIdAsync(_currentUserService.GetCurrentUserId()) ??
-                throw new AppException(ErrorCode.NOT_AUTHENTICATED);
+            var account = await _accountRepository.GetAccountByEmail(email) ??
+                throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
             var otp = _otpService.GenerateOtp(account.email);
 
             var body = $@"
@@ -161,10 +161,10 @@ namespace ShopPC.Service.ImplementationsService
         }
 
 
-        public async Task<string> ResetPassword(string otp, string newPassword)
+        public async Task<string> ResetPassword(string otp, string newPassword,string email)
         {
-            var account = await _accountRepository.GetByIdAsync(_currentUserService.GetCurrentUserId()) ??
-                 throw new AppException(ErrorCode.NOT_AUTHENTICATED);
+            var account = await _accountRepository.GetAccountByEmail(email) ??
+                throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
 
             if (!_otpService.VerifyOtp(account.email, otp))
                 throw new AppException(ErrorCode.INVALID_OTP);

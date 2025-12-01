@@ -6,7 +6,7 @@ using ShopPC.Models;
 
 namespace ShopPC.Repository.ImplementationsRepository
 {
-    public class AccountRepository: GenericReopository<Account>,IAccountRepository
+    public class AccountRepository : GenericReopository<Account>, IAccountRepository
     {
         public AccountRepository(AppDbContext context) : base(context)
         {
@@ -19,12 +19,17 @@ namespace ShopPC.Repository.ImplementationsRepository
 
         public async Task<List<Account>> searchAccountAsync(string key)
         {
-            return await _dbSet.Where(p => p.userName.Contains(key)|| p.email.Contains(key)).ToListAsync();
+            return await _dbSet.Where(p => p.userName.Contains(key) || p.email.Contains(key)).ToListAsync();
         }
 
         public async Task<Account?> GetAccountById(string id)
         {
             return await _dbSet.FirstOrDefaultAsync(a => a.id == id);
+        }
+
+        public async Task<Account?> GetAccountByEmail(string email)
+        {
+            return await _dbSet.FirstOrDefaultAsync(a => a.email == email);
         }
     }
 }

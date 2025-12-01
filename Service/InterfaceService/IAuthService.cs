@@ -6,9 +6,9 @@
         
         Task Logout(string token);
 
-        Task<string> SendOtpForgotPassword();
+        Task<string> SendOtpForgotPassword(string email);
 
-        Task<string> ResetPassword(string otp, string newPassword);
+        Task<string> ResetPassword(string otp, string newPassword,string email);
 
         Task<(string accessToken, string refreshToken)> RefreshTokenAsync(string refreshToken);
     }

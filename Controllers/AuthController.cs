@@ -81,9 +81,10 @@ namespace ShopPC.Controllers
             }
         }
 
-        [HttpGet("send-otp-forgot-password")]
-        [Authorize(Roles = "ADMIN,USER")]
-        public async Task<ActionResult<ApiResponse<string>>> SendOtpForgotPassword()
+        [HttpPost("send-otp-forgot-password")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ApiResponse<string>>> SendOtpForgotPassword(
+            [FromForm] string email)
         {
             var response = new ApiResponse<string>
             {
@@ -91,7 +92,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var result = await _authService.SendOtpForgotPassword();
+                var result = await _authService.SendOtpForgotPassword(email);
                 response.Result = result;
                 return Ok(response);
             }
@@ -112,10 +113,11 @@ namespace ShopPC.Controllers
         }
 
         [HttpPut("reset-password")]
-        [Authorize(Roles = "ADMIN,USER")]
+        [AllowAnonymous]
         public async Task<ActionResult<string>> resetPassword(
             [FromForm(Name="otp")][Required] string otp,
-            [FromForm(Name ="newPassword")][Required] string newPassword)
+            [FromForm(Name ="newPassword")][Required] string newPassword,   
+            [FromForm (Name ="email")] [Required] string email)
         {
             var response = new ApiResponse<string>
             {
@@ -123,7 +125,7 @@ namespace ShopPC.Controllers
             };
             try
             {
-                var result = await _authService.ResetPassword(otp,newPassword);
+                var result = await _authService.ResetPassword(otp,newPassword,email);
                 response.Result = result;
                 return Ok(response);
             }

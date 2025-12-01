@@ -8,5 +8,7 @@ namespace ShopPC.Repository.InterfaceRepository
         Task<List<Account>> searchAccountAsync(string key);
 
         Task<Account?> GetAccountById(string id);
+
+        Task<Account?> GetAccountByEmail(string email);
     }
 }
