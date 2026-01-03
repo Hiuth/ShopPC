@@ -158,7 +158,20 @@ namespace ShopPC.Service.ImplementationsService
                 }
 
                 order.status = request.status;
-                await _emailService.SendEmailAsync(user.email, "Cập nhật trạng thái đơn hàng", GenerateUserOrderNotification(order.status));
+
+                _=Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _emailService.SendEmailAsync(user.email, "Cập nhật trạng thái đơn hàng", GenerateUserOrderNotification(order.status));
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log lỗi nếu cần thiết
+                        Console.WriteLine($"Lỗi khi gửi email: {ex.Message}");
+                    }
+                });
+                
             }
 
             // Cập nhật các thông tin khác

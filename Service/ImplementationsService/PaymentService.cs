@@ -193,9 +193,20 @@ namespace ShopPC.Service.ImplementationsService
                 </div>";
 
 
-            await _emailService.SendEmailAsync(user.email, "Thông báo thanh toán thành công", notiUser);
-
-            await _emailService.SendEmailAsync("nextaura2025@gmail.com", "Thông báo đơn hàng mới", notiAdmin);
+            // Gửi email ngầm, không chờ kết quả để không làm gián đoạn luồng chính, làm kiến trúc event-driven 
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await _emailService.SendEmailAsync(user.email, "Thông báo thanh toán thành công", notiUser);
+                    await _emailService.SendEmailAsync("nextaura2025@gmail.com", "Thông báo đơn hàng mới", notiAdmin);
+                }
+                catch (Exception ex)
+                {
+                    // Log lỗi nếu cần (có thể thêm logging service sau)
+                    Console.WriteLine($"Error sending payment notification emails: {ex.Message}");
+                }
+            });
 
         }
 
