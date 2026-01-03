@@ -17,9 +17,10 @@ namespace ShopPC.Service.ImplementationsService
         private readonly ICurrentUserService _currentUserService;
         private readonly IProductRepository _productRepository;
         private readonly IProductUnitRepository _productUnitRepository;
+        private readonly EmailService _emailService;
         public OrderService(IOrderRepository orderRepository, IAccountRepository accountRepository,
             IOrderDetailRepository orderDetailRepository, ICurrentUserService currentUserService,
-            IProductRepository productRepository, IProductUnitRepository productUnitRepository)
+            IProductRepository productRepository, IProductUnitRepository productUnitRepository, EmailService emailService)
         {
             _orderRepository = orderRepository;
             _accountRepository = accountRepository;
@@ -27,6 +28,7 @@ namespace ShopPC.Service.ImplementationsService
             _currentUserService = currentUserService;
             _productRepository = productRepository;
             _productUnitRepository = productUnitRepository;
+            _emailService = emailService;
         }
 
         public async Task<OrderResponse> CreateOrder(OrderRequest request)
@@ -51,11 +53,63 @@ namespace ShopPC.Service.ImplementationsService
             return OrderMapper.toOrderResponse(order);
         }
 
+
+        public static string GenerateUserOrderNotification(string status)
+        {
+            //CONFIRMED,  PROCESSING,SHIPPED,DELIVERED,  CANCELED
+            string statusText = status switch
+            {
+                "CONFIRMED" => "xác nhận",
+                "PROCESSING" => "đang xử lý",
+                "SHIPPED" => "đã bàn giao cho đơn vị vận chuyển",
+                "DELIVERED" => "giao hàng thành công",
+                "CANCELED" => "đã bị hủy",
+                _ => "cập nhật trạng thái"
+            };
+
+            return $@"
+                <div style='font-family: Arial, Helvetica, sans-serif; background-color: #eef4ff; padding: 24px;'>
+                    <div style='max-width: 620px; margin: auto; background-color: #ffffff; border-radius: 10px; padding: 28px; border-top: 6px solid #2d89ef; box-shadow: 0 4px 12px rgba(45,137,239,0.15);'>
+        
+                        <h2 style='color: #2d89ef; margin: 0 0 16px 0; font-weight: 600;'>
+                            Thông báo từ Nexora
+                        </h2>
+
+                        <p style='font-size: 17px; color: #1f2d3d; margin: 12px 0;'>
+                            <b>Đơn hàng của bạn đã được {statusText}.</b>
+                        </p>
+
+                        <p style='font-size: 14.5px; color: #555555; line-height: 1.7; margin: 8px 0;'>
+                            Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của Nexora.
+                            Chúng tôi sẽ tiếp tục cập nhật trạng thái đơn hàng trong thời gian sớm nhất.
+                        </p>
+
+                        <p style='font-size: 14.5px; color: #555555; line-height: 1.7; margin: 8px 0;'>
+                            Nếu bạn có bất kỳ thắc mắc nào, vui lòng liên hệ bộ phận hỗ trợ của chúng tôi để được hỗ trợ kịp thời.
+                        </p>
+
+                        <div style='margin-top: 22px; padding-top: 14px; border-top: 1px solid #e6eaf0;'>
+                            <p style='font-size: 12.5px; color: #8a8a8a; text-align: center; margin: 0;'>
+                                © Nexora – Hệ thống thương mại điện tử
+                            </p>
+                        </div>
+
+                    </div>
+                </div>";
+        }
+
+
+
+
         public async Task<OrderResponse> UpdateOrder(string orderId, OrderRequest request)
         {
             var order = await _orderRepository.GetByIdAsync(orderId) ??
                 throw new AppException(ErrorCode.ORDER_NOT_EXISTS);
 
+            var accountId = await _orderRepository.GetAccountIdByOrderIdAsync(orderId)??
+                throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
+
+            var user = await _accountRepository.GetAccountById(accountId);
             // Nếu trạng thái thay đổi
             if (!String.IsNullOrWhiteSpace(request.status))
             {
@@ -104,6 +158,7 @@ namespace ShopPC.Service.ImplementationsService
                 }
 
                 order.status = request.status;
+                await _emailService.SendEmailAsync(user.email, "Cập nhật trạng thái đơn hàng", GenerateUserOrderNotification(order.status));
             }
 
             // Cập nhật các thông tin khác

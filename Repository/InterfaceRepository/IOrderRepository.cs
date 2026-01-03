@@ -6,5 +6,6 @@ namespace ShopPC.Repository.InterfaceRepository
     {
         Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string userId);
 
+        Task<String?> GetAccountIdByOrderIdAsync(string orderId);
     }
 }

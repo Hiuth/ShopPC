@@ -17,5 +17,11 @@ namespace ShopPC.Repository.ImplementationsRepository
             return await _dbSet.Where(o => o.accountId == userId).ToListAsync();
         }
 
+        public async Task<String?> GetAccountIdByOrderIdAsync(string orderId)
+        {
+            var order = await _dbSet.FirstOrDefaultAsync(o => o.id == orderId);
+            return order != null ? order.accountId : null;
+        }
+
     }
 }

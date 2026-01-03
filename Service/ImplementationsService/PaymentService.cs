@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CloudinaryDotNet;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ShopPC.Configuration;
+using ShopPC.Exceptions;
 using ShopPC.Models;
 using ShopPC.Repository.InterfaceRepository;
 using ShopPC.Service.InterfaceService;
@@ -14,10 +16,17 @@ namespace ShopPC.Service.ImplementationsService
     {
         private readonly VnPayConfig _vnpayConfig;
         private readonly IPaymentRepository _paymentRepository;
-        public PaymentService(IOptions<VnPayConfig> vnpayConfig, IPaymentRepository paymentRepository)
+        private readonly IOrderRepository _orderRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly EmailService _emailService;
+        public PaymentService(IOptions<VnPayConfig> vnpayConfig, IPaymentRepository paymentRepository, 
+            IOrderRepository orderRepository, EmailService emailService, IAccountRepository accountRepository)
         {
             _vnpayConfig = vnpayConfig.Value;
             _paymentRepository = paymentRepository;
+            _orderRepository = orderRepository;
+            _emailService = emailService;
+            _accountRepository = accountRepository;
         }
 
         private string BuildDataToSign(IDictionary<string, string> data)
@@ -120,6 +129,7 @@ namespace ShopPC.Service.ImplementationsService
 
         public async Task SavePaymentLogAsync(string orderId, decimal amount, string status, string transactionId)
         {
+
             var log = new PaymentLogs
             {
                 orderId = orderId,
@@ -128,8 +138,65 @@ namespace ShopPC.Service.ImplementationsService
                 status = status,
                 transactionId = transactionId
             };
-
             await _paymentRepository.AddAsync(log);
+            
+            var accountId = await _orderRepository.GetAccountIdByOrderIdAsync(orderId)??
+                throw new AppException(ErrorCode.ACCOUNT_NOT_EXISTS);
+
+            var user = await _accountRepository.GetAccountById(accountId);
+
+            var notiUser = $@"
+                <div style='font-family: Arial, Helvetica, sans-serif; background-color: #f4f8ff; padding: 20px;'>
+                    <div style='max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; padding: 24px; border-top: 5px solid #2d89ef; box-shadow: 0 2px 8px rgba(0,0,0,0.05);'>
+                        <h2 style='color: #2d89ef; margin-top: 0;'>Thông báo từ Nexora</h2>
+
+                        <p style='font-size: 16px; color: #333333;'>
+                            <b>Đơn hàng của bạn đã được thanh toán thành công.</b>
+                        </p>
+
+                        <p style='font-size: 14px; color: #555555; line-height: 1.6;'>
+                            Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi.
+                        </p>
+
+                        <p style='font-size: 14px; color: #555555; line-height: 1.6;'>
+                            Nếu bạn có bất kỳ thắc mắc nào, vui lòng liên hệ bộ phận hỗ trợ của Nexora.
+                        </p>
+
+                        <hr style='border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;'>
+
+                        <p style='font-size: 12px; color: #888888; text-align: center;'>
+                            © Nexora – Hệ thống thương mại điện tử
+                        </p>
+                    </div>
+                </div>";
+
+
+            var notiAdmin = $@"
+                <div style='font-family: Arial, Helvetica, sans-serif; background-color: #f4f8ff; padding: 20px;'>
+                    <div style='max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; padding: 24px; border-top: 5px solid #2d89ef; box-shadow: 0 2px 8px rgba(0,0,0,0.05);'>
+                        <h2 style='color: #2d89ef; margin-top: 0;'>Thông báo hệ thống Nexora</h2>
+
+                        <p style='font-size: 16px; color: #333333;'>
+                            <b>Bạn có đơn hàng mới.</b>
+                        </p>
+
+                        <p style='font-size: 14px; color: #555555; line-height: 1.6;'>
+                            Vui lòng đăng nhập vào trang quản trị để kiểm tra và xử lý đơn hàng.
+                        </p>
+
+                        <hr style='border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;'>
+
+                        <p style='font-size: 12px; color: #888888; text-align: center;'>
+                            © Nexora – Admin Notification System
+                        </p>
+                    </div>
+                </div>";
+
+
+            await _emailService.SendEmailAsync(user.email, "Thông báo thanh toán thành công", notiUser);
+
+            await _emailService.SendEmailAsync("nextaura2025@gmail.com", "Thông báo đơn hàng mới", notiAdmin);
+
         }
 
         public string BuildFrontendRedirectUrl(IDictionary<string, string> vnPayQueryParams, string clientBaseUrl)
