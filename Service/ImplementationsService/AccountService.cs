@@ -58,7 +58,7 @@ namespace ShopPC.Service.ImplementationsService
 
             var account = AccountMapper.toAccount(request);
             account.password = BC.HashPassword(request.password);
-            account.accountImg = "https://res.cloudinary.com/dggt29zsn/image/upload/v1761529832/Funny_Cat_Faces_upxnd6.jpg";
+            account.accountImg = "https://res.cloudinary.com/dggt29zsn/image/upload/v1768190743/sd_ldoije.jpg";
             await _accountRepository.AddAsync(account);
             return AccountMapper.toAccountResponse(account);
         }
